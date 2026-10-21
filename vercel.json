@@ -4,7 +4,7 @@
     { "source": "/api/:path*", "destination": "/api/index" }
   ],
   "functions": {
-    "api/index.js": { "maxDuration": 30 }
+    "api/index.js": { "maxDuration": 10 }
   },
   "headers": [
     {
