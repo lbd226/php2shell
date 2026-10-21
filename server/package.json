@@ -1,0 +1,26 @@
+{
+  "name": "php2shell-ownership-scan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Domain-ownership-verified, strictly-passive PHP version posture checker for PHP2Shell (CVE-2026-109618 / CVE-2026-109619).",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "ipaddr.js": "^2.2.0",
+    "nodemailer": "^10.2.0",
+    "pino": "^9.6.0",
+    "psl": "^1.15.0",
+    "resend": "^4.0.1",
+    "zod": "^3.24.1"
+  }
+}
