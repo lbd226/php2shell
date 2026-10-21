@@ -38,6 +38,8 @@ const BLOCKED = [
   '::ffff:169.254.169.254', // IPv4-mapped metadata
   '::ffff:10.0.0.1', // IPv4-mapped private
   '2002:a9fe:a9fe::', // 6to4 wrapping 169.254.169.254
+  '::a9fe:a9fe', // deprecated IPv4-compatible ::/96 wrapping 169.254.169.254
+  '::7f00:1', // deprecated IPv4-compatible ::/96 wrapping 127.0.0.1
   '64:ff9b::a9fe:a9fe', // NAT64 embedding
   'not-an-ip',
   '',

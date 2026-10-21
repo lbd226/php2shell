@@ -92,7 +92,7 @@ below; it never does email/DNS/network itself.
 | GET  | `/api/verify/email/confirm?token=` | Email link target; verifies and redirects to the hub. |
 | POST | `/api/verify/dns/start` | Begin DNS TXT challenge; returns the record to publish. |
 | POST | `/api/verify/dns/check` | Resolve the TXT record and verify. |
-| GET  | `/api/verify/:id/status?claimSecret=` | Poll challenge progress (bound to the originating session). |
+| POST | `/api/verify/:id/status` | Poll challenge progress (claimSecret in body; bound to the originating session). |
 | POST | `/api/verify/:id/claim` | Exchange a verified challenge for one scan **grant**. |
 | POST | `/api/scan` | `Authorization: Bearer <grant>` → run the passive posture check. |
 | GET  | `/api/scan/:id` | Fetch a stored result (same grant). |

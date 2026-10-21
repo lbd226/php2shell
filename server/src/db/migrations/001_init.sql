@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS verification (
   verifier_hash     BLOB,                             -- SHA-256(verifier); nulled on consume (single-use)
   dns_record_name   TEXT,                             -- _php2shell-verify.<domain>
   dns_token         TEXT,                             -- random challenge value (public in DNS)
-  claim_secret_hash BLOB NOT NULL,                    -- SHA-256(claimSecret)
+  claim_secret_hash BLOB NOT NULL,                    -- SHA-256(claimSecret); poll + DNS-claim secret
+  confirm_secret_hash BLOB,                           -- SHA-256(confirmSecret); minted at email confirm, binds the email claim to the clicker
   status            TEXT NOT NULL DEFAULT 'pending'
                     CHECK(status IN ('pending','verified','consumed','expired','failed')),
   attempts          INTEGER NOT NULL DEFAULT 0,
@@ -76,5 +77,6 @@ CREATE INDEX IF NOT EXISTS idx_audit_ts ON audit_log(ts);
 CREATE TABLE IF NOT EXISTS rate_bucket (
   key          TEXT PRIMARY KEY,
   window_start INTEGER NOT NULL,
-  count        INTEGER NOT NULL
+  count        INTEGER NOT NULL,
+  prev_count   INTEGER NOT NULL DEFAULT 0
 );

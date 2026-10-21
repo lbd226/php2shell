@@ -18,7 +18,7 @@ const byId = db.prepare('SELECT * FROM verification WHERE id = ?');
 const bySelector = db.prepare('SELECT * FROM verification WHERE selector = ?');
 const incAttemptsStmt = db.prepare('UPDATE verification SET attempts = attempts + 1 WHERE id = ?');
 const verifyEmailStmt = db.prepare(
-  "UPDATE verification SET status = 'verified', verified_at = ?, verifier_hash = NULL WHERE id = ? AND status = 'pending'"
+  "UPDATE verification SET status = 'verified', verified_at = ?, verifier_hash = NULL, confirm_secret_hash = ? WHERE id = ? AND status = 'pending'"
 );
 const verifyDnsStmt = db.prepare(
   "UPDATE verification SET status = 'verified', verified_at = ? WHERE id = ? AND status = 'pending'"
@@ -26,6 +26,7 @@ const verifyDnsStmt = db.prepare(
 const consumeStmt = db.prepare("UPDATE verification SET status = 'consumed' WHERE id = ? AND status = 'verified'");
 const markSent = db.prepare('UPDATE verification SET last_sent_at = ?, send_count = send_count + 1 WHERE id = ?');
 const expireStmt = db.prepare("UPDATE verification SET status = 'expired' WHERE status = 'pending' AND expires_at < ?");
+const expireVerifiedStmt = db.prepare("UPDATE verification SET status = 'expired' WHERE status = 'verified' AND verified_at < ?");
 
 export function getById(id) {
   return byId.get(id);
@@ -83,9 +84,12 @@ export function markVerifiedByEmail(selector, verifier) {
     incAttemptsStmt.run(row.id);
     return { ok: false, reason: 'invalid' };
   }
-  const r = verifyEmailStmt.run(nowMs(), row.id);
+  // Mint a fresh secret delivered ONLY to the clicker (via the confirm redirect), so the
+  // party that proved ownership — not whoever called /start — is the one who can claim.
+  const confirmSecret = randomSecret();
+  const r = verifyEmailStmt.run(nowMs(), sha256(confirmSecret), row.id);
   if (r.changes !== 1) return { ok: false, reason: 'used' };
-  return { ok: true, id: row.id, domain: row.domain };
+  return { ok: true, id: row.id, domain: row.domain, confirmSecret };
 }
 
 export function markVerifiedDns(id) {
@@ -105,8 +109,11 @@ export function claim(id, claimSecret) {
   const txn = db.transaction(() => {
     const v = byId.get(id);
     if (!v) return { error: 'not_found', status: 404 };
+    // Email verifications are claimed with the confirm-time secret (held by the clicker);
+    // DNS verifications with the start-time claimSecret (held by the prover, who is the same party).
+    const expectedHash = v.method === 'email' ? v.confirm_secret_hash : v.claim_secret_hash;
     // Uniform response for a wrong secret: do not reveal existence/state.
-    if (!matchesHash(claimSecret, v.claim_secret_hash)) return { error: 'not_found', status: 404 };
+    if (!matchesHash(claimSecret, expectedHash)) return { error: 'not_found', status: 404 };
     if (v.status === 'consumed') return { error: 'already_claimed', status: 409 };
     if (v.status !== 'verified') return { error: 'not_verified', status: 409 };
     const flip = consumeStmt.run(id);
@@ -118,5 +125,9 @@ export function claim(id, claimSecret) {
 }
 
 export function expireStale() {
-  return expireStmt.run(nowMs()).changes;
+  const now = nowMs();
+  const pending = expireStmt.run(now).changes;
+  // A verified-but-unclaimed row must not linger indefinitely; expire it after the grant TTL.
+  const verified = expireVerifiedStmt.run(now - config.ttl.grantMs).changes;
+  return pending + verified;
 }

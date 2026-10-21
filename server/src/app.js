@@ -2,6 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import { ZodError } from 'zod';
 import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import { config } from './config.js';
 import { logger } from './lib/logger.js';
 import verifyRoutes from './routes/verify.js';
@@ -10,7 +11,8 @@ import metaRoutes from './routes/meta.js';
 
 export function createApp() {
   const app = express();
-  app.set('trust proxy', true);
+  // Resolve req.ip from the real peer, not a client-forged X-Forwarded-For.
+  app.set('trust proxy', config.trustProxy);
   app.disable('x-powered-by');
 
   // JSON-only API; CSP matters for the static hub, handled there. Keep other hardening.
@@ -36,9 +38,13 @@ export function createApp() {
   app.use('/api', metaRoutes);
 
   if (config.SERVE_STATIC) {
-    // Serve the static hub (repo root, two levels up from server/src).
-    const root = fileURLToPath(new URL('../../', import.meta.url));
-    app.use(express.static(root, { index: 'index.html', extensions: ['html'] }));
+    // Serve ONLY the two public hub files by explicit route — never the repo tree,
+    // the server source, or the SQLite database.
+    const hubDir = fileURLToPath(new URL('../../', import.meta.url));
+    const sendHub = (file) => (_req, res) => res.sendFile(path.join(hubDir, file));
+    app.get('/', sendHub('index.html'));
+    app.get('/index.html', sendHub('index.html'));
+    app.get('/scan.html', sendHub('scan.html'));
   }
 
   app.use((_req, res) => res.status(404).json({ error: 'not_found' }));

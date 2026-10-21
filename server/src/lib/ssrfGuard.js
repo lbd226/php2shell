@@ -30,6 +30,12 @@ export function isPublicIp(ip) {
     if (addr.isIPv4MappedAddress()) {
       return isPublicIp(addr.toIPv4Address().toString());
     }
+    // Reject the deprecated IPv4-compatible ::/96 block (::, ::1, ::a.b.c.d), which ipaddr.js
+    // otherwise labels 'unicast'. Keeps the "global-unicast only" contract regardless of kernel.
+    const bytes = addr.toByteArray();
+    let highZero = true;
+    for (let i = 0; i < 12; i++) { if (bytes[i] !== 0) { highZero = false; break; } }
+    if (highZero) return false;
     // ipaddr.js returns 'unicast' only for global unicast; 6to4/teredo/rfc6052/rfc6145/
     // uniqueLocal/linkLocal/loopback/reserved/multicast all return their own labels.
     return addr.range() === 'unicast';

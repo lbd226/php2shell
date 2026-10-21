@@ -18,6 +18,10 @@ const noTrailingSlash = (s) => s.replace(/\/+$/, '');
 const schema = z.object({
   NODE_ENV: z.string().default('production'),
   PORT: int(8080, 1, 65535),
+  // Express 'trust proxy' value. Behind exactly one reverse proxy use '1'; for a specific
+  // front proxy use its IP/CIDR; 'false' when directly exposed. NEVER 'true' (lets clients
+  // forge X-Forwarded-For and bypass per-IP rate limits).
+  TRUST_PROXY: z.string().default('1'),
 
   PUBLIC_BASE_URL: z.string().url().transform(noTrailingSlash),
   HUB_URL: z.string().url().transform(noTrailingSlash),
@@ -64,6 +68,13 @@ export const config = {
   ...cfg,
   emailEnabled: cfg.RESEND_API_KEY.length > 0 || cfg.SMTP_HOST.length > 0,
   emailProvider: cfg.RESEND_API_KEY.length > 0 ? 'resend' : (cfg.SMTP_HOST.length > 0 ? 'smtp' : 'none'),
+  trustProxy: (() => {
+    const v = cfg.TRUST_PROXY.trim();
+    if (v === 'true') return true;   // discouraged, but honored if explicitly set
+    if (v === 'false') return false;
+    if (/^\d+$/.test(v)) return Number(v);
+    return v; // IP / CIDR / comma list
+  })(),
   corsOrigins: [cfg.HUB_URL, ...cfg.CORS_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean)],
   resolverIps: cfg.RESOLVER_IPS.split(',').map((s) => s.trim()).filter(Boolean),
   ttl: {

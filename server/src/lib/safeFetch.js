@@ -35,7 +35,9 @@ export function fetchHead({ domain, ip, scheme }) {
         servername: scheme === 'https' ? domain : undefined, // correct SNI; TLS verification stays ON
         headers: { Host: domain, 'User-Agent': UA, Accept: '*/*', Connection: 'close' },
         // Pin to the validated IP; the kernel never performs a second, attacker-controllable lookup.
-        lookup: (_host, _opts, cb) => cb(null, ip, family),
+        // Node >=20 (autoSelectFamily) calls lookup with {all:true} and expects an array form.
+        lookup: (_host, opts, cb) =>
+          (opts && opts.all ? cb(null, [{ address: ip, family }]) : cb(null, ip, family)),
         maxHeaderSize: MAX_HEADER_BYTES,
         setHost: false, // we set Host ourselves
       },

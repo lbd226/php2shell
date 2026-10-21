@@ -294,7 +294,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
     api('/api/verify/dns/check',{method:'POST',body:{verificationId:state.verificationId}}).then(function(r){
       b.disabled=false;b.textContent='אימות כעת';
       if(r.status===429){showErr('errDns','נסו שוב בעוד מספר שניות.');return}
-      if(r.ok&&r.body.status==='verified'){proceedToScan();return}
+      if(r.ok&&r.body.status==='verified'){proceedToScan(state.claimSecret);return}
       showErr('errDns','הרשומה עדיין לא נמצאה. ודאו שהוספתם אותה, והמתינו להפצת ה‑DNS.');
     });
   });
@@ -324,18 +324,22 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
   var pollTimer=null,pollDelay=4000;
   function pollStatus(){
     if(!state.verificationId||!state.claimSecret)return;
-    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/status?claimSecret='+encodeURIComponent(state.claimSecret)).then(function(r){
-      if(r.ok&&r.body.status==='verified'){proceedToScan();return}
+    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/status',{method:'POST',body:{claimSecret:state.claimSecret}}).then(function(r){
+      if(r.ok&&r.body.status==='verified'){showVerifiedWaiting();return}
       pollDelay=Math.min(pollDelay*1.3,30000);
       pollTimer=setTimeout(pollStatus,pollDelay);
     }).catch(function(){pollTimer=setTimeout(pollStatus,pollDelay)});
   }
+  function showVerifiedWaiting(){
+    if(pollTimer)clearTimeout(pollTimer);
+    $('emailSent').innerHTML='<div class="callout"><span aria-hidden="true">✓</span><span>האימות הושלם. הבדיקה ממשיכה בלשונית שנפתחה מקישור המייל — אם פתחתם אותו במכשיר אחר, הבדיקה רצה שם.</span></div>';
+  }
 
-  /* claim -> scan */
-  function proceedToScan(){
+  /* claim -> scan. secret = DNS claimSecret, or the confirmSecret delivered to the email clicker. */
+  function proceedToScan(secret){
     if(pollTimer)clearTimeout(pollTimer);
     step(3);$('scanBusy').hidden=false;$('resultBox').hidden=true;
-    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/claim',{method:'POST',body:{claimSecret:state.claimSecret}}).then(function(r){
+    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/claim',{method:'POST',body:{claimSecret:secret}}).then(function(r){
       if(!r.ok){renderError('לא ניתן היה להנפיק הרשאת סריקה: '+((r.body&&r.body.error)||r.status));return}
       var grant=r.body.grant;
       return api('/api/scan',{method:'POST',headers:{authorization:'Bearer '+grant}}).then(function(s){
@@ -389,12 +393,14 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
   function resumeFromHash(){
     var h=location.hash||'';
     if(h.indexOf('verified=1')===-1)return false;
-    var m=h.match(/id=([A-Za-z0-9_-]+)/);
-    var saved=SS.get('p2s-verify');
-    if(m&&saved&&saved.claimSecret&&saved.verificationId===decodeURIComponent(m[1])){
-      state=saved;step(2);$('domainEcho').textContent=state.domain||'';proceedToScan();return true;
-    }
-    return false;
+    var mid=h.match(/id=([A-Za-z0-9_%-]+)/);
+    var mcs=h.match(/cs=([A-Za-z0-9_%-]+)/);
+    if(!mid||!mcs)return false;
+    var saved=SS.get('p2s-verify')||{};
+    state={verificationId:decodeURIComponent(mid[1]),domain:saved.domain||'',claimSecret:saved.claimSecret};
+    step(2);$('domainEcho').textContent=state.domain||'';
+    proceedToScan(decodeURIComponent(mcs[1]));
+    return true;
   }
 
   if(!resumeFromHash())step(1);

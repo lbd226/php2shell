@@ -44,7 +44,7 @@ r.post('/email/start', async (req, res, next) => {
     const ipHash = ipHashOf(req);
     enforce(`ip:${ipHash}:verifystart`, 10, 10 * MIN);
     enforce(`domain:${domain}:email`, 5, 60 * MIN);
-    enforce(`rcpt:${recipient}:email`, 3, 60 * MIN);
+    enforce(`rcpt:${recipient.toLowerCase()}:email`, 3, 60 * MIN);
 
     const out = await emailChallenge.startAndSend({ domain, emailAddress: recipient, ipHash });
     audit('email_sent', { verificationId: out.verificationId, domain, ipHash, outcome: 'sent' });
@@ -57,8 +57,9 @@ r.get('/email/confirm', (req, res) => {
   const out = emailChallenge.confirm(token);
   if (out.ok) {
     audit('confirm', { verificationId: out.id, domain: out.domain, outcome: 'verified' });
-    // Redirect to the hub, with the one-time token stripped from the URL.
-    return res.redirect(302, `${config.HUB_URL}/scan.html#verified=1&id=${encodeURIComponent(out.id)}`);
+    // Redirect to the hub. The one-time token is dropped; the claim secret travels only in the
+    // URL fragment (never sent to the server, logs, or Referer) so only the clicker can claim.
+    return res.redirect(302, `${config.HUB_URL}/scan.html#verified=1&id=${encodeURIComponent(out.id)}&cs=${encodeURIComponent(out.confirmSecret)}`);
   }
   const statusMap = { expired: 410, used: 410, locked: 429, invalid: 400 };
   res.status(statusMap[out.reason] || 400).type('html; charset=utf-8').send(confirmErrorPage(out.reason));
@@ -90,9 +91,10 @@ r.post('/dns/check', async (req, res, next) => {
 });
 
 // ---- Status + claim ----
-r.get('/:id/status', (req, res, next) => {
+r.post('/:id/status', (req, res, next) => {
   try {
-    const claimSecret = z.string().min(1).max(128).parse(req.query.claimSecret);
+    // Secret in the POST body, never the query string (keeps it out of access logs / Referer).
+    const { claimSecret } = z.object({ claimSecret: z.string().min(1).max(128) }).parse(req.body);
     const s = verifications.statusFor(req.params.id, claimSecret);
     if (!s) return res.status(404).json({ error: 'not_found' });
     res.json(s);
