@@ -5,6 +5,7 @@ import { config } from './core.js';
 import verifyRoutes from './routes/verify.js';
 import scanRoutes from './routes/scan.js';
 import metaRoutes from './routes/meta.js';
+import previewRoutes from './routes/preview.js';
 
 export function createApp() {
   const app = express();
@@ -32,6 +33,7 @@ export function createApp() {
   app.use('/api/verify', verifyRoutes);
   app.use('/api/scan', scanRoutes);
   app.use('/api', metaRoutes);
+  app.use('/api', previewRoutes);
 
   app.use((_req, res) => res.status(404).json({ error: 'not_found' }));
 
