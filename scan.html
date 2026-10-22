@@ -20,48 +20,55 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#eef1f5; --surface:#ffffff; --surface-2:#f7f9fb; --surface-3:#e9edf2;
-  --fg:#0e141c; --muted:#515c6a; --faint:#5f6875; --border:#d6dce4;
-  --accent:#0c6b86; --accent-fg:#ffffff; --accent-weak:#e0eef2; --accent-line:#8cc3d2;
-  --crit:#bd1b28; --crit-weak:#fbe4e6; --crit-line:#edaab0;
-  --high:#b4530a; --high-weak:#fbe8d6; --warn:#8f5602; --warn-weak:#faeecf;
-  --ok:#0f7536; --ok-weak:#e0f2e7;
-  --shadow:0 1px 2px rgba(14,20,28,.05),0 10px 30px rgba(14,20,28,.08);
-  --radius:14px; --radius-lg:18px; --maxw:760px;
-  --sans:"Heebo","Inter",-apple-system,"Segoe UI",Arial,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#f5f4f1; --surface:#ffffff; --surface-2:#faf9f6; --surface-3:#ecebe6;
+  --fg:#121722; --muted:#4f5a68; --faint:#6a7280; --border:#e0ded7;
+  --accent:#1b4fd4; --accent-fg:#ffffff; --accent-weak:#e8edfb; --accent-line:#b9caf4;
+  --accent2:#9a6f14;
+  --crit:#c21526; --crit-weak:#fbe3e5; --crit-line:#eeb1b7;
+  --high:#b4530a; --high-weak:#f6ecd3; --warn:#8a5a07; --warn-weak:#f6ecd3; --warn-line:#e4cf98;
+  --ok:#11773a; --ok-weak:#e2f1e8; --ok-line:#a9d7bb;
+  --shadow:0 1px 2px rgba(18,23,34,.05),0 12px 34px rgba(18,23,34,.09);
+  --radius:12px; --radius-lg:16px; --maxw:760px;
+  --display:"Frank Ruhl Libre",Georgia,"Times New Roman",serif;
+  --sans:"Assistant",-apple-system,BlinkMacSystemFont,"Segoe UI","Arial Hebrew","Noto Sans Hebrew",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-html[lang="en"]{--sans:"Inter","Heebo",-apple-system,"Segoe UI",Arial,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#070a0e; --surface:#111822; --surface-2:#0d131b; --surface-3:#1d2733;
-  --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
-  --accent:#3bbdd9; --accent-fg:#04141a; --accent-weak:#0f2b34; --accent-line:#1f4f5d;
-  --crit:#ff7a82; --crit-weak:#331418; --crit-line:#5c252a;
-  --high:#f3993f; --high-weak:#33220f; --warn:#e4ab4c; --warn-weak:#2d2210;
-  --ok:#53c680; --ok-weak:#0e2a1a;
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.55);
+  --bg:#0a0d14; --surface:#141a24; --surface-2:#0f141d; --surface-3:#1d2635;
+  --fg:#eef1f6; --muted:#97a2b2; --faint:#7f8a99; --border:#232c3a;
+  --accent:#6ea0ff; --accent-fg:#081019; --accent-weak:#15233b; --accent-line:#33507e;
+  --accent2:#c9a24a;
+  --crit:#ff6f7a; --crit-weak:#311519; --crit-line:#5c2a30;
+  --high:#f0975a; --high-weak:#2b2410; --warn:#e0b057; --warn-weak:#2b2410; --warn-line:#4d4120;
+  --ok:#5fcf8a; --ok-weak:#0f2a1b; --ok-line:#27583a;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 14px 38px rgba(0,0,0,.55);
   color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#070a0e; --surface:#111822; --surface-2:#0d131b; --surface-3:#1d2733;
-  --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
-  --accent:#3bbdd9; --accent-fg:#04141a; --accent-weak:#0f2b34; --accent-line:#1f4f5d;
-  --crit:#ff7a82; --crit-weak:#331418; --crit-line:#5c252a;
-  --high:#f3993f; --high-weak:#33220f; --warn:#e4ab4c; --warn-weak:#2d2210;
-  --ok:#53c680; --ok-weak:#0e2a1a;
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.55);
+  --bg:#0a0d14; --surface:#141a24; --surface-2:#0f141d; --surface-3:#1d2635;
+  --fg:#eef1f6; --muted:#97a2b2; --faint:#7f8a99; --border:#232c3a;
+  --accent:#6ea0ff; --accent-fg:#081019; --accent-weak:#15233b; --accent-line:#33507e;
+  --accent2:#c9a24a;
+  --crit:#ff6f7a; --crit-weak:#311519; --crit-line:#5c2a30;
+  --high:#f0975a; --high-weak:#2b2410; --warn:#e0b057; --warn-weak:#2b2410; --warn-line:#4d4120;
+  --ok:#5fcf8a; --ok-weak:#0f2a1b; --ok-line:#27583a;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 14px 38px rgba(0,0,0,.55);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;padding-bottom:40px}
-h1,h2,h3{margin:0;text-wrap:balance;font-weight:800}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;padding-bottom:40px}
+h1,h2{margin:0;text-wrap:balance;font-family:var(--display);font-weight:900}
+h3{margin:0;text-wrap:balance;font-weight:700}
 p{margin:0}
 a{color:var(--accent)}
 code,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+/* Hebrew never inherits mono or Latin tracking */
+html[lang="he"] .eyebrow{font-family:var(--sans);letter-spacing:normal}
+html[lang="he"] h1,html[lang="he"] h2{letter-spacing:normal}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
 [hidden]{display:none!important}
 .skip{position:absolute;inset-inline-start:-9999px;top:8px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:8px;z-index:60;font-weight:700}
@@ -135,6 +142,7 @@ input::placeholder{color:var(--faint)}
 .copy{flex:none;width:40px;height:42px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);cursor:pointer;font-size:15px}
 .copy:hover{background:var(--surface-3)}
 .radio{display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;font-family:var(--mono);direction:ltr;font-size:14px}
+.radio.txt{font-family:var(--sans);direction:inherit}
 .radio:has(input:checked){border-color:var(--accent-line);background:var(--accent-weak)}
 .radio input{accent-color:var(--accent)}
 .muted{color:var(--muted);font-size:13.5px}
@@ -182,7 +190,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
 </div></div>
 
 <main id="main"><div class="wrap">
-  <ol class="stepper" aria-label="Progress">
+  <ol class="stepper" data-tal="progressAria" aria-label="Progress">
     <li id="st1" aria-current="step"><span class="dot"></span><span data-t="step1">דומיין</span></li>
     <li id="st2"><span class="dot"></span><span data-t="step2">אימות בעלות</span></li>
     <li id="st3"><span class="dot"></span><span data-t="step3">תוצאה</span></li>
@@ -227,7 +235,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
         <label class="radio"><input type="radio" name="mbox" value="admin" checked> admin@<span class="emDom"></span></label>
         <label class="radio"><input type="radio" name="mbox" value="security"> security@<span class="emDom"></span></label>
         <label class="radio"><input type="radio" name="mbox" value="webmaster"> webmaster@<span class="emDom"></span></label>
-        <label class="radio"><input type="radio" name="mbox" value="__custom"> <span data-t="emailOther">כתובת אחרת בדומיין הזה…</span></label>
+        <label class="radio txt"><input type="radio" name="mbox" value="__custom"> <span data-t="emailOther">כתובת אחרת בדומיין הזה…</span></label>
       </div>
       <input type="email" id="customEmail" placeholder="you@example.com" hidden style="margin-top:8px">
       <div class="btnrow"><button class="btn" id="emailSend" data-t="emailSend">שליחת מייל אימות</button></div>
@@ -263,7 +271,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
 window.I18N = {
   he: {
     title:"PHP2Shell — אימות וסריקה", skip:"דלג לתוכן",
-    langAria:"החלפת שפה", themeAria:"החלפת ערכת צבעים", copyAria:"העתקה",
+    langAria:"החלפת שפה", themeAria:"החלפת ערכת צבעים", copyAria:"העתקה", progressAria:"התקדמות",
     eyebrow:"כלי לבעלי דומיין",
     h1:"אימות בעלות וסריקת גרסה פסיבית",
     lead:"כדי לבדוק דומיין צריך קודם להוכיח שהוא שלכם. אנחנו לא מנצלים חולשות ולא שולחים מטענים — רק קוראים את הכותרות שהשרת עצמו חושף ומסיקים מהן את גרסת ה‑PHP.",
@@ -305,7 +313,7 @@ window.I18N = {
   },
   en: {
     title:"PHP2Shell — Verify & Scan", skip:"Skip to content",
-    langAria:"Switch language", themeAria:"Toggle theme", copyAria:"Copy",
+    langAria:"Switch language", themeAria:"Toggle theme", copyAria:"Copy", progressAria:"Progress",
     eyebrow:"Domain-owner tool",
     h1:"Verify ownership & passive version scan",
     lead:"To scan a domain you first prove it's yours. We don't exploit anything and send no payloads — we only read the headers the server itself advertises and infer its PHP version.",

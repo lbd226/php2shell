@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PHP2Shell</title>
-<meta name="description" content="מרכז מידע וכלי בדיקה לחולשות PHP2Shell (CVE-2026-109618 / CVE-2026-109619) — הרצת קוד מרחוק בליבת PHP. בדקו את החשיפה שלכם ותקנו.">
-<meta name="theme-color" content="#0c6b86" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0a0e13" media="(prefers-color-scheme: dark)">
+<meta name="description" content="התראת אבטחה וכלי בדיקה לחולשות PHP2Shell (CVE-2026-109618 / CVE-2026-109619) — הרצת קוד מרחוק בליבת PHP. בדקו את החשיפה שלכם ותקנו.">
+<meta name="theme-color" content="#1b4fd4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -20,181 +20,245 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Inter:wght@400;500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#eef1f5; --surface:#ffffff; --surface-2:#f7f9fb; --surface-3:#e9edf2;
-  --fg:#0e141c; --muted:#515c6a; --faint:#5f6875; --border:#d6dce4;
-  --accent:#0c6b86; --accent-fg:#ffffff; --accent-weak:#e0eef2; --accent-line:#8cc3d2;
-  --crit:#bd1b28; --crit-weak:#fbe4e6; --crit-line:#edaab0;
-  --high:#b4530a; --high-weak:#fbe8d6; --warn:#8f5602; --warn-weak:#faeecf;
-  --ok:#0f7536; --ok-weak:#e0f2e7;
-  --shadow-sm:0 1px 2px rgba(14,20,28,.06);
-  --shadow:0 1px 2px rgba(14,20,28,.05),0 10px 30px rgba(14,20,28,.08);
-  --radius:14px; --radius-lg:18px; --maxw:1120px;
-  --s3:16px; --s4:24px; --s5:36px;
-  --sans:"Heebo","Inter",-apple-system,"Segoe UI",Arial,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --bg:#f5f4f1; --surface:#ffffff; --surface-2:#faf9f6; --surface-3:#ecebe6;
+  --fg:#121722; --muted:#4f5a68; --faint:#6a7280; --border:#e0ded7;
+  --accent:#1b4fd4; --accent-fg:#ffffff; --accent-weak:#e8edfb; --accent-line:#b9caf4;
+  --accent2:#9a6f14; --accent2-weak:#f4ecd8;
+  --crit:#c21526; --crit-weak:#fbe3e5; --crit-line:#eeb1b7;
+  --high:#b4530a; --warn:#8a5a07; --warn-weak:#f6ecd3; --warn-line:#e4cf98;
+  --ok:#11773a; --ok-weak:#e2f1e8; --ok-line:#a9d7bb;
+  --shadow-sm:0 1px 2px rgba(18,23,34,.06);
+  --shadow:0 1px 2px rgba(18,23,34,.05),0 12px 34px rgba(18,23,34,.09);
+  --radius:12px; --radius-lg:16px; --maxw:1120px;
+  --s3:16px; --s4:24px; --s5:40px;
+  --display:"Frank Ruhl Libre",Georgia,"Times New Roman",serif;
+  --sans:"Assistant",-apple-system,BlinkMacSystemFont,"Segoe UI","Arial Hebrew","Noto Sans Hebrew",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-html[lang="en"]{--sans:"Inter","Heebo",-apple-system,"Segoe UI",Arial,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#070a0e; --surface:#111822; --surface-2:#0d131b; --surface-3:#1d2733;
-  --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
-  --accent:#3bbdd9; --accent-fg:#04141a; --accent-weak:#0f2b34; --accent-line:#1f4f5d;
-  --crit:#ff7a82; --crit-weak:#331418; --crit-line:#5c252a;
-  --high:#f3993f; --high-weak:#33220f; --warn:#e4ab4c; --warn-weak:#2d2210;
-  --ok:#53c680; --ok-weak:#0e2a1a;
+  --bg:#0a0d14; --surface:#141a24; --surface-2:#0f141d; --surface-3:#1d2635;
+  --fg:#eef1f6; --muted:#97a2b2; --faint:#7f8a99; --border:#232c3a;
+  --accent:#6ea0ff; --accent-fg:#081019; --accent-weak:#15233b; --accent-line:#33507e;
+  --accent2:#c9a24a; --accent2-weak:#2a2412;
+  --crit:#ff6f7a; --crit-weak:#311519; --crit-line:#5c2a30;
+  --high:#f0975a; --warn:#e0b057; --warn-weak:#2b2410; --warn-line:#4d4120;
+  --ok:#5fcf8a; --ok-weak:#0f2a1b; --ok-line:#27583a;
   --shadow-sm:0 1px 2px rgba(0,0,0,.5);
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.55);
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 14px 38px rgba(0,0,0,.55);
   color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#070a0e; --surface:#111822; --surface-2:#0d131b; --surface-3:#1d2733;
-  --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
-  --accent:#3bbdd9; --accent-fg:#04141a; --accent-weak:#0f2b34; --accent-line:#1f4f5d;
-  --crit:#ff7a82; --crit-weak:#331418; --crit-line:#5c252a;
-  --high:#f3993f; --high-weak:#33220f; --warn:#e4ab4c; --warn-weak:#2d2210;
-  --ok:#53c680; --ok-weak:#0e2a1a;
+  --bg:#0a0d14; --surface:#141a24; --surface-2:#0f141d; --surface-3:#1d2635;
+  --fg:#eef1f6; --muted:#97a2b2; --faint:#7f8a99; --border:#232c3a;
+  --accent:#6ea0ff; --accent-fg:#081019; --accent-weak:#15233b; --accent-line:#33507e;
+  --accent2:#c9a24a; --accent2-weak:#2a2412;
+  --crit:#ff6f7a; --crit-weak:#311519; --crit-line:#5c2a30;
+  --high:#f0975a; --warn:#e0b057; --warn-weak:#2b2410; --warn-line:#4d4120;
+  --ok:#5fcf8a; --ok-weak:#0f2a1b; --ok-line:#27583a;
   --shadow-sm:0 1px 2px rgba(0,0,0,.5);
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.55);
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 14px 38px rgba(0,0,0,.55);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.62;font-size:16px;-webkit-font-smoothing:antialiased}
-h1,h2,h3,h4{line-height:1.18;text-wrap:balance;margin:0;font-weight:800}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.65;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2{font-family:var(--display);line-height:1.12;margin:0;text-wrap:balance;font-weight:900;letter-spacing:-.01em}
+h2{font-weight:700;letter-spacing:-.005em}
+h3,h4{font-family:var(--sans);font-weight:700;margin:0;line-height:1.3}
 p{margin:0}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-code,kbd,samp,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.mono,code,kbd,samp{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+/* Hebrew never inherits mono or Latin tracking */
+html[lang="he"] .pill,html[lang="he"] .tag,html[lang="he"] .eyebrow,html[lang="he"] .sec-eyebrow,html[lang="he"] .chan,html[lang="he"] .fc-head{font-family:var(--sans)}
+html[lang="he"] .eyebrow,html[lang="he"] .sec-eyebrow,html[lang="he"] .chan,html[lang="he"] .kicker,html[lang="he"] h1,html[lang="he"] h2{letter-spacing:normal}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:5px}
 [hidden]{display:none!important}
-.wrap{max-width:var(--maxw);margin-inline:auto;padding-left:max(18px,env(safe-area-inset-left,0));padding-right:max(18px,env(safe-area-inset-right,0))}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0));padding-right:max(16px,env(safe-area-inset-right,0))}
 .skip{position:absolute;inset-inline-start:-9999px;top:8px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:8px;z-index:60;font-weight:700}
 .skip:focus{inset-inline-start:16px}
 
-.band{border-top:1px solid var(--border)}
-.band>.wrap{padding-block:clamp(34px,5.5vw,60px)}
-.band.tint{background:var(--surface)}
-.band.hero{border-top:none}
+/* ===== The Measured Rule: every band's top edge is a ruled hairline with a short accent starter tick ===== */
+.band{position:relative;border-top:1px solid var(--border)}
+.band::before{content:"";position:absolute;top:-1px;inset-inline-start:0;width:44px;height:3px;background:var(--accent)}
+.band::after{content:"";position:absolute;top:-1px;inset-inline:0;height:9px;pointer-events:none;opacity:.5;
+  background-image:repeating-linear-gradient(90deg,var(--border) 0 1px,transparent 1px 27px);
+  -webkit-mask-image:linear-gradient(90deg,#000,transparent 55%);mask-image:linear-gradient(90deg,#000,transparent 55%)}
+html[dir="rtl"] .band::after{-webkit-mask-image:linear-gradient(270deg,#000,transparent 55%);mask-image:linear-gradient(270deg,#000,transparent 55%)}
+.band>.wrap{padding-block:clamp(36px,5.5vw,62px)}
+.band.tint{background:var(--surface-2)}
 
-.statusbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+/* ===== masthead ===== */
+.statusbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.statusbar::before{content:"";position:absolute;inset-inline:0;top:0;height:2px;background:var(--accent2);opacity:.7}
 .statusbar .wrap{display:flex;align-items:center;gap:12px;padding-block:11px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px;font-size:17px;text-decoration:none;color:var(--fg)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.2px;text-decoration:none;color:var(--fg)}
 .brand .n2{color:var(--accent)}
+.brand:hover{text-decoration:none}
 .sp{flex:1 1 auto}
-.livedot{width:9px;height:9px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 0 var(--crit);animation:pulse 2.4s infinite}
+.livedot{width:9px;height:9px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 0 var(--crit);animation:pulse 2.4s infinite;flex:none}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--crit) 55%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.sev-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12.5px;font-weight:600;background:var(--crit-weak);color:var(--crit);border:1px solid var(--crit-line);padding:5px 11px;border-radius:999px;direction:ltr}
-.tbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);height:40px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;padding:0 12px;font-family:var(--sans)}
+.sev-chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;background:var(--crit-weak);color:var(--crit);border:1px solid var(--crit-line);padding:5px 11px;border-radius:999px}
+.sev-chip .num{font-family:var(--mono);direction:ltr}
+.navcta{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14px;padding:10px 16px;border-radius:9px;text-decoration:none;white-space:nowrap}
+.navcta:hover{filter:brightness(1.07);text-decoration:none}
+.navcta svg{width:16px;height:16px;flex:none}
+.tbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);height:40px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;padding:0 12px;font-family:var(--sans)}
 .tbtn.sq{width:40px;justify-content:center;padding:0;font-size:17px}
 .tbtn:hover{background:var(--surface-3)}
 .tbtn svg{width:16px;height:16px}
-.navcta{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14px;padding:10px 17px;border-radius:10px;text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px color-mix(in srgb,var(--accent) 40%,transparent)}
-.navcta:hover{filter:brightness(1.08);text-decoration:none}
-.navcta svg{width:16px;height:16px;flex:none}
-@media(max-width:560px){.navcta{order:5;flex:1 1 100%;justify-content:center;padding:11px 17px}.sev-chip{display:none}}
+@media(max-width:620px){.navcta{order:5;flex:1 1 100%;justify-content:center;padding:11px}.sev-chip{display:none}}
 
-.hero{position:relative;overflow:hidden;background:
-  radial-gradient(900px 440px at 88% -12%,var(--accent-weak),transparent 62%),
-  radial-gradient(700px 320px at 8% 120%,color-mix(in srgb,var(--crit) 10%,transparent),transparent 60%),
-  var(--surface-2)}
-.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
-  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
-  background-size:46px 46px;-webkit-mask-image:radial-gradient(640px 400px at 85% 0,#000,transparent 72%);mask-image:radial-gradient(640px 400px at 85% 0,#000,transparent 72%)}
-.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr .85fr;gap:clamp(24px,4vw,46px);align-items:center;padding-block:clamp(40px,6vw,64px)}
-.eyebrow{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:9px}
-.hero h1{font-size:clamp(30px,5.6vw,52px);font-weight:900;margin:14px 0 10px;letter-spacing:-.5px}
-.hero .lead{font-size:clamp(16.5px,2.2vw,19.5px);color:var(--muted);max-width:56ch}
-.cve-row{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 0}
-.cve-tag{font-family:var(--mono);font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--border);padding:8px 13px;border-radius:10px;direction:ltr}
+/* ===== hero ===== */
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(26px,4vw,52px);align-items:center;padding-block:clamp(40px,6vw,66px)}
+.kicker{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12.5px;font-weight:600;color:var(--accent2);letter-spacing:.14em;text-transform:uppercase}
+.kicker .date{font-family:var(--mono);direction:ltr;color:var(--muted);text-transform:none;letter-spacing:0}
+html[lang="he"] .kicker{text-transform:none;letter-spacing:.02em}
+.hero h1{font-size:clamp(32px,6vw,58px);margin:16px 0 14px}
+.hero .lead{font-size:clamp(16.5px,2.1vw,19px);color:var(--muted);max-width:54ch}
+.cve-row{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.cve-tag{font-family:var(--mono);font-size:13px;font-weight:500;background:var(--surface);border:1px solid var(--border);padding:7px 12px;border-radius:8px;direction:ltr;color:var(--fg)}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;margin-top:24px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:15.5px;padding:13px 22px;border-radius:10px;text-decoration:none}
+.hero-cta:hover{filter:brightness(1.07);text-decoration:none}
 
-.gauge{direction:ltr;margin-top:24px;max-width:460px}
-.gauge-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
-.gauge-top .score{font-family:var(--mono);font-weight:600;font-size:15px}
-.gauge-top .score b{font-size:22px;color:var(--crit)}
-.gauge-top .band-label{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--crit);letter-spacing:.5px}
-.gauge-track{position:relative;height:12px;border-radius:999px;overflow:hidden;display:flex;border:1px solid var(--border)}
-.gz{height:100%}.gz.low{width:40%;background:var(--ok)}.gz.med{width:30%;background:var(--warn)}.gz.high{width:20%;background:var(--high)}.gz.crit{width:10%;background:var(--crit)}
-.gz:not(.crit){opacity:.42}
-.gauge-marker{position:absolute;top:-4px;bottom:-4px;left:92%;width:3px;background:var(--fg);border-radius:2px;box-shadow:0 0 0 2px var(--surface-2)}
-.gauge-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:5px}
-.hero-cta{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:15px;padding:12px 20px;border-radius:11px;text-decoration:none}
-.hero-cta:hover{filter:brightness(1.08);text-decoration:none}
+/* severity ledger + patch ladder card */
+.ledger{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+.ledger-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:20px 22px 14px}
+.score{font-family:var(--display);font-weight:900;line-height:.9;color:var(--crit);display:flex;align-items:baseline;gap:6px}
+.score b{font-size:58px}
+.score .of{font-family:var(--sans);font-size:17px;font-weight:600;color:var(--muted)}
+.vector{text-align:end}
+.vector .band-label{font-size:12px;font-weight:700;color:var(--crit);letter-spacing:.08em}
+.vector .v{display:block;font-family:var(--mono);direction:ltr;font-size:11.5px;color:var(--faint);margin-top:3px}
+.ruler{position:relative;height:30px;margin:0 22px;direction:ltr}
+.ruler::before{content:"";position:absolute;inset-inline:0;bottom:11px;height:1px;background:var(--border)}
+.ruler .ticks{position:absolute;inset-inline:0;bottom:11px;height:11px;background-image:repeating-linear-gradient(90deg,var(--border) 0 1px,transparent 1px 10%);opacity:.8}
+.ruler .major{position:absolute;bottom:8px;width:1.5px;height:14px;background:var(--faint)}
+.ruler .notch{position:absolute;left:92%;bottom:6px;width:3px;height:19px;background:var(--crit);border-radius:2px;box-shadow:0 0 0 2px var(--surface)}
+.ruler-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--faint);margin:2px 22px 0;direction:ltr}
+.ladder{padding:14px 22px 20px;border-top:1px solid var(--border);margin-top:12px}
+.ladder-cap{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+html[lang="he"] .ladder-cap{letter-spacing:.02em;text-transform:none}
+.lrow{display:grid;grid-template-columns:48px 1fr 56px;gap:10px;align-items:center;margin-bottom:10px}
+.lrow:last-child{margin-bottom:0}
+.lb,.lv{font-family:var(--mono);direction:ltr;font-size:12.5px;color:var(--muted)}
+.lv{text-align:end;color:var(--ok);font-weight:500}
+.rail{position:relative;height:9px;border-radius:999px;direction:ltr;background:linear-gradient(90deg,var(--crit-weak) 0 var(--at,68%),var(--ok-weak) var(--at,68%) 100%);border:1px solid var(--border);overflow:visible}
+.rail::before{content:"";position:absolute;left:var(--at,68%);top:50%;transform:translate(-50%,-50%);width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 2px var(--surface)}
+.heremark{position:absolute;top:-6px;width:2px;height:21px;background:var(--hm,var(--fg));border-radius:2px;transition:left .3s ease;display:none}
+.heremark::after{content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--hm,var(--fg))}
+.lrow.active .heremark{display:block}
+.lrow.active .rail{box-shadow:0 0 0 2px var(--accent-line)}
 
-.factcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
-.factcard .fc-head{font-family:var(--mono);font-size:11.5px;letter-spacing:1px;color:var(--faint);padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.factcard dl{margin:0;padding:6px 18px 12px}
+/* instrument fact panel */
+.factcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-top:16px}
+.fc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;letter-spacing:.14em;color:var(--faint);padding:11px 18px;border-bottom:1px solid var(--border);text-transform:uppercase}
+.fc-head .chan{font-family:var(--mono);color:var(--accent2)}
+html[lang="he"] .fc-head{text-transform:none;letter-spacing:.02em}
+.factcard dl{margin:0;padding:4px 18px 10px}
 .factcard .row{display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--border)}
 .factcard .row:last-child{border-bottom:none}
 .factcard dt{color:var(--muted);font-size:13.5px;flex:none}
 .factcard dd{margin:0;font-weight:700;font-size:13.5px;text-align:end}
-.factcard dd.mono{font-family:var(--mono);font-weight:500;direction:ltr;font-size:12.5px}
+.factcard dd.mono{font-family:var(--mono);font-weight:500;direction:ltr;font-size:12px;color:var(--fg)}
 .factcard dd.danger{color:var(--crit)}
 
-.sec-head{margin-bottom:var(--s4)}
-.sec-eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:1.5px;color:var(--accent);display:block;margin-bottom:9px}
+/* section heads */
+.sec-head{margin-bottom:var(--s4);max-width:72ch}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:11px}
+.sec-eyebrow::before{content:"";width:22px;height:2px;background:var(--accent)}
+html[lang="he"] .sec-eyebrow{text-transform:none;letter-spacing:.02em}
 .sec-head h2{font-size:clamp(23px,3.4vw,31px)}
-.sub{color:var(--muted);max-width:68ch;margin-top:8px;font-size:15.5px}
+.sub{color:var(--muted);margin-top:9px;font-size:15.5px}
 
-.callout{display:flex;gap:13px;align-items:flex-start;background:var(--warn-weak);border:1px solid color-mix(in srgb,var(--warn) 34%,transparent);border-radius:var(--radius);padding:16px 18px}
+/* callouts */
+.callout{display:flex;gap:13px;align-items:flex-start;background:var(--warn-weak);border:1px solid var(--warn-line);border-radius:var(--radius);padding:16px 18px}
 .callout.info{background:var(--accent-weak);border-color:var(--accent-line)}
-.callout .ic{flex:none;font-size:19px;line-height:1.5}
+.callout .ic{flex:none;font-size:18px;line-height:1.5}
 .callout p{font-size:14.5px;color:var(--fg)}
 .callout a{font-weight:700}
 
+/* logo wall */
+.logowall{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.logocell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:22px 12px;border-inline-end:1px solid var(--border);border-bottom:1px solid var(--border);position:relative}
+.logocell::after{content:"";position:absolute;bottom:-1px;inset-inline-start:0;width:0;height:2px;background:var(--accent);transition:width .18s}
+.logocell:hover::after,.logocell:focus-within::after{width:100%}
+.logocell svg{height:26px;width:auto;max-width:92px;fill:var(--muted);opacity:.7;transition:fill .18s,opacity .18s,transform .18s}
+.logocell:hover svg{fill:var(--fg);opacity:1;transform:translateY(-2px)}
+.logocell .nm{font-size:11px;color:var(--faint);font-weight:600;text-align:center}
+.logo-note{margin-top:12px;font-size:13px;color:var(--faint)}
+/* disclosed-by row */
+.credit{display:flex;flex-wrap:wrap;align-items:center;gap:10px 0;margin-top:6px}
+.credit a{font-weight:600;font-size:14.5px;color:var(--muted);padding:2px 15px;border-inline-end:1px solid var(--border)}
+.credit a:first-child{padding-inline-start:0}
+.credit a:last-child{border-inline-end:none}
+.credit a:hover{color:var(--fg);text-decoration:none}
+
+/* generic cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:19px 20px;display:flex;flex-direction:column;gap:9px;transition:border-color .18s,transform .18s,box-shadow .18s}
+.card:hover{border-color:var(--accent-line);transform:translateY(-3px);box-shadow:var(--shadow)}
+.card .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card .top .ttl{display:flex;align-items:center;gap:10px;min-width:0}
+.card .top .ttl svg{height:19px;width:auto;max-width:26px;fill:var(--muted);flex:none}
+.card h3{font-size:16.5px}
+.card h3.cve-id{font-family:var(--mono);direction:ltr;font-weight:600;font-size:15px}
+.card p{font-size:13.8px;color:var(--muted)}
+.card.cve{border-top:3px solid var(--crit)}
+.tag{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:7px;white-space:nowrap}
+.tag.affected{background:var(--crit-weak);color:var(--crit)}.tag.patch{background:var(--ok-weak);color:var(--ok)}.tag.action{background:var(--accent-weak);color:var(--accent)}.tag.nofix{background:var(--warn-weak);color:var(--warn)}
+.tag.tech{background:var(--surface-3);color:var(--muted);font-family:var(--mono);direction:ltr;font-weight:500}
+
+/* self-check */
 .checker{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px}
 .checker form{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:4px}
 .field{flex:1 1 230px;min-width:0}
 .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:7px}
-.field input{width:100%;font-family:var(--mono);font-size:16px;direction:ltr;text-align:left;padding:12px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg)}
+.field input{width:100%;font-family:var(--mono);font-size:16px;direction:ltr;text-align:left;padding:12px 13px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg)}
 .field input::placeholder{color:var(--faint)}
-.btn{font-family:var(--sans);font-size:15px;font-weight:700;background:var(--accent);color:var(--accent-fg);border:none;border-radius:10px;padding:13px 22px;cursor:pointer;white-space:nowrap;transition:filter .15s}
-.btn:hover{filter:brightness(1.08)}
+.btn{font-family:var(--sans);font-size:15px;font-weight:700;background:var(--accent);color:var(--accent-fg);border:none;border-radius:9px;padding:13px 22px;cursor:pointer;white-space:nowrap;transition:filter .15s}
+.btn:hover{filter:brightness(1.07)}
 .btn.ghost{background:var(--surface-2);color:var(--fg);border:1px solid var(--border)}
 .result{margin-top:18px;border-radius:12px;padding:16px 18px;border:1px solid var(--border);display:none;gap:14px;align-items:flex-start}
 .result.show{display:flex}
 .result .led{flex:none;width:13px;height:13px;border-radius:50%;margin-top:5px;background:var(--faint);box-shadow:0 0 0 4px color-mix(in srgb,var(--faint) 20%,transparent)}
 .result.r-crit{background:var(--crit-weak);border-color:var(--crit-line)}.result.r-crit .led{background:var(--crit);box-shadow:0 0 0 4px color-mix(in srgb,var(--crit) 24%,transparent)}
-.result.r-ok{background:var(--ok-weak);border-color:color-mix(in srgb,var(--ok) 42%,transparent)}.result.r-ok .led{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 24%,transparent)}
-.result.r-warn{background:var(--warn-weak);border-color:color-mix(in srgb,var(--warn) 42%,transparent)}.result.r-warn .led{background:var(--warn);box-shadow:0 0 0 4px color-mix(in srgb,var(--warn) 24%,transparent)}
-.result .verdict{font-weight:800;font-size:17.5px}
+.result.r-ok{background:var(--ok-weak);border-color:var(--ok-line)}.result.r-ok .led{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 24%,transparent)}
+.result.r-warn{background:var(--warn-weak);border-color:var(--warn-line)}.result.r-warn .led{background:var(--warn);box-shadow:0 0 0 4px color-mix(in srgb,var(--warn) 24%,transparent)}
+.result .verdict{font-weight:800;font-size:17px}
 .result.r-crit .verdict{color:var(--crit)}.result.r-ok .verdict{color:var(--ok)}.result.r-warn .verdict{color:var(--warn)}
 .result .detail{margin-top:7px;font-size:14.5px;color:var(--fg)}
 .result .detail b{font-family:var(--mono);direction:ltr;unicode-bidi:plaintext;font-weight:600}
 .howto{margin-top:16px;font-size:13.5px;color:var(--muted)}
-.cmd{display:block;direction:ltr;text-align:left;font-family:var(--mono);font-size:13.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-top:8px;overflow-x:auto;white-space:pre}
+.cmd{display:block;direction:ltr;text-align:left;font-family:var(--mono);font-size:13.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:8px;overflow-x:auto;white-space:pre;color:var(--fg)}
 .checker .or{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
 .checker .or p{font-size:14px;color:var(--muted)}
-.cta{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:10px;text-decoration:none;white-space:nowrap}
-.cta:hover{filter:brightness(1.08);text-decoration:none}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:9px;text-decoration:none;white-space:nowrap}
+.cta:hover{filter:brightness(1.07);text-decoration:none}
 
+/* version table */
 .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
 table{border-collapse:collapse;width:100%;min-width:470px;background:var(--surface)}
-caption{text-align:start;color:var(--muted);font-size:13px;padding:10px 14px}
+caption{text-align:start;color:var(--muted);font-size:13px;padding:11px 15px}
 th,td{padding:12px 15px;text-align:start;border-bottom:1px solid var(--border);font-size:14.5px}
-th{background:var(--surface-2);font-weight:700;font-size:12.5px;color:var(--muted);letter-spacing:.3px}
+th{background:var(--surface-2);font-weight:700;font-size:12.5px;color:var(--muted);letter-spacing:.02em}
 tr:last-child td{border-bottom:none}
-td .v{font-family:var(--mono);direction:ltr;unicode-bidi:plaintext;font-weight:500}
-.pill{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px}
+td .v{font-family:var(--mono);direction:ltr;unicode-bidi:plaintext;font-weight:500;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+.pill .v{font-weight:600}
 .pill.bad{background:var(--crit-weak);color:var(--crit)}.pill.good{background:var(--ok-weak);color:var(--ok)}.pill.eol{background:var(--warn-weak);color:var(--warn)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:16px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:19px 20px;display:flex;flex-direction:column;gap:9px;transition:border-color .18s,transform .18s,box-shadow .18s}
-.card:hover{border-color:var(--accent-line);transform:translateY(-3px);box-shadow:var(--shadow)}
-.card .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.card h3{font-size:17px}
-.card p{font-size:13.8px;color:var(--muted)}
-.card.cve{border-top:3px solid var(--crit)}
-.tag{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px;white-space:nowrap}
-.tag.affected{background:var(--crit-weak);color:var(--crit)}.tag.patch{background:var(--ok-weak);color:var(--ok)}.tag.action{background:var(--accent-weak);color:var(--accent)}.tag.nofix{background:var(--warn-weak);color:var(--warn)}
-
+/* steps */
 .steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;counter-reset:s}
 .steps li{counter-increment:s;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:flex-start}
-.steps li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--accent-fg);font-family:var(--mono);font-weight:600;display:grid;place-items:center}
+.steps li::before{content:counter(s);flex:none;width:32px;height:32px;border-radius:9px;background:var(--accent-weak);color:var(--accent);font-family:var(--display);font-weight:700;font-size:17px;display:grid;place-items:center}
 .steps li h4{font-size:15.5px;margin-bottom:4px}
 .steps li p{font-size:13.8px;color:var(--muted)}
 
+/* faq */
 details.faq{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
 details.faq summary{cursor:pointer;padding:15px 17px;font-weight:700;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
 details.faq summary::-webkit-details-marker{display:none}
@@ -203,17 +267,19 @@ details.faq[open] summary::after{content:"\2212"}
 details.faq .body{padding:0 17px 16px;color:var(--muted);font-size:14.3px}
 details.faq .body code{background:var(--surface-2);padding:1px 5px;border-radius:5px}
 
+/* refs */
 .refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:11px}
 .ref{display:flex;flex-direction:column;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 15px;transition:border-color .18s,transform .18s}
 .ref:hover{border-color:var(--accent-line);transform:translateY(-2px);text-decoration:none}
-.ref .src{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+.ref .src{font-family:var(--mono);font-size:11.5px;color:var(--faint);direction:ltr}
 .ref .t{font-weight:700;font-size:14px;color:var(--fg)}
 
-/* ad containers: invisible until an ad is injected (AdSense-ready, no placeholder clutter) */
+/* ad containers (AdSense-ready, invisible until filled) */
 .ad{display:flex;justify-content:center;margin:var(--s4) auto 0}
 .ad:empty{display:none;margin:0}
 
-footer{border-top:1px solid var(--border);background:var(--surface)}
+footer{border-top:1px solid var(--border);background:var(--surface);position:relative}
+footer::before{content:"";position:absolute;inset-inline:0;top:-1px;height:2px;width:44px;background:var(--accent2)}
 footer .wrap{padding-block:30px 36px;display:flex;flex-direction:column;gap:16px}
 .foot-top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 .foot-links{display:flex;flex-wrap:wrap;gap:8px 18px}
@@ -222,9 +288,9 @@ footer .wrap{padding-block:30px 36px;display:flex;flex-direction:column;gap:16px
 .disc{font-size:12.5px;color:var(--faint);max-width:94ch}
 
 dialog{border:1px solid var(--border);background:var(--surface);color:var(--fg);border-radius:16px;max-width:620px;width:calc(100% - 32px);padding:0;box-shadow:var(--shadow)}
-dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
+dialog::backdrop{background:rgba(5,8,13,.6);backdrop-filter:blur(2px)}
 .dlg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
-.dlg-head h3{font-size:19px}
+.dlg-head h3{font-size:19px;font-family:var(--display);font-weight:700}
 .dlg-body{padding:18px 20px;max-height:66vh;overflow:auto}
 .dlg-body h4{font-size:15px;margin:16px 0 6px}.dlg-body h4:first-child{margin-top:0}
 .dlg-body p,.dlg-body li{font-size:14px;color:var(--muted);line-height:1.65}
@@ -239,8 +305,8 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
 .cookie .btn{padding:10px 18px;font-size:14px}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media(max-width:820px){.hero .wrap{grid-template-columns:1fr}.factcard{order:2}}
-@media(max-width:560px){.checker{padding:18px}.checker form{flex-direction:column;align-items:stretch}.btn{width:100%}.checker .or{flex-direction:column;align-items:stretch}.cta{justify-content:center}}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero .art{order:2}.logowall{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.checker{padding:18px}.checker form{flex-direction:column;align-items:stretch}.btn{width:100%}.checker .or{flex-direction:column;align-items:stretch}.cta{justify-content:center}.logowall{grid-template-columns:repeat(3,1fr)}.score b{font-size:48px}}
 </style>
 </head>
 <body>
@@ -248,7 +314,7 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
 
 <header class="statusbar"><div class="wrap">
   <a class="brand" href="/" dir="ltr" aria-label="PHP2Shell">
-    <svg width="27" height="27" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg>
+    <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg>
     <span><span class="n1">PHP2</span><span class="n2">Shell</span></span>
   </a>
   <span class="sp"></span>
@@ -256,8 +322,8 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
     <span data-t="navCta">בדיקת דומיין מאומתת</span>
   </a>
-  <span class="sev-chip"><span class="livedot" aria-hidden="true"></span> CVSS 9.2 · CRITICAL</span>
-  <button class="tbtn" id="langBtn" type="button" aria-label="Switch language">
+  <span class="sev-chip"><span class="livedot" aria-hidden="true"></span> <span class="num">CVSS 9.2</span> · <span data-t="critical">קריטי</span></span>
+  <button class="tbtn" id="langBtn" type="button" data-tal="langAria" aria-label="Switch language">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
     <span data-lang-code>EN</span>
   </button>
@@ -266,52 +332,72 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
 
 <main id="main">
   <section class="band hero"><div class="wrap">
-    <div>
-      <p class="eyebrow"><span class="livedot" aria-hidden="true"></span> <span data-t="eyebrow">עדכון אבטחה · פורסם 21 באוקטובר 2026</span></p>
+    <div class="lead-col">
+      <p class="kicker"><span class="livedot" aria-hidden="true"></span> <span data-t="kicker">התראת אבטחה</span> <span class="date">· 21 OCT 2026</span></p>
       <h1 data-t="h1">PHP2Shell — הרצת קוד מרחוק בליבת PHP</h1>
-      <p class="lead" data-t="lead">שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת ללא כל אימות. כאן תבינו אם אתם חשופים, ומה בדיוק צריך לעשות — לעצמכם ולספקים שלכם.</p>
+      <p class="lead" data-t="lead">שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת בלי שום התחברות. כאן תגלו אם אתם חשופים, ומה בדיוק לעשות — לכם ולספקים שלכם.</p>
       <div class="cve-row"><span class="cve-tag">CVE-2026-109618</span><span class="cve-tag">CVE-2026-109619</span></div>
-      <div class="gauge" role="img" data-tal="gaugeAria" aria-label="CVSS 9.2 / 10 — Critical">
-        <div class="gauge-top"><span class="score"><b>9.2</b> / 10</span><span class="band-label">CRITICAL · CVSS v4.0</span></div>
-        <div class="gauge-track" aria-hidden="true"><span class="gz low"></span><span class="gz med"></span><span class="gz high"></span><span class="gz crit"></span><span class="gauge-marker"></span></div>
-        <div class="gauge-scale" aria-hidden="true"><span>0</span><span>Low</span><span>Med</span><span>High</span><span>10</span></div>
-      </div>
       <a class="hero-cta" href="/scan.html"><span data-t="heroCta">בדיקת דומיין שבבעלותכם</span> <span data-t="arrowFwd" aria-hidden="true">←</span></a>
     </div>
-    <aside class="factcard" aria-label="Key facts">
-      <div class="fc-head"><span>ADVISORY</span><span>PHP CORE</span></div>
-      <dl>
-        <div class="row"><dt data-t="fPublished">פורסם</dt><dd data-t="fPublishedV">21 אוקטובר 2026</dd></div>
-        <div class="row"><dt data-t="fType">סוג</dt><dd data-t="fTypeV">הרצת קוד מרחוק</dd></div>
-        <div class="row"><dt data-t="fAuth">דרוש אימות</dt><dd class="danger" data-t="fAuthV">לא נדרש</dd></div>
-        <div class="row"><dt data-t="fExploit">ניצול ציבורי</dt><dd class="danger" data-t="fExploitV">קיים במחזור</dd></div>
-        <div class="row"><dt data-t="fFixed">ענפים מתוקנים</dt><dd class="mono">8.2.35 · 8.3.36 · 8.4.27 · 8.5.12</dd></div>
-      </dl>
-    </aside>
+    <div class="art">
+      <div class="ledger" role="img" data-tal="gaugeAria" aria-label="CVSS 9.2 of 10 — Critical">
+        <div class="ledger-head">
+          <span class="score"><b>9.2</b><span class="of">/10</span></span>
+          <span class="vector"><span class="band-label" data-t="critical">קריטי</span><span class="v">CVSS:4.0 / AV:N</span></span>
+        </div>
+        <div class="ruler" aria-hidden="true"><span class="ticks"></span><span class="major" style="left:0"></span><span class="major" style="left:20%"></span><span class="major" style="left:40%"></span><span class="major" style="left:60%"></span><span class="major" style="left:80%"></span><span class="notch"></span></div>
+        <div class="ruler-scale" aria-hidden="true"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></div>
+        <div class="ladder">
+          <div class="ladder-cap" data-t="ladderCap">ענפים נתמכים · גרסה מתוקנת</div>
+          <div class="lrow" data-branch="8.5"><span class="lb">8.5.x</span><div class="rail" style="--at:70%"><span class="heremark"></span></div><span class="lv">8.5.12</span></div>
+          <div class="lrow" data-branch="8.4"><span class="lb">8.4.x</span><div class="rail" style="--at:66%"><span class="heremark"></span></div><span class="lv">8.4.27</span></div>
+          <div class="lrow" data-branch="8.3"><span class="lb">8.3.x</span><div class="rail" style="--at:62%"><span class="heremark"></span></div><span class="lv">8.3.36</span></div>
+          <div class="lrow" data-branch="8.2"><span class="lb">8.2.x</span><div class="rail" style="--at:58%"><span class="heremark"></span></div><span class="lv">8.2.35</span></div>
+        </div>
+      </div>
+      <aside class="factcard" aria-label="Key facts" data-tal="factsAria">
+        <div class="fc-head"><span data-t="fcAdvisory">התראת אבטחה</span><span class="chan">PHP-CORE</span></div>
+        <dl>
+          <div class="row"><dt data-t="fPublished">פורסם</dt><dd data-t="fPublishedV">21 אוקטובר 2026</dd></div>
+          <div class="row"><dt data-t="fType">סוג</dt><dd data-t="fTypeV">הרצת קוד מרחוק</dd></div>
+          <div class="row"><dt data-t="fAuth">דרוש אימות</dt><dd class="danger" data-t="fAuthV">לא נדרש</dd></div>
+          <div class="row"><dt data-t="fExploit">ניצול ציבורי</dt><dd class="danger" data-t="fExploitV">קיים בשטח</dd></div>
+          <div class="row"><dt data-t="fFixed">ענפים מתוקנים</dt><dd class="mono">8.2.35 · 8.3.36 · 8.4.27 · 8.5.12</dd></div>
+        </dl>
+      </aside>
+    </div>
   </div></section>
 
   <section class="band"><div class="wrap">
     <div class="callout info"><span class="ic" aria-hidden="true">ℹ︎</span>
-      <p data-th="disclaimer">זהו מרכז מידע. הבדיקה העצמית למטה רצה כולה בדפדפן שלכם, על גרסה שאתם מקלידים. לבדיקה חיה של דומיין שבבעלותכם יש <a href="/scan.html">סורק ייעודי</a> שמחייב קודם הוכחת בעלות. אל תריצו בדיקות נגד מערכות שאינן שלכם ושאין לכם הרשאה לבדוק — זו עבירה.</p></div>
+      <p data-th="disclaimer">זהו מרכז מידע עצמאי. הבדיקה העצמית שבהמשך רצה כולה בדפדפן שלכם, על גרסה שאתם מקלידים. לבדיקה חיה של דומיין שבבעלותכם יש <a href="/scan.html">סורק ייעודי</a> שמחייב קודם הוכחת בעלות. אל תריצו בדיקות נגד מערכות שאינן שלכם ושאין לכם הרשאה לבדוק — זו עבירה.</p></div>
   </div></section>
 
-  <section class="band tint" id="what"><div class="wrap">
+  <section class="band tint" id="ecosystem"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_ecosystem">הסביבה המושפעת</span><h2 data-t="ecoH">מי רץ על ליבת PHP</h2>
+      <p class="sub" data-t="ecoSub">החולשה היא במנוע PHP עצמו — ולכן כל מה שרץ מעליו חשוף ברגע שה‑PHP שתחתיו פגיע. אלה חלק מהפלטפורמות והספקים המושפעים.</p>
+    </div>
+    <div class="logowall" id="logowall" aria-label="Affected platforms"></div>
+    <p class="logo-note" data-t="ecoNote">מושפעים מפני שהם רצים על PHP — לא בגלל פגם משלהם. הסמלים שייכים לבעליהם.</p>
+  </div></section>
+
+  <section class="band" id="what"><div class="wrap">
     <div class="sec-head"><span class="sec-eyebrow" data-t="e_bg">רקע</span><h2 data-t="whatH">מה זו החולשה</h2>
-      <p class="sub" data-t="whatSub">PHP2Shell הוא השם שניתן לצמד חולשות בליבת PHP עצמה — לא בתוסף או בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני באינטרנט. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק ללא התחברות.</p>
+      <p class="sub" data-t="whatSub">PHP2Shell הוא השם לצמד חולשות בליבת PHP עצמה — לא בתוסף ולא בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני ברשת. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק בלי התחברות.</p>
     </div>
     <div class="grid">
-      <div class="card cve"><div class="top"><h3 class="mono" dir="ltr">CVE-2026-109618</h3><span class="tag affected">Memory</span></div><p data-t="cve18">כשל בטיפול בזיכרון: כשנגמר הזיכרון בזמן שנתוני הבקשה עדיין בהרכבה, שלב הניקוי מתייחס לנתונים החלקיים כאילו היו תקינים — פתח להשתלטות.</p></div>
-      <div class="card cve"><div class="top"><h3 class="mono" dir="ltr">CVE-2026-109619</h3><span class="tag affected">Use-after-free</span></div><p data-t="cve19">שימוש בזיכרון משוחרר: מצב שנשאר מבקשה אחת מצביע לזיכרון שכבר שוחרר, ובקשה מאוחרת על אותו worker יכולה להשתמש בו. אושרה גם דליפת מידע מהזיכרון.</p></div>
+      <div class="card cve"><div class="top"><div class="ttl"><h3 class="cve-id" dir="ltr">CVE-2026-109618</h3></div><span class="tag tech">Memory</span></div><p data-t="cve18">כשל בטיפול בזיכרון: כשנגמר הזיכרון בזמן שנתוני הבקשה עדיין בהרכבה, שלב הניקוי מתייחס לנתונים החלקיים כאילו היו תקינים — פתח להשתלטות.</p></div>
+      <div class="card cve"><div class="top"><div class="ttl"><h3 class="cve-id" dir="ltr">CVE-2026-109619</h3></div><span class="tag tech">Use-after-free</span></div><p data-t="cve19">שימוש בזיכרון משוחרר: מצב שנשאר מבקשה אחת מצביע לזיכרון שכבר שוחרר, ובקשה מאוחרת על אותו worker יכולה להשתמש בו. אושרה גם דליפת מידע מהזיכרון.</p></div>
     </div>
     <div class="callout" style="margin-top:16px"><span class="ic" aria-hidden="true">⚠︎</span>
-      <p data-t="exploitNote">כבר יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות ששחזרו את המחקר באופן עצמאי — ההגנה דחופה, לא תיאורטית. אל תורידו "כלי בדיקה" לא רשמיים: חלקם דווחו כנגועים בתוכנה זדונית.</p></div>
+      <p data-t="exploitNote">כבר יש קוד ניצול ציבורי בשטח, וחברות אבטחה מדווחות ששחזרו את המחקר באופן עצמאי — ההגנה דחופה, לא תיאורטית. אל תורידו "כלי בדיקה" לא רשמיים: חלקם דווחו כנגועים בתוכנה זדונית.</p></div>
   </div></section>
 
   <section class="band"><div class="wrap"><div class="ad" id="ad-1" data-ad-slot=""></div></div></section>
 
   <section class="band tint" id="check"><div class="wrap">
     <div class="sec-head"><span class="sec-eyebrow" data-t="e_tool">כלי</span><h2 data-t="checkH">בדיקה עצמית — האם אתם חשופים?</h2>
-      <p class="sub" data-t="checkSub">הקלידו את גרסת ה‑PHP שרצה אצלכם, והבדיקה תגיד אם היא בטווח הפגיע. הכול מתבצע בדפדפן שלכם — שום דבר לא נשלח לרשת.</p>
+      <p class="sub" data-t="checkSub">הקלידו את גרסת ה‑PHP שרצה אצלכם, והבדיקה תגיד אם היא בטווח הפגיע ותסמן אתכם על סולם הגרסאות שלמעלה. הכול מתבצע בדפדפן — שום דבר לא נשלח לרשת.</p>
     </div>
     <div class="checker">
       <form id="checkForm" novalidate>
@@ -325,7 +411,7 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
       </div>
       <div class="howto" id="howto"><p data-t="howto1">לא בטוחים איזו גרסה רצה אצלכם? הריצו בשרת שלכם:</p>
         <code class="cmd">php -v</code>
-        <p style="margin-top:10px" data-th="howto2">או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> באתר שבבעלותכם.</p>
+        <p style="margin-top:10px" data-th="howto2">או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code>phpinfo()</code> באתר שבבעלותכם.</p>
       </div>
       <div class="or"><p data-t="orScan">רוצים לבדוק דומיין חי במקום גרסה? אפשר לסרוק דומיין שבבעלותכם, אחרי הוכחת בעלות.</p>
         <a class="cta" href="/scan.html"><span data-t="orScanBtn">אימות בעלות וסריקה</span> <span data-t="arrowFwd" aria-hidden="true">←</span></a></div>
@@ -340,27 +426,44 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
       <caption data-t="verCap">מקור: ההודעות הרשמיות של PHP.net ו‑Imunify360. ודאו מול המקור בזמן אמת.</caption>
       <thead><tr><th scope="col" data-t="thBranch">ענף PHP</th><th scope="col" data-t="thStatus">סטטוס</th><th scope="col" data-t="thFixed">גרסה מתוקנת</th></tr></thead>
       <tbody>
-        <tr><td><span class="v">8.5.x</span></td><td><span class="pill bad" data-t="below">פגיע מתחת ל‑8.5.12</span></td><td><span class="v">8.5.12</span></td></tr>
-        <tr><td><span class="v">8.4.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.4.27</span></td><td><span class="v">8.4.27</span></td></tr>
-        <tr><td><span class="v">8.3.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.3.36</span></td><td><span class="v">8.3.36</span></td></tr>
-        <tr><td><span class="v">8.2.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.2.35</span></td><td><span class="v">8.2.35</span></td></tr>
-        <tr><td><span class="v">7.4 – 8.1</span></td><td><span class="pill eol" data-t="eol">סוף חיים — ללא גרסה רשמית</span></td><td data-t="moveSupported">מעבר לענף נתמך</td></tr>
+        <tr><td><span class="v">8.5.x</span></td><td><span class="pill bad"><span data-t="belowPfx">פגיע מתחת ל־</span><span class="v">8.5.12</span></span></td><td><span class="v">8.5.12</span></td></tr>
+        <tr><td><span class="v">8.4.x</span></td><td><span class="pill bad"><span data-t="belowPfx">פגיע מתחת ל־</span><span class="v">8.4.27</span></span></td><td><span class="v">8.4.27</span></td></tr>
+        <tr><td><span class="v">8.3.x</span></td><td><span class="pill bad"><span data-t="belowPfx">פגיע מתחת ל־</span><span class="v">8.3.36</span></span></td><td><span class="v">8.3.36</span></td></tr>
+        <tr><td><span class="v">8.2.x</span></td><td><span class="pill bad"><span data-t="belowPfx">פגיע מתחת ל־</span><span class="v">8.2.35</span></span></td><td><span class="v">8.2.35</span></td></tr>
+        <tr><td><span class="v">7.4 – 8.1</span></td><td><span class="pill eol" data-t="eolStatus">סוף חיים — ללא גרסה רשמית</span></td><td data-t="moveSupported">מעבר לענף נתמך</td></tr>
       </tbody>
     </table></div>
   </div></section>
 
   <section class="band tint" id="vendors"><div class="wrap">
     <div class="sec-head"><span class="sec-eyebrow" data-t="e_vendors">ספקים</span><h2 data-t="venH">ספקים וכלים רלוונטיים</h2>
-      <p class="sub" data-t="venSub">כל דבר שרץ על PHP מושפע ברגע שה‑PHP שתחתיו פגיע. ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.</p>
+      <p class="sub" data-t="venSub">ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.</p>
     </div>
     <div class="grid">
-      <div class="card"><div class="top"><h3>WordPress</h3><span class="tag action" data-t="tUpdatePhp">עדכנו PHP</span></div><p data-t="vWordpress">וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.</p></div>
-      <div class="card"><div class="top"><h3>Plesk</h3><span class="tag affected" data-t="tAffected">מושפע</span></div><p data-t="vPlesk">Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.</p></div>
-      <div class="card"><div class="top"><h3>cPanel / Imunify360</h3><span class="tag patch" data-t="tWaf">חוק WAF</span></div><p data-t="vImunify">חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.</p></div>
-      <div class="card"><div class="top"><h3>Palo Alto PAN-OS</h3><span class="tag nofix" data-t="tNoFix">אין תיקון עדיין</span></div><p data-t="vPalo">Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.</p></div>
-      <div class="card"><div class="top"><h3>Google Cloud</h3><span class="tag action" data-t="tGuidance">הנחיה</span></div><p data-t="vGoogle">Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.</p></div>
-      <div class="card"><div class="top"><h3>Laravel · Drupal · Joomla · Magento</h3><span class="tag action" data-t="tUpdatePhp2">עדכנו PHP</span></div><p data-t="vFrameworks">כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers, וודאו שהפרודקשן על גרסה מתוקנת.</p></div>
+      <div class="card"><div class="top"><div class="ttl" data-logo="wordpress"><h3>WordPress</h3></div><span class="tag action" data-t="tUpdatePhp">עדכנו PHP</span></div><p data-t="vWordpress">וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.</p></div>
+      <div class="card"><div class="top"><div class="ttl" data-logo="plesk"><h3>Plesk</h3></div><span class="tag affected" data-t="tAffected">מושפע</span></div><p data-t="vPlesk">Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.</p></div>
+      <div class="card"><div class="top"><div class="ttl" data-logo="cpanel"><h3>cPanel · Imunify360</h3></div><span class="tag patch" data-t="tWaf">חוק WAF</span></div><p data-t="vImunify">חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.</p></div>
+      <div class="card"><div class="top"><div class="ttl" data-logo="paloaltonetworks"><h3>Palo Alto PAN-OS</h3></div><span class="tag nofix" data-t="tNoFix">אין תיקון עדיין</span></div><p data-t="vPalo">Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.</p></div>
+      <div class="card"><div class="top"><div class="ttl" data-logo="googlecloud"><h3>Google Cloud</h3></div><span class="tag action" data-t="tGuidance">הנחיה</span></div><p data-t="vGoogle">Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.</p></div>
+      <div class="card"><div class="top"><div class="ttl"><h3>Laravel · Drupal · Joomla</h3></div><span class="tag action" data-t="tUpdatePhp2">עדכנו PHP</span></div><p data-t="vFrameworks">כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers, וודאו שהפרודקשן על גרסה מתוקנת.</p></div>
     </div>
+  </div></section>
+
+  <section class="band" id="disclosed"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_disclosed">גילוי ומעקב</span><h2 data-t="disH">נחשף ומתועד על ידי</h2>
+      <p class="sub" data-t="disSub">חוקרי אבטחה וגופי ניטור שפרסמו ניתוחים והודעות רשמיות על החולשה. כל שם מפנה להודעה המקורית.</p>
+    </div>
+    <nav class="credit" data-tal="creditAria" aria-label="Disclosed and tracked by">
+      <a href="https://php2shell.com" target="_blank" rel="noopener">Wiz</a>
+      <a href="https://php2shell.com" target="_blank" rel="noopener">OpenAI</a>
+      <a href="https://www.rapid7.com/blog/post/etr-cve-2026-109618-and-cve-2026-109619-critical-unauthenticated-remote-code-execution-in-php/" target="_blank" rel="noopener">Rapid7</a>
+      <a href="https://www.tenable.com/blog/php2shell-cve-2026-109618-cve-2026-109619-frequently-asked-questions-about-critical-php-remote" target="_blank" rel="noopener">Tenable</a>
+      <a href="https://research.jfrog.com/post/php2shell-all-you-need-to-know-about-cve-2026-109618-and-cve-2026-109619/" target="_blank" rel="noopener">JFrog</a>
+      <a href="https://sansec.io/research/php2shell" target="_blank" rel="noopener">Sansec</a>
+      <a href="https://socradar.io/blog/php2shell-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener">SOCRadar</a>
+      <a href="https://blog.imunify360.com/php-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener">Imunify360</a>
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-109618" target="_blank" rel="noopener">NVD / NIST</a>
+    </nav>
   </div></section>
 
   <section class="band"><div class="wrap"><div class="ad" id="ad-2" data-ad-slot=""></div></div></section>
@@ -372,7 +475,7 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
     <ol class="steps">
       <li><div><h4 data-t="fix1h">מפו את גרסאות ה‑PHP</h4><p data-t="fix1p">בכל שרת, קונטיינר ואחסון מנוהל. אל תשכחו staging, cron ו‑CLI.</p></div></li>
       <li><div><h4 data-t="fix2h">שדרגו לגרסה המתוקנת</h4><p data-t="fix2p">8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 ומעלה. ענף סוף‑חיים? עברו לענף נתמך.</p></div></li>
-      <li><div><h4 data-t="fix3h">הקלת ביניים ל‑CVE-2026-109619</h4><p data-th="fix3p">כהמלצת PHP: כבו את <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.</p></div></li>
+      <li><div><h4 data-t="fix3h">הקלת ביניים ל‑CVE-2026-109619</h4><p data-th="fix3p">כהמלצת PHP: כבו את <code>session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.</p></div></li>
       <li><div><h4 data-t="fix4h">הפעילו חסימה ב‑WAF</h4><p data-t="fix4p">עדכנו את חוקות ה‑WAF (למשל Imunify360 8.83). שכבת הגנה משלימה — לא תחליף לעדכון.</p></div></li>
       <li><div><h4 data-t="fix5h">בקשו אישור מהספקים</h4><p data-t="fix5p">פנו לספקי האחסון, ה‑SaaS וה‑CDN ובקשו בכתב אילו גרסאות PHP הם מריצים ומתי יעדכנו.</p></div></li>
       <li><div><h4 data-t="fix6h">נטרו ותעדו</h4><p data-t="fix6p">חפשו קריסות worker חריגות ובקשות חשודות בלוגים, ושמרו תיעוד שדרוג מסודר.</p></div></li>
@@ -385,7 +488,7 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
     <details class="faq"><summary data-t="q2">עדכנתי את התוספים — זה מספיק?</summary><div class="body" data-t="a2">לא. החולשה היא בליבת PHP. עדכון תוספים או תבניות לא מתקן אותה; צריך לעדכן את גרסת ה‑PHP של הסביבה.</div></details>
     <details class="faq"><summary data-t="q3">אני על ענף סוף‑חיים (7.4–8.1). מה עכשיו?</summary><div class="body" data-t="a3">אין גרסה רשמית מתוקנת לענפים האלה, רק תיקוני מקור חלקיים. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.</div></details>
     <details class="faq"><summary data-t="q4">יש כלי שסורק דומיין חי?</summary><div class="body" data-th="a4">כן — אבל רק אחרי שמוכיחים בעלות על הדומיין (או הרשאה מפורשת), דרך <a href="/scan.html">הסורק שלנו</a>. הבדיקה פסיבית: היא קוראת את כותרות השרת ומסיקה גרסה, בלי לנצל שום דבר. סריקה של מערכת שאינה שלכם וללא הרשאה היא עבירה.</div></details>
-    <details class="faq"><summary data-t="q5">יש כבר ניצול בשטח?</summary><div class="body" data-t="a5">כן — יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.</div></details>
+    <details class="faq"><summary data-t="q5">יש כבר ניצול בשטח?</summary><div class="body" data-t="a5">כן — יש קוד ניצול ציבורי בשטח, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.</div></details>
   </div></section>
 
   <section class="band tint" id="refs"><div class="wrap">
@@ -397,11 +500,10 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
       <a class="ref" href="https://nvd.nist.gov/vuln/detail/CVE-2026-109618" target="_blank" rel="noopener"><span class="src">nvd.nist.gov</span><span class="t">NVD · CVE-2026-109618</span></a>
       <a class="ref" href="https://nvd.nist.gov/vuln/detail/CVE-2026-109619" target="_blank" rel="noopener"><span class="src">nvd.nist.gov</span><span class="t">NVD · CVE-2026-109619</span></a>
       <a class="ref" href="https://www.php.net/" target="_blank" rel="noopener"><span class="src">php.net</span><span class="t" data-t="refPhp">הודעת PHP הרשמית</span></a>
-      <a class="ref" href="https://www.rapid7.com/blog/post/etr-cve-2026-109618-and-cve-2026-109619-critical-unauthenticated-remote-code-execution-in-php/" target="_blank" rel="noopener"><span class="src">rapid7.com</span><span class="t">Rapid7 · ETR</span></a>
-      <a class="ref" href="https://www.tenable.com/blog/php2shell-cve-2026-109618-cve-2026-109619-frequently-asked-questions-about-critical-php-remote" target="_blank" rel="noopener"><span class="src">tenable.com</span><span class="t">Tenable · FAQ</span></a>
-      <a class="ref" href="https://sansec.io/research/php2shell" target="_blank" rel="noopener"><span class="src">sansec.io</span><span class="t">Sansec · Research</span></a>
-      <a class="ref" href="https://research.jfrog.com/post/php2shell-all-you-need-to-know-about-cve-2026-109618-and-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">jfrog.com</span><span class="t">JFrog Security</span></a>
-      <a class="ref" href="https://socradar.io/blog/php2shell-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">socradar.io</span><span class="t">SOCRadar</span></a>
+      <a class="ref" href="https://www.rapid7.com/blog/post/etr-cve-2026-109618-and-cve-2026-109619-critical-unauthenticated-remote-code-execution-in-php/" target="_blank" rel="noopener"><span class="src">rapid7.com</span><span class="t" data-t="refRapid7">Rapid7 · ניתוח</span></a>
+      <a class="ref" href="https://www.tenable.com/blog/php2shell-cve-2026-109618-cve-2026-109619-frequently-asked-questions-about-critical-php-remote" target="_blank" rel="noopener"><span class="src">tenable.com</span><span class="t" data-t="refTenable">Tenable · שאלות ותשובות</span></a>
+      <a class="ref" href="https://sansec.io/research/php2shell" target="_blank" rel="noopener"><span class="src">sansec.io</span><span class="t" data-t="refSansec">Sansec · מחקר</span></a>
+      <a class="ref" href="https://research.jfrog.com/post/php2shell-all-you-need-to-know-about-cve-2026-109618-and-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">jfrog.com</span><span class="t" data-t="refJfrog">JFrog · מחקר אבטחה</span></a>
       <a class="ref" href="https://support.plesk.com/hc/en-us/articles/44397729587351-Vulnerability-CVE-2026-109618-and-CVE-2026-109619-Remote-code-execution-in-PHP-shipped-with-Plesk" target="_blank" rel="noopener"><span class="src">plesk.com</span><span class="t" data-t="refPlesk">Plesk · הודעת אבטחה</span></a>
       <a class="ref" href="https://security.paloaltonetworks.com/CVE-2026-109618" target="_blank" rel="noopener"><span class="src">paloaltonetworks.com</span><span class="t">Palo Alto · PAN-OS</span></a>
       <a class="ref" href="https://cloud.google.com/blog/products/identity-security/responding-to-core-php-vulnerabilities-cve-2026-109618-cve-2026-109619" target="_blank" rel="noopener"><span class="src">cloud.google.com</span><span class="t" data-t="refGoogle">Google Cloud · תגובה</span></a>
@@ -414,17 +516,17 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
 <footer><div class="wrap">
   <div class="foot-top">
     <span class="brand" dir="ltr"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg><span><span class="n1">PHP2</span><span class="n2">Shell</span></span></span>
-    <nav class="foot-links" aria-label="Legal">
+    <nav class="foot-links" data-tal="legalAria" aria-label="Legal">
       <button type="button" data-dlg="privacy" data-t="lPrivacy">הצהרת פרטיות</button>
       <button type="button" data-dlg="cookies" data-t="lCookies">מדיניות עוגיות</button>
       <button type="button" data-dlg="a11y" data-t="lA11y">הצהרת נגישות</button>
       <button type="button" id="cookiePrefs" data-t="lPrefs">העדפות עוגיות</button>
     </nav>
   </div>
-  <p class="disc" data-t="footDisc">מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק "כמות שהוא" למטרות הסברה בלבד ואינו מהווה ייעוץ אבטחה או משפטי. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות המסחריים שייכים לבעליהם.</p>
+  <p class="disc" data-t="footDisc">מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק "כמות שהוא" למטרות הסברה בלבד ואינו מהווה ייעוץ אבטחה או משפטי. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות והסמלים המסחריים שייכים לבעליהם.</p>
 </div></footer>
 
-<div class="cookie" id="cookieBar" role="dialog" aria-live="polite" aria-label="Cookies">
+<div class="cookie" id="cookieBar" role="dialog" aria-live="polite" data-tal="cookieAria" aria-label="Cookies">
   <div class="inner">
     <p><span data-t="ckText">אנחנו משתמשים בעוגיות חיוניות בלבד כברירת מחדל. עוגיות לניתוח ולפרסום ייטענו רק באישורכם.</span> <button type="button" id="cookieLearn" style="background:none;border:none;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline" data-t="ckMore">פרטים</button></p>
     <div class="acts"><button class="btn ghost" type="button" id="cookieReject" data-t="ckEssential">רק חיוניות</button><button class="btn" type="button" id="cookieAccept" data-t="ckAccept">אישור הכול</button></div>
@@ -435,33 +537,57 @@ dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
 <dialog id="dlg-cookies" aria-labelledby="dct"><div class="dlg-head"><h3 id="dct" data-t="lCookies">מדיניות עוגיות</h3><button class="tbtn sq" type="button" data-close data-tal="closeAria" aria-label="Close">✕</button></div><div class="dlg-body" data-th="cookiesBody"></div></dialog>
 <dialog id="dlg-a11y" aria-labelledby="dat"><div class="dlg-head"><h3 id="dat" data-t="lA11y">הצהרת נגישות</h3><button class="tbtn sq" type="button" data-close data-tal="closeAria" aria-label="Close">✕</button></div><div class="dlg-body" data-th="a11yBody"></div></dialog>
 
+<script>window.BRAND={
+  wordpress:{t:"WordPress",d:"M21.469 6.825c.84 1.537 1.318 3.3 1.318 5.175 0 3.979-2.156 7.456-5.363 9.325l3.295-9.527c.615-1.54.82-2.771.82-3.864 0-.405-.026-.78-.07-1.11m-7.981.105c.647-.03 1.232-.105 1.232-.105.582-.075.514-.93-.067-.899 0 0-1.755.135-2.88.135-1.064 0-2.85-.15-2.85-.15-.585-.03-.661.855-.075.885 0 0 .54.061 1.125.09l1.68 4.605-2.37 7.08L5.354 6.9c.649-.03 1.234-.1 1.234-.1.585-.075.516-.93-.065-.896 0 0-1.746.138-2.874.138-.2 0-.438-.008-.69-.015C4.911 3.15 8.235 1.215 12 1.215c2.809 0 5.365 1.072 7.286 2.833-.046-.003-.091-.009-.141-.009-1.06 0-1.812.923-1.812 1.914 0 .89.513 1.643 1.06 2.531.411.72.89 1.643.89 2.977 0 .915-.354 1.994-.821 3.479l-1.075 3.585-3.9-11.61.001.014zM12 22.784c-1.059 0-2.081-.153-3.048-.437l3.237-9.406 3.315 9.087c.024.053.05.101.078.149-1.12.393-2.325.609-3.582.609M1.211 12c0-1.564.336-3.05.935-4.39L7.29 21.709C3.694 19.96 1.212 16.271 1.211 12M12 0C5.385 0 0 5.385 0 12s5.385 12 12 12 12-5.385 12-12S18.615 0 12 0"},
+  laravel:{t:"Laravel",d:"M23.642 5.43a.364.364 0 01.014.1v5.149c0 .135-.073.26-.189.326l-4.323 2.49v4.934a.378.378 0 01-.188.326L9.93 23.949a.316.316 0 01-.066.027c-.008.002-.016.008-.024.01a.348.348 0 01-.192 0c-.011-.002-.02-.008-.03-.012-.02-.008-.042-.014-.062-.025L.533 18.755a.376.376 0 01-.189-.326V2.974c0-.033.005-.066.014-.098.003-.012.01-.02.014-.032a.369.369 0 01.023-.058c.004-.013.015-.022.023-.033l.033-.045c.012-.01.025-.018.037-.027.014-.012.027-.024.041-.034H.53L5.043.05a.375.375 0 01.375 0L9.93 2.647h.002c.015.01.027.021.04.033l.038.027c.013.014.02.03.033.045.008.011.02.021.025.033.01.02.017.038.024.058.003.011.01.021.013.032.01.031.014.064.014.098v9.652l3.76-2.164V5.527c0-.033.004-.066.013-.098.003-.01.01-.02.013-.032a.487.487 0 01.024-.059c.007-.012.018-.02.025-.033.012-.015.021-.03.033-.043.012-.012.025-.02.037-.028.014-.01.026-.023.041-.032h.001l4.513-2.598a.375.375 0 01.375 0l4.513 2.598c.016.01.027.021.042.031.012.01.025.018.036.028.013.014.022.03.034.044.008.012.019.021.024.033.011.02.018.04.024.06.006.01.012.021.015.032zm-.74 5.032V6.179l-1.578.908-2.182 1.256v4.283zm-4.51 7.75v-4.287l-2.147 1.225-6.126 3.498v4.325zM1.093 3.624v14.588l8.273 4.761v-4.325l-4.322-2.445-.002-.003H5.04c-.014-.01-.025-.021-.04-.031-.011-.01-.024-.018-.035-.027l-.001-.002c-.013-.012-.021-.025-.031-.04-.01-.011-.021-.022-.028-.036h-.002c-.008-.014-.013-.031-.02-.047-.006-.016-.014-.027-.018-.043a.49.49 0 01-.008-.057c-.002-.014-.006-.027-.006-.041V5.789l-2.18-1.257zM5.23.81L1.47 2.974l3.76 2.164 3.758-2.164zm1.956 13.505l2.182-1.256V3.624l-1.58.91-2.182 1.255v9.435zm11.581-10.95l-3.76 2.163 3.76 2.163 3.759-2.164zm-.376 4.978L16.21 7.087 14.63 6.18v4.283l2.182 1.256 1.58.908zm-8.65 9.654l5.514-3.148 2.756-1.572-3.757-2.163-4.323 2.489-3.941 2.27z"},
+  drupal:{t:"Drupal",d:"M15.78 5.113C14.09 3.425 12.48 1.815 11.998 0c-.48 1.815-2.09 3.425-3.778 5.113-2.534 2.53-5.405 5.4-5.405 9.702a9.184 9.185 0 1018.368 0c0-4.303-2.871-7.171-5.405-9.702M6.72 16.954c-.563-.019-2.64-3.6 1.215-7.416l2.55 2.788a.218.218 0 01-.016.325c-.61.625-3.204 3.227-3.527 4.126-.066.186-.164.18-.222.177M12 21.677a3.158 3.158 0 01-3.158-3.159 3.291 3.291 0 01.787-2.087c.57-.696 2.37-2.655 2.37-2.655s1.774 1.988 2.367 2.649a3.09 3.09 0 01.792 2.093A3.158 3.158 0 0112 21.677m6.046-5.123c-.068.15-.223.398-.431.405-.371.014-.411-.177-.686-.583-.604-.892-5.864-6.39-6.848-7.455-.866-.935-.122-1.595.223-1.94C10.736 6.547 12 5.285 12 5.285s3.766 3.574 5.336 6.016c1.57 2.443 1.029 4.556.71 5.253"},
+  joomla:{t:"Joomla",d:"M16.719 14.759L14.22 17.26l-2.37 2.37-.462.466c-1.368 1.365-3.297 1.83-5.047 1.397-.327 1.424-1.604 2.49-3.13 2.49C1.438 23.983 0 22.547 0 20.772c0-1.518 1.055-2.789 2.469-3.123-.446-1.76.016-3.705 1.396-5.08l.179-.18 2.37 2.37-.184.181c-.769.779-.769 2.024 0 2.789.771.78 2.022.78 2.787 0l.465-.465 2.367-2.371 2.502-2.506 2.368 2.372zm.924 6.652c-1.822.563-3.885.12-5.328-1.318l-.18-.185 2.365-2.369.18.184c.771.768 2.018.768 2.787 0 .765-.765.769-2.01-.004-2.781l-.466-.465-2.365-2.37-2.502-2.503 2.37-2.369 2.499 2.505 2.367 2.37.464.464c1.365 1.36 1.846 3.278 1.411 5.021 1.56.224 2.759 1.56 2.759 3.18 0 1.784-1.439 3.21-3.209 3.21-1.545 0-2.851-1.096-3.135-2.565l-.013-.009zM6.975 9.461l2.508-2.505 2.37-2.369.462-.461C13.74 2.7 15.772 2.251 17.58 2.79c.212-1.561 1.555-2.775 3.179-2.775 1.772 0 3.211 1.437 3.211 3.209 0 1.631-1.216 2.978-2.79 3.186.519 1.799.068 3.816-1.35 5.234l-.182.184-2.369-2.369.184-.184c.769-.77.769-2.016 0-2.783-.766-.766-2.011-.768-2.781.003l-.462.461-2.37 2.369-2.505 2.502-2.37-2.366zm-2.653 2.647l-.461-.462C2.43 10.215 1.986 8.17 2.529 6.358 1.1 6.029.03 4.754.03 3.224.03 1.454 1.47.015 3.24.015c1.596 0 2.92 1.166 3.17 2.691 1.73-.405 3.626.065 4.979 1.415l.184.185-2.37 2.37-.183-.181c-.77-.765-2.016-.765-2.785 0-.771.781-.77 2.025-.005 2.79l.465.466 2.37 2.369 2.505 2.505-2.367 2.37-2.51-2.505-2.371-2.37v-.012z"},
+  magento:{t:"Magento",d:"M12 24l-4.455-2.572v-12l2.97-1.715v12.001l1.485.902 1.485-.902V7.713l2.971 1.715v12L12 24zM22.391 6v12l-2.969 1.714V7.713L12 3.43 4.574 7.713v12.001L1.609 18V6L12 0l10.391 6z"},
+  php:{t:"PHP",d:"M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.802-.124-.995-.175-.193-.523-.29-1.047-.29zM12 5.688C5.373 5.688 0 8.514 0 12s5.373 6.313 12 6.313S24 15.486 24 12c0-3.486-5.373-6.312-12-6.312zm-3.26 7.451c-.261.25-.575.438-.917.551-.336.108-.765.164-1.285.164H5.357l-.327 1.681H3.652l1.23-6.326h2.65c.797 0 1.378.209 1.744.628.366.418.476 1.002.33 1.752a2.836 2.836 0 0 1-.305.847c-.143.255-.33.49-.561.703zm4.024.715l.543-2.799c.063-.318.039-.536-.068-.651-.107-.116-.336-.174-.687-.174H11.46l-.704 3.625H9.388l1.23-6.327h1.367l-.327 1.682h1.218c.767 0 1.295.134 1.586.401s.378.7.263 1.299l-.572 2.944h-1.389zm7.597-2.265a2.782 2.782 0 0 1-.305.847c-.143.255-.33.49-.561.703a2.44 2.44 0 0 1-.917.551c-.336.108-.765.164-1.286.164h-1.18l-.327 1.682h-1.378l1.23-6.326h2.649c.797 0 1.378.209 1.744.628.366.417.477 1.001.331 1.751zM17.766 10.207h-.943l-.516 2.648h.838c.557 0 .971-.105 1.242-.314.272-.21.455-.559.551-1.049.092-.47.049-.802-.125-.995s-.524-.29-1.047-.29z"},
+  plesk:{t:"Plesk",d:"M6.102 7.021v7.353h.736V7.02zm13.655.01v7.343h.735V7.032zm.735 4.633l2.479 2.71h1.019l-2.574-2.731L24 9.122h-.987zm-4.008-2.636c-.536 0-.972.125-1.31.378-.337.252-.505.609-.505 1.07 0 .26.049.474.148.642.1.168.226.306.38.415.154.108.328.198.522.267.194.07.39.134.59.19.175.049.342.1.5.152.158.052.297.117.418.194.12.077.216.17.286.278.07.109.104.244.104.405 0 .21-.095.388-.286.535-.19.147-.484.221-.88.221-.609 0-1.104-.245-1.485-.735l-.572.504c.286.315.59.54.913.678.322.136.693.204 1.11.204.272 0 .527-.033.766-.1a1.89 1.89 0 00.621-.294c.176-.13.316-.288.419-.478.102-.189.153-.402.153-.64 0-.26-.051-.474-.153-.646a1.46 1.46 0 00-.402-.436 2.284 2.284 0 00-.545-.289 13.019 13.019 0 00-.594-.205c-.161-.049-.317-.1-.467-.152a2.013 2.013 0 01-.397-.184.923.923 0 01-.275-.252.598.598 0 01-.104-.357c0-.203.075-.371.225-.504.15-.133.413-.2.787-.2.293 0 .546.055.759.163.213.109.41.278.594.51l.011.01.54-.494c-.272-.315-.556-.535-.853-.661a2.586 2.586 0 00-1.018-.19zm-14.688.041c-.588 0-1.187.095-1.796.284v7.626h.725v-2.72c.182.048.364.087.546.115a3.539 3.539 0 001.586-.11c.336-.102.635-.261.898-.478.263-.217.474-.494.636-.83.16-.336.241-.739.241-1.208 0-.385-.067-.742-.2-1.071a2.42 2.42 0 00-.572-.851 2.636 2.636 0 00-.898-.557c-.35-.133-.739-.2-1.166-.2zm8.886 0c-.322 0-.627.055-.914.163-.287.11-.54.275-.756.5a2.391 2.391 0 00-.515.845c-.126.34-.189.74-.189 1.202 0 .35.052.683.157.998.106.315.263.596.473.84.21.246.473.44.788.583.315.144.683.216 1.103.216.455 0 .844-.068 1.166-.205.322-.137.605-.338.85-.604l-.44-.462c-.204.224-.431.387-.683.488a2.226 2.226 0 01-.84.153c-.554 0-.992-.175-1.314-.526-.322-.35-.493-.822-.514-1.417h3.939c.013-.904-.176-1.592-.568-2.064-.392-.473-.973-.71-1.743-.71zm.031.62c.26 0 .487.04.683.121.196.08.355.187.478.32.122.133.217.295.284.484.066.189.1.392.1.609H9.074a2.126 2.126 0 01.494-1.103c.111-.126.264-.23.456-.31.193-.08.422-.12.688-.12zM1.86 9.7c.616 0 1.094.188 1.434.563.34.374.51.866.51 1.475 0 .659-.185 1.165-.552 1.518-.368.354-.863.53-1.486.53-.168 0-.342-.018-.52-.057a4.836 4.836 0 01-.52-.142V9.868c.182-.063.367-.107.557-.132.189-.024.38-.036.577-.036zm2.377 6.588v.692H8.66v-.692z"},
+  cpanel:{t:"cPanel",d:"M4.586 9.346a.538.538 0 00-.34.113.561.561 0 00-.197.299L2.74 14.654h.922a.528.528 0 00.332-.113.561.561 0 00.2-.291l.968-3.604h.744a.677.677 0 01.317.077.703.703 0 01.24.199.732.732 0 01.129.281.65.65 0 01-.01.326.698.698 0 01-.676.526h-.385a.538.538 0 00-.337.113.561.561 0 00-.2.291l-.24.896h1.201a1.939 1.939 0 001.62-.867 1.988 1.988 0 00.265-.586l.027-.1a1.854 1.854 0 00.026-.907 1.973 1.973 0 00-1.031-1.34 1.875 1.875 0 00-.88-.21H4.587zm18.447 0a.401.401 0 00-.25.082.377.377 0 00-.14.217l-1.334 5.01a1.7 1.7 0 00.57-.096 1.806 1.806 0 00.496-.266 1.74 1.74 0 00.385-.408 1.648 1.648 0 00.234-.531l.996-3.696a.23.23 0 00-.045-.217.246.246 0 00-.2-.095h-.712zM8.381 10.643l-.133.503a.564.564 0 00-.006.26.544.544 0 00.1.221.552.552 0 00.185.154.53.53 0 00.252.06h2.157a.101.101 0 01.084.038.098.098 0 01.015.088l-.02.072-.324 1.201-.013.055a.172.172 0 01-.067.105.205.205 0 01-.127.04H9.178a.147.147 0 01-.12-.057.136.136 0 01-.027-.13c.022-.074.071-.112.147-.112h.808a.53.53 0 00.332-.112.564.564 0 00.2-.293l.132-.498H8.84a1.131 1.131 0 00-.38.065 1.152 1.152 0 00-.323.176 1.194 1.194 0 00-.256.271 1.052 1.052 0 00-.156.346l-.028.1a1.095 1.095 0 00-.013.533 1.203 1.203 0 00.212.464 1.141 1.141 0 00.918.453l2.157.006a.899.899 0 00.875-.67l.525-1.95a1.101 1.101 0 00.01-.514 1.114 1.114 0 00-.205-.444 1.149 1.149 0 00-.377-.312 1.048 1.048 0 00-.498-.12H8.38zm-6.397.01a1.924 1.924 0 00-.638.107 1.989 1.989 0 00-.553.295 1.962 1.962 0 00-.7 1.045l-.027.1a1.936 1.936 0 00-.023.905 1.955 1.955 0 00.361.786 1.986 1.986 0 00.668.554 1.875 1.875 0 00.88.21h.464l.266-.983a.23.23 0 00-.043-.215.239.239 0 00-.198-.096h-.423a.702.702 0 01-.319-.074.67.67 0 01-.24-.195.732.732 0 01-.127-.281.706.706 0 01.01-.34.73.73 0 01.256-.377.675.675 0 01.42-.14h.697a.538.538 0 00.338-.114.561.561 0 00.199-.297l.232-.89h-1.5zm11.08 0l-.982 3.689a.23.23 0 00.045.217.238.238 0 00.195.095h.711a.413.413 0 00.248-.08.363.363 0 00.143-.21l.644-2.41h.745a.678.678 0 01.318.075.708.708 0 01.238.2.735.735 0 01.129.28.65.65 0 01-.01.327l-.398 1.506a.243.243 0 00.24.312h.713a.403.403 0 00.244-.08.366.366 0 00.143-.213l.332-1.248a1.897 1.897 0 00.029-.908 1.955 1.955 0 00-.361-.79 1.987 1.987 0 00-.668-.554 1.889 1.889 0 00-.885-.209h-1.813zm5.793 0a1.458 1.458 0 00-.488.081 1.489 1.489 0 00-.752.58 1.493 1.493 0 00-.205.454l-.406 1.505a1.018 1.018 0 00-.016.508 1.139 1.139 0 00.205.446 1.095 1.095 0 00.377.312 1.071 1.071 0 00.498.115h2.502a.528.528 0 00.332-.113.561.561 0 00.2-.291l.21-.791h-2.748a.2.2 0 01-.191-.252l.299-1.127a.34.34 0 01.113-.162.281.281 0 01.18-.064h1.232a.153.153 0 01.147.193l-.026.1c-.022.075-.071.113-.146.113h-.81a.538.538 0 00-.339.111.526.526 0 00-.191.293l-.133.49h2.004a.887.887 0 00.547-.181.864.864 0 00.32-.483l.12-.45a1.11 1.11 0 00.013-.513 1.076 1.076 0 00-.203-.443 1.146 1.146 0 00-.375-.313 1.047 1.047 0 00-.498-.119h-1.772Z"},
+  googlecloud:{t:"Google Cloud",d:"M12.19 2.38a9.344 9.344 0 0 0-9.234 6.893c.053-.02-.055.013 0 0-3.875 2.551-3.922 8.11-.247 10.941l.006-.007-.007.03a6.717 6.717 0 0 0 4.077 1.356h5.173l.03.03h5.192c6.687.053 9.376-8.605 3.835-12.35a9.365 9.365 0 0 0-2.821-4.552l-.043.043.006-.05A9.344 9.344 0 0 0 12.19 2.38zm-.358 4.146c1.244-.04 2.518.368 3.486 1.15a5.186 5.186 0 0 1 1.862 4.078v.518c3.53-.07 3.53 5.262 0 5.193h-5.193l-.008.009v-.04H6.785a2.59 2.59 0 0 1-1.067-.23h.001a2.597 2.597 0 1 1 3.437-3.437l3.013-3.012A6.747 6.747 0 0 0 8.11 8.24c.018-.01.04-.026.054-.023a5.186 5.186 0 0 1 3.67-1.69z"},
+  paloaltonetworks:{t:"Palo Alto Networks",d:"m10.278 15.443 1.705 1.705-3.426 3.426-3.427-3.426 8.592-8.591-1.705-1.705 3.426-3.426 3.427 3.426-8.592 8.591zM0 12.017l3.426 3.426 8.591-8.59-3.426-3.427L0 12.017zm11.983 5.13 3.426 3.427L24 11.983l-3.426-3.426-8.591 8.59z"},
+  openai:{t:"OpenAI",d:"M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"},
+  jfrog:{t:"JFrog",d:"M10.655 15.631l-1.268.353c.11.32.2.893.2 1.665v3.795h1.421v-4.015c.265-.32.552-.474.86-.474.156 0 .277.033.409.11l.386-1.312a1.05 1.05 0 00-.53-.122 1.22 1.22 0 00-.463.09c-.265.131-.596.43-.805.715 0-.32-.077-.573-.21-.805zM5.76 13.757h-.154v7.676h1.477v-3.398h1.864v-1.268H7.082v-1.764H9.41l.088-.673c-1.4-.1-2.668-.32-3.738-.573zm-3.452 8.7l.684.796c.662-.265 1.49-.86 1.71-1.81.077-.308.1-.506.1-1.51v-6.165H3.308v6.33c0 .828-.032 1.136-.142 1.423-.144.32-.486.695-.86.938zm13.422-3.892c0 1.346-.264 1.92-.871 1.92a.782.782 0 01-.717-.464c-.11-.286-.176-.773-.176-1.434 0-.563.055-.96.143-1.268.11-.353.386-.574.728-.574.254 0 .474.11.606.298.199.265.287.76.287 1.522zm.87 2.206c.465-.551.674-1.225.674-2.195 0-.916-.187-1.544-.617-2.073-.464-.574-1.06-.85-1.831-.85-1.456 0-2.426 1.18-2.426 2.967 0 1.787.96 2.934 2.426 2.934.827.01 1.367-.297 1.775-.783zm4.038-3.177c0 .52-.31.805-.86.805-.497 0-.828-.23-.828-.805 0-.529.31-.838.838-.838.53 0 .85.31.85.838zm2.503-1.213l-.585-.937c-.33.31-.727.485-1.113.485-.177 0-.276-.022-.662-.12a3.282 3.282 0 00-.97-.145c-1.38 0-2.272.75-2.272 1.92 0 .837.375 1.367 1.158 1.576-.32.077-.662.243-.816.43a.79.79 0 00-.166.52c0 .176.044.33.11.463a.68.68 0 00.31.275c.253.1.66.166 1.29.177.33 0 .529.01.595.01.386.023.584.09.739.166.143.089.253.287.253.508 0 .22-.132.44-.341.573-.188.132-.497.188-.894.188-.65 0-1.014-.243-1.014-.695 0-.2.022-.243.066-.364h-1.301c-.055.11-.122.265-.122.573 0 .386.144.717.442 1.004.485.474 1.279.606 2.04.606.838 0 1.654-.198 2.128-.727.298-.331.43-.695.43-1.17 0-.507-.143-.893-.463-1.212-.375-.364-.805-.497-1.632-.508l-.761-.01c-.143 0-.232-.056-.232-.133 0-.154.199-.288.563-.464.11.01.143.01.21.01 1.146 0 1.984-.705 1.984-1.686 0-.375-.11-.662-.32-.927.177.022.232.033.364.033.375 0 .673-.12.982-.419zM5.384 7.085c-1.764.43-2.966 1.279-2.966 2.25 0 .606.463 1.157 1.224 1.587a2.155 2.155 0 01-.353-1.157c.01-1.004.794-1.941 2.095-2.68zM24 10.889c0-.64-.397-1.224-1.059-1.709.055.2.1.397.1.596 0 1.82-2.548 3.385-6.165 4.036.408.044.827.066 1.268.066 3.23-.01 5.856-1.345 5.856-2.989zm-2.084-.992c0-.673-.574-1.29-1.555-1.798.23.276.353.574.353.883 0 1.62-3.44 2.933-7.698 2.933-4.246 0-7.698-1.312-7.698-2.933 0-.21.055-.408.165-.596-.683.452-1.07.97-1.07 1.522 0 1.753 3.916 3.176 8.747 3.176 4.83 0 8.756-1.445 8.756-3.187zM18.1 9.81c-1.786 1.147-7.279 1.588-9.639.11-1.853-1.158-1.213-3-6.518-7.036-.694-.53.133-1.092.651-.728.518.364.044.453 1.092 1.5 2.117 2.118 2.095.21 2.426.938.706 1.51 2.25 3.032 2.25 3.032 1.555 1.015 2.79 1.235 5.084-.32 1.456-.981.86 1.566 4.423-.275 1.3-.673 1.246-.22 2.569-2.063.55-.76 1.6.585.408.772-.474.078-1.28.596-1.621 1.412-.496 1.224-.287 2.128-1.125 2.658zM8.196 6.7c-.44-.199-.904-.95-1.08-1.246.496-.486.297-1.29.01-1.732-.275-.44-.617-.32-.98-.727-.376-.41.142-1.467.617-.651 1.775 3.055 2.944 1.786 4.39 1.599 1.39-.177 2.624.584 3-1.566.065-.353.407-.43.44.143.033.585.254 1.996 1.015 2.173.76.187 1.378-.177 1.555-.375.176-.2.275-.177.353.33.077.497.275 1.192 1.345.42 2.195-1.566 1.566-2.173 2.426-2.58.485-.232 1.257.518.144 1.08-1.588.805-1.754 1.797-2.757 2.426-1.688 1.059-1.17.044-3.882-.342-1.048-.143-1.38 1.015-2.195.684-1.864-.772-3.177-.618-4.4.364zm5.879-5.657c.066.463.143.452.309.485.165.044.375-.22.375-.463.01-.254-.11-.408-.353-.397-.254.01-.342.132-.331.375zm8.16.827c.2.187.728.066.85-.078.32-.352.33-.562.165-.805-.165-.231-.507-.198-.85.056-.341.253-.275.727-.164.827zm-.143 2.338c-.165.22-.176.386-.055.507.132.132.397.242.585.1.187-.155.187-.376.033-.563-.166-.2-.386-.2-.563-.044zM5.352 1.45c.253.077.374.32.584.044.11-.133.12-.32-.023-.52-.088-.12-.507-.21-.683-.032-.177.177-.01.464.121.508zM.178 1.295c.463.287.76.717 1.114.33.121-.131.264-.363.01-.826C1.117.457.511.325.301.457c-.22.12-.485.618-.121.838zM4.447 3.49c.143.154.397.143.551.055.144-.088.121-.32-.022-.518-.088-.122-.353-.188-.53 0-.176.187-.098.352 0 .463z"},
+  nginx:{t:"NGINX",d:"M12 0L1.605 6v12L12 24l10.395-6V6L12 0zm6 16.59c0 .705-.646 1.29-1.529 1.29-.631 0-1.351-.255-1.801-.81l-6-7.141v6.66c0 .721-.57 1.29-1.274 1.29H7.32c-.721 0-1.29-.6-1.29-1.29V7.41c0-.705.63-1.29 1.5-1.29.646 0 1.38.255 1.83.81l5.97 7.141V7.41c0-.721.6-1.29 1.29-1.29h.075c.72 0 1.29.6 1.29 1.29v9.18H18z"},
+  apache:{t:"Apache",d:"M17.805 2.197v.066h.156v.44h.072v-.44h.156v-.066zm.9 0l-.175.353-.172-.353h-.087v.506h.067V2.3l.172.35h.045l.172-.35v.404h.066v-.506zm-4.257 1c-.204.31-.424.66-.66 1.06l-.04.062a44.457 44.457 0 00-1.265 2.29c-.187.36-.38.742-.577 1.146l2.267-.25c.66-.302.955-.578 1.242-.976a15.5 15.5 0 00.23-.342c.23-.363.46-.763.663-1.16.197-.386.37-.767.505-1.11.083-.22.15-.422.198-.6.042-.158.074-.307.1-.45-.884.15-1.965.295-2.668.33zM11.894 7.78l-.077.16c-.078.16-.157.32-.236.488-.086.18-.172.364-.26.552l-.132.287a75.265 75.265 0 00-1.427 3.3c-.163.397-.327.807-.493 1.23-.15.38-.297.765-.45 1.164l-.02.06c-.15.396-.3.802-.453 1.22l-.01.027.72-.08a.213.213 0 01-.042-.006c.863-.106 2.01-.75 2.75-1.547.342-.367.652-.8.94-1.306.213-.377.413-.795.604-1.258.168-.405.328-.843.48-1.318-.196.105-.423.18-.673.235a2.184 2.184 0 01-.273.046c.806-.31 1.314-.905 1.683-1.64a2.816 2.816 0 01-.968.428c-.06.012-.116.022-.174.03l-.043.006h.002c.278-.118.514-.248.718-.403a2.571 2.571 0 00.637-.698l.063-.104.077-.154a8.107 8.107 0 00.367-.85l.03-.088a3.04 3.04 0 00.123-.463.733.733 0 01-.094.065c-.243.145-.66.277-.996.34l.663-.074-.664.073h-.017l-.1.017c.006-.003.01-.006.017-.008l-2.265.25-.013.022zM8.27 16.45c-.117.323-.236.654-.355.992l-.005.015c-.016.046-.032.094-.05.142-.08.227-.15.432-.31.9.264.12.475.435.675.793a1.44 1.44 0 00-.466-.99c1.293.06 2.41-.27 2.99-1.217.05-.084.096-.173.14-.268-.26.333-.59.474-1.2.44 0 0-.004 0-.005.002l.004-.002c.9-.404 1.354-.79 1.754-1.433.094-.153.186-.32.28-.503-.788.81-1.702 1.04-2.664.865l-.72.078a6.43 6.43 0 00-.067.183zM15.42.112c-.376.222-1 .85-1.748 1.763l.686 1.294c.48-.687.97-1.307 1.462-1.836l.058-.062c-.02.02-.04.04-.057.062-.16.176-.644.74-1.375 1.863.703-.035 1.784-.18 2.666-.33.262-1.47-.258-2.142-.258-2.142s-.66-1.07-1.436-.61zm-3.084 6.402a40.253 40.253 0 011.306-2.26l.04-.064c.224-.352.45-.693.677-1.02l-.685-1.293-.157.192c-.197.245-.403.51-.613.79a39.853 39.853 0 00-2.016 2.97l-.022.038.893 1.763c.19-.378.38-.752.575-1.118zm-3.73 8.32c.158-.406.319-.81.483-1.225.156-.394.32-.79.484-1.19a91.133 91.133 0 011.6-3.604l.205-.424c.12-.243.237-.485.36-.724a.125.125 0 01.02-.04l-.895-1.763-.044.07c-.207.34-.414.687-.617 1.042a38.056 38.056 0 00-1.092 2.04l-.094.193a24.573 24.573 0 00-1.258 3.087 18.492 18.492 0 00-.52 1.997l.896 1.77c.117-.317.24-.638.364-.963zm-1.376-.476a13.38 13.38 0 00-.234 1.692c0 .02-.004.04-.005.06-.28-.45-1.03-.888-1.026-.884.537.778.944 1.55 1.005 2.31-.29.058-.684-.027-1.14-.195.475.436.83.556.97.588-.434.03-.89.328-1.346.67.668-.27 1.21-.38 1.596-.29-.61 1.74-1.23 3.655-1.843 5.69a.538.538 0 00.364-.354c.11-.368.84-2.786 1.978-5.965l.097-.27.028-.078c.12-.332.246-.672.374-1.02l.09-.237v-.004L7.24 14.3c-.003.02-.01.04-.012.06z"},
+};</script>
 <script>
 window.I18N={
 he:{
- skip:"דלג לתוכן הראשי", themeAria:"החלפת ערכת צבעים", closeAria:"סגירה", gaugeAria:"ציון חומרת CVSS 9.2 מתוך 10 — קריטי",
- title:"PHP2Shell", eyebrow:"עדכון אבטחה · פורסם 21 באוקטובר 2026",
+ skip:"דלג לתוכן הראשי", themeAria:"החלפת ערכת צבעים", langAria:"החלפת שפה", closeAria:"סגירה",
+ gaugeAria:"ציון חומרת CVSS 9.2 מתוך 10 — קריטי", factsAria:"עובדות מפתח", creditAria:"נחשף ומתועד על ידי", legalAria:"קישורים משפטיים", cookieAria:"הודעת עוגיות",
+ title:"PHP2Shell", critical:"קריטי",
+ navCta:"בדיקת דומיין מאומתת", arrowFwd:"←",
+ kicker:"התראת אבטחה",
  h1:"PHP2Shell — הרצת קוד מרחוק בליבת PHP",
- lead:"שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת ללא כל אימות. כאן תבינו אם אתם חשופים, ומה בדיוק צריך לעשות — לעצמכם ולספקים שלכם.",
- navCta:"בדיקת דומיין מאומתת", arrowFwd:"←", heroCta:"בדיקת דומיין שבבעלותכם",
- fPublished:"פורסם", fPublishedV:"21 אוקטובר 2026", fType:"סוג", fTypeV:"הרצת קוד מרחוק", fAuth:"דרוש אימות", fAuthV:"לא נדרש", fExploit:"ניצול ציבורי", fExploitV:"קיים במחזור", fFixed:"ענפים מתוקנים",
- disclaimer:'זהו מרכז מידע. הבדיקה העצמית למטה רצה כולה בדפדפן שלכם, על גרסה שאתם מקלידים. לבדיקה חיה של דומיין שבבעלותכם יש <a href="/scan.html">סורק ייעודי</a> שמחייב קודם הוכחת בעלות. אל תריצו בדיקות נגד מערכות שאינן שלכם ושאין לכם הרשאה לבדוק — זו עבירה.',
+ lead:"שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת בלי שום התחברות. כאן תגלו אם אתם חשופים, ומה בדיוק לעשות — לכם ולספקים שלכם.",
+ heroCta:"בדיקת דומיין שבבעלותכם",
+ ladderCap:"ענפים נתמכים · גרסה מתוקנת",
+ fcAdvisory:"התראת אבטחה",
+ fPublished:"פורסם", fPublishedV:"21 אוקטובר 2026", fType:"סוג", fTypeV:"הרצת קוד מרחוק", fAuth:"דרוש אימות", fAuthV:"לא נדרש", fExploit:"ניצול ציבורי", fExploitV:"קיים בשטח", fFixed:"ענפים מתוקנים",
+ disclaimer:'זהו מרכז מידע עצמאי. הבדיקה העצמית שבהמשך רצה כולה בדפדפן שלכם, על גרסה שאתם מקלידים. לבדיקה חיה של דומיין שבבעלותכם יש <a href="/scan.html">סורק ייעודי</a> שמחייב קודם הוכחת בעלות. אל תריצו בדיקות נגד מערכות שאינן שלכם ושאין לכם הרשאה לבדוק — זו עבירה.',
+ e_ecosystem:"הסביבה המושפעת", ecoH:"מי רץ על ליבת PHP",
+ ecoSub:"החולשה היא במנוע PHP עצמו — ולכן כל מה שרץ מעליו חשוף ברגע שה‑PHP שתחתיו פגיע. אלה חלק מהפלטפורמות והספקים המושפעים.",
+ ecoNote:"מושפעים מפני שהם רצים על PHP — לא בגלל פגם משלהם. הסמלים שייכים לבעליהם.",
  e_bg:"רקע", whatH:"מה זו החולשה",
- whatSub:"PHP2Shell הוא השם שניתן לצמד חולשות בליבת PHP עצמה — לא בתוסף או בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני באינטרנט. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק ללא התחברות.",
+ whatSub:"PHP2Shell הוא השם לצמד חולשות בליבת PHP עצמה — לא בתוסף ולא בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני ברשת. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק בלי התחברות.",
  cve18:"כשל בטיפול בזיכרון: כשנגמר הזיכרון בזמן שנתוני הבקשה עדיין בהרכבה, שלב הניקוי מתייחס לנתונים החלקיים כאילו היו תקינים — פתח להשתלטות.",
  cve19:"שימוש בזיכרון משוחרר: מצב שנשאר מבקשה אחת מצביע לזיכרון שכבר שוחרר, ובקשה מאוחרת על אותו worker יכולה להשתמש בו. אושרה גם דליפת מידע מהזיכרון.",
- exploitNote:'כבר יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות ששחזרו את המחקר באופן עצמאי — ההגנה דחופה, לא תיאורטית. אל תורידו "כלי בדיקה" לא רשמיים: חלקם דווחו כנגועים בתוכנה זדונית.',
+ exploitNote:'כבר יש קוד ניצול ציבורי בשטח, וחברות אבטחה מדווחות ששחזרו את המחקר באופן עצמאי — ההגנה דחופה, לא תיאורטית. אל תורידו "כלי בדיקה" לא רשמיים: חלקם דווחו כנגועים בתוכנה זדונית.',
  e_tool:"כלי", checkH:"בדיקה עצמית — האם אתם חשופים?",
- checkSub:"הקלידו את גרסת ה‑PHP שרצה אצלכם, והבדיקה תגיד אם היא בטווח הפגיע. הכול מתבצע בדפדפן שלכם — שום דבר לא נשלח לרשת.",
+ checkSub:"הקלידו את גרסת ה‑PHP שרצה אצלכם, והבדיקה תגיד אם היא בטווח הפגיע ותסמן אתכם על סולם הגרסאות שלמעלה. הכול מתבצע בדפדפן — שום דבר לא נשלח לרשת.",
  yourVer:"גרסת ה‑PHP שלכם", checkBtn:"בדיקת חשיפה", clearBtn:"ניקוי",
  howto1:"לא בטוחים איזו גרסה רצה אצלכם? הריצו בשרת שלכם:",
- howto2:'או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> באתר שבבעלותכם.',
+ howto2:'או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code>phpinfo()</code> באתר שבבעלותכם.',
  orScan:"רוצים לבדוק דומיין חי במקום גרסה? אפשר לסרוק דומיין שבבעלותכם, אחרי הוכחת בעלות.", orScanBtn:"אימות בעלות וסריקה",
  e_ver:"גרסאות", verH:"גרסאות פגיעות ומתוקנות",
  verSub:"שדרגו לגרסה המתוקנת של הענף שלכם — או גבוהה ממנה. ענפים שהגיעו לסוף חיים (7.4 עד 8.1) לא קיבלו גרסה רשמית, רק תיקוני מקור חלקיים; עדיף לעבור לענף נתמך.",
  verCap:"מקור: ההודעות הרשמיות של PHP.net ו‑Imunify360. ודאו מול המקור בזמן אמת.",
- thBranch:"ענף PHP", thStatus:"סטטוס", thFixed:"גרסה מתוקנת", below:"פגיע מתחת ל‑8.5.12", eol:"סוף חיים — ללא גרסה רשמית", moveSupported:"מעבר לענף נתמך",
+ thBranch:"ענף PHP", thStatus:"סטטוס", thFixed:"גרסה מתוקנת", belowPfx:"פגיע מתחת ל־", eolStatus:"סוף חיים — ללא גרסה רשמית", moveSupported:"מעבר לענף נתמך",
  e_vendors:"ספקים", venH:"ספקים וכלים רלוונטיים",
- venSub:"כל דבר שרץ על PHP מושפע ברגע שה‑PHP שתחתיו פגיע. ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.",
+ venSub:"ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.",
  tUpdatePhp:"עדכנו PHP", tUpdatePhp2:"עדכנו PHP", tAffected:"מושפע", tWaf:"חוק WAF", tNoFix:"אין תיקון עדיין", tGuidance:"הנחיה",
  vWordpress:"וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.",
  vPlesk:"Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.",
@@ -469,10 +595,12 @@ he:{
  vPalo:"Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.",
  vGoogle:"Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.",
  vFrameworks:"כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers, וודאו שהפרודקשן על גרסה מתוקנת.",
+ e_disclosed:"גילוי ומעקב", disH:"נחשף ומתועד על ידי",
+ disSub:"חוקרי אבטחה וגופי ניטור שפרסמו ניתוחים והודעות רשמיות על החולשה. כל שם מפנה להודעה המקורית.",
  e_action:"פעולה", fixH:"מה לעשות עכשיו", fixSub:"צעדי הגנה בלבד — בלי פרטי ניצול. בצעו לפי הסדר, והתחילו מהפרודקשן החשוף לאינטרנט.",
  fix1h:"מפו את גרסאות ה‑PHP", fix1p:"בכל שרת, קונטיינר ואחסון מנוהל. אל תשכחו staging, cron ו‑CLI.",
  fix2h:"שדרגו לגרסה המתוקנת", fix2p:"8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 ומעלה. ענף סוף‑חיים? עברו לענף נתמך.",
- fix3h:"הקלת ביניים ל‑CVE-2026-109619", fix3p:'כהמלצת PHP: כבו את <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.',
+ fix3h:"הקלת ביניים ל‑CVE-2026-109619", fix3p:'כהמלצת PHP: כבו את <code>session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.',
  fix4h:"הפעילו חסימה ב‑WAF", fix4p:"עדכנו את חוקות ה‑WAF (למשל Imunify360 8.83). שכבת הגנה משלימה — לא תחליף לעדכון.",
  fix5h:"בקשו אישור מהספקים", fix5p:"פנו לספקי האחסון, ה‑SaaS וה‑CDN ובקשו בכתב אילו גרסאות PHP הם מריצים ומתי יעדכנו.",
  fix6h:"נטרו ותעדו", fix6p:"חפשו קריסות worker חריגות ובקשות חשודות בלוגים, ושמרו תיעוד שדרוג מסודר.",
@@ -481,11 +609,11 @@ he:{
  q2:"עדכנתי את התוספים — זה מספיק?", a2:"לא. החולשה היא בליבת PHP. עדכון תוספים או תבניות לא מתקן אותה; צריך לעדכן את גרסת ה‑PHP של הסביבה.",
  q3:"אני על ענף סוף‑חיים (7.4–8.1). מה עכשיו?", a3:"אין גרסה רשמית מתוקנת לענפים האלה, רק תיקוני מקור חלקיים. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.",
  q4:"יש כלי שסורק דומיין חי?", a4:'כן — אבל רק אחרי שמוכיחים בעלות על הדומיין (או הרשאה מפורשת), דרך <a href="/scan.html">הסורק שלנו</a>. הבדיקה פסיבית: היא קוראת את כותרות השרת ומסיקה גרסה, בלי לנצל שום דבר. סריקה של מערכת שאינה שלכם וללא הרשאה היא עבירה.',
- q5:"יש כבר ניצול בשטח?", a5:"כן — יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.",
+ q5:"יש כבר ניצול בשטח?", a5:"כן — יש קוד ניצול ציבורי בשטח, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.",
  e_sources:"מקורות", refH:"מקורות והודעות רשמיות", refSub:"כל קביעה בעמוד נשענת על המקורות האלה. בכל ספק — המקור הרשמי קובע.",
- refOfficial:"האתר הרשמי · Wiz × OpenAI × Calif", refPhp:"הודעת PHP הרשמית", refPlesk:"Plesk · הודעת אבטחה", refGoogle:"Google Cloud · תגובה", refImunify:"Imunify360 · חוק WAF", refWiz:"Wiz · מאגר חולשות",
+ refOfficial:"האתר הרשמי · Wiz × OpenAI × Calif", refPhp:"הודעת PHP הרשמית", refRapid7:"Rapid7 · ניתוח", refTenable:"Tenable · שאלות ותשובות", refSansec:"Sansec · מחקר", refJfrog:"JFrog · מחקר אבטחה", refPlesk:"Plesk · הודעת אבטחה", refGoogle:"Google Cloud · תגובה", refImunify:"Imunify360 · חוק WAF", refWiz:"Wiz · מאגר חולשות",
  lPrivacy:"הצהרת פרטיות", lCookies:"מדיניות עוגיות", lA11y:"הצהרת נגישות", lPrefs:"העדפות עוגיות",
- footDisc:"מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק “כמות שהוא” למטרות הסברה בלבד ואינו מהווה ייעוץ אבטחה או משפטי. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות המסחריים שייכים לבעליהם.",
+ footDisc:"מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק “כמות שהוא” למטרות הסברה בלבד ואינו מהווה ייעוץ אבטחה או משפטי. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות והסמלים המסחריים שייכים לבעליהם.",
  ckText:"אנחנו משתמשים בעוגיות חיוניות בלבד כברירת מחדל. עוגיות לניתוח ולפרסום ייטענו רק באישורכם.", ckMore:"פרטים", ckEssential:"רק חיוניות", ckAccept:"אישור הכול",
  scVulnT:"פגיע — דרוש עדכון", scVulnM:"גרסה <b>{v}</b> נמצאת בטווח הפגיע. שדרגו ל‑<b>{fix}</b> או לגרסה גבוהה ממנה.",
  scOkT:"מעודכן ומוגן", scOkM:"גרסה <b>{v}</b> כוללת את התיקון (<b>{fix}</b> ומעלה). ודאו שגם staging, cron ו‑CLI מעודכנים.",
@@ -497,30 +625,38 @@ he:{
  a11yBody:"<p>אנו מחויבים לנגישות בהתאם לתקן <strong>WCAG 2.1 ברמה AA</strong> ולתקנות הנגישות בישראל (ת“י 5568).</p><h4>מה יישמנו</h4><ul><li>ניווט מלא במקלדת עם מצב מיקוד נראה.</li><li>מבנה סמנטי, כותרות מדורגות וסימוני ARIA.</li><li>ניגודיות AA בשתי ערכות הצבעים.</li><li>כיבוד <code>prefers-reduced-motion</code>, תמיכה ב‑RTL ו‑LTR, ומעבר בין עברית לאנגלית.</li></ul><h4>פנייה</h4><p>נתקלתם ברכיב שאינו נגיש? <code>accessibility@php2shell.ai</code>.</p>"
 },
 en:{
- skip:"Skip to content", themeAria:"Toggle theme", closeAria:"Close", gaugeAria:"CVSS severity 9.2 out of 10 — Critical",
- title:"PHP2Shell", eyebrow:"Security advisory · Disclosed Oct 21, 2026",
+ skip:"Skip to content", themeAria:"Toggle theme", langAria:"Switch language", closeAria:"Close",
+ gaugeAria:"CVSS severity 9.2 out of 10 — Critical", factsAria:"Key facts", creditAria:"Disclosed and tracked by", legalAria:"Legal links", cookieAria:"Cookie notice",
+ title:"PHP2Shell", critical:"Critical",
+ navCta:"Verified domain scan", arrowFwd:"→",
+ kicker:"Security advisory",
  h1:"PHP2Shell — Remote code execution in PHP core",
  lead:"Two critical vulnerabilities in PHP core let an attacker run code on the server with no authentication. Here's how to tell if you're exposed — and exactly what to do, for yourself and your vendors.",
- navCta:"Verified domain scan", arrowFwd:"→", heroCta:"Scan a domain you own",
+ heroCta:"Scan a domain you own",
+ ladderCap:"Supported branches · fixed version",
+ fcAdvisory:"Security advisory",
  fPublished:"Disclosed", fPublishedV:"Oct 21, 2026", fType:"Type", fTypeV:"Remote code execution", fAuth:"Auth required", fAuthV:"None", fExploit:"Public exploit", fExploitV:"In the wild", fFixed:"Fixed branches",
- disclaimer:'This is an awareness hub. The self-check below runs entirely in your browser, on a version you type. For a live check of a domain you own, use our <a href="/scan.html">dedicated scanner</a>, which first requires proof of ownership. Never run checks against systems you don’t own or aren’t authorized to test — that’s a crime.',
+ disclaimer:'This is an independent awareness hub. The self-check below runs entirely in your browser, on a version you type. For a live check of a domain you own, use our <a href="/scan.html">dedicated scanner</a>, which first requires proof of ownership. Never run checks against systems you don’t own or aren’t authorized to test — that’s a crime.',
+ e_ecosystem:"Affected ecosystem", ecoH:"What runs on PHP core",
+ ecoSub:"The flaw is in the PHP engine itself — so everything running on top of it is exposed the moment the PHP beneath it is vulnerable. These are some of the affected platforms and vendors.",
+ ecoNote:"Affected because they run on PHP — not because of a flaw of their own. Trademarks belong to their owners.",
  e_bg:"Background", whatH:"What the vulnerability is",
- whatSub:"PHP2Shell is the name given to a pair of flaws in PHP core itself — not a plugin or a theme, but the engine behind nearly every second dynamic site on the web. Both are rated 9.2 (critical) and allow unauthenticated remote code execution.",
+ whatSub:"PHP2Shell is the name for a pair of flaws in PHP core itself — not a plugin or a theme, but the engine behind nearly every second dynamic site on the web. Both are rated 9.2 (critical) and allow unauthenticated remote code execution.",
  cve18:"A memory-handling flaw: when the process runs out of memory while request data is still being assembled, the cleanup step treats the partial data as valid — an opening for takeover.",
  cve19:"A use-after-free: state left over from one request points to freed memory, and a later request on the same worker can use it. Memory disclosure is also confirmed.",
- exploitNote:"Public exploit code is already circulating, and security firms report independently reproducing the research — defending is urgent, not theoretical. Don’t download unofficial “checkers”: some were reported to carry malware.",
+ exploitNote:"Public exploit code is already in the wild, and security firms report independently reproducing the research — defending is urgent, not theoretical. Don’t download unofficial “checkers”: some were reported to carry malware.",
  e_tool:"Tool", checkH:"Self-check — are you exposed?",
- checkSub:"Type the PHP version you run and the check tells you whether it's in the vulnerable range. It all runs in your browser — nothing is sent over the network.",
+ checkSub:"Type the PHP version you run; the check tells you whether it's in the vulnerable range and marks you on the version ladder above. It all runs in your browser — nothing is sent over the network.",
  yourVer:"Your PHP version", checkBtn:"Check exposure", clearBtn:"Clear",
  howto1:"Not sure which version you run? On your own server:",
- howto2:'Or check your hosting panel (cPanel / Plesk → PHP version), or <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> on a site you own.',
+ howto2:'Or check your hosting panel (cPanel / Plesk → PHP version), or <code>phpinfo()</code> on a site you own.',
  orScan:"Want to check a live domain instead of a version? You can scan a domain you own, after proving ownership.", orScanBtn:"Verify ownership & scan",
  e_ver:"Versions", verH:"Vulnerable & fixed versions",
  verSub:"Upgrade to your branch's fixed version — or higher. End-of-life branches (7.4 to 8.1) got no official release, only partial source backports; moving to a supported branch is best.",
  verCap:"Source: the official PHP.net and Imunify360 advisories. Verify against the source in real time.",
- thBranch:"PHP branch", thStatus:"Status", thFixed:"Fixed version", below:"Vulnerable below 8.5.12", eol:"End-of-life — no official release", moveSupported:"Move to a supported branch",
+ thBranch:"PHP branch", thStatus:"Status", thFixed:"Fixed version", belowPfx:"Vulnerable below ", eolStatus:"End-of-life — no official release", moveSupported:"Move to a supported branch",
  e_vendors:"Vendors", venH:"Relevant vendors & tools",
- venSub:"Anything running on PHP is affected the moment the PHP beneath it is vulnerable. In most cases the fix is updating the host's PHP version — not the app. Summaries below; see each vendor's official advisory.",
+ venSub:"In most cases the fix is updating the host's PHP version — not the app. Summaries below; see each vendor's official advisory.",
  tUpdatePhp:"Update PHP", tUpdatePhp2:"Update PHP", tAffected:"Affected", tWaf:"WAF rule", tNoFix:"No fix yet", tGuidance:"Guidance",
  vWordpress:"WordPress itself isn't the flaw — but it runs on PHP. Update the PHP version in your hosting panel to your branch's fixed release.",
  vPlesk:"Plesk ships its own PHP and published dedicated guidance to update the bundled PHP. Update through Plesk, not by hand.",
@@ -528,10 +664,12 @@ en:{
  vPalo:"Palo Alto lists PAN-OS as affected, with no fix available yet. Track the vendor update and apply interim mitigations.",
  vGoogle:"Google published response guidance for the PHP core vulnerabilities, including a service mapping and upgrading managed runtimes.",
  vFrameworks:"Every PHP framework is exposed through the runtime. Update PHP in the environment, restart the workers, and confirm production is on a fixed version.",
+ e_disclosed:"Disclosure & tracking", disH:"Disclosed & tracked by",
+ disSub:"Security researchers and monitoring outfits that published analyses and advisories on the vulnerability. Each name links to its original report.",
  e_action:"Action", fixH:"What to do now", fixSub:"Defensive steps only — no exploit details. Work in order, starting with internet-facing production.",
  fix1h:"Map your PHP versions", fix1p:"Across every server, container, and managed host. Don't forget staging, cron, and CLI.",
  fix2h:"Upgrade to the fixed version", fix2p:"8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 or later. On an EOL branch? Move to a supported one.",
- fix3h:"Interim mitigation for CVE-2026-109619", fix3p:'Per PHP: disable <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> and restart worker processes to clear stuck state.',
+ fix3h:"Interim mitigation for CVE-2026-109619", fix3p:'Per PHP: disable <code>session.upload_progress</code> and restart worker processes to clear stuck state.',
  fix4h:"Enable WAF blocking", fix4p:"Update your WAF rules (e.g. Imunify360 8.83). A complementary layer — not a substitute for the update.",
  fix5h:"Ask your vendors to confirm", fix5p:"Ask your hosting, SaaS, and CDN providers in writing which PHP versions they run and when they'll update.",
  fix6h:"Monitor and document", fix6p:"Watch for unusual worker crashes and suspicious requests in logs, and keep a clean upgrade record.",
@@ -542,9 +680,9 @@ en:{
  q4:"Is there a tool that scans a live domain?", a4:'Yes — but only after you prove you own the domain (or are authorized), via <a href="/scan.html">our scanner</a>. The check is passive: it reads the server’s headers and infers a version, exploiting nothing. Scanning a system you don’t own, without authorization, is a crime.',
  q5:"Is there active exploitation?", a5:"Yes — public exploit code is circulating and security firms report independently reproducing the research. Treat the update as urgent.",
  e_sources:"Sources", refH:"Sources & official advisories", refSub:"Every claim on this page rests on these sources. When in doubt, the official source wins.",
- refOfficial:"Official site · Wiz × OpenAI × Calif", refPhp:"Official PHP advisory", refPlesk:"Plesk · Security advisory", refGoogle:"Google Cloud · Response", refImunify:"Imunify360 · WAF rule", refWiz:"Wiz · Vulnerability DB",
+ refOfficial:"Official site · Wiz × OpenAI × Calif", refPhp:"Official PHP advisory", refRapid7:"Rapid7 · Analysis", refTenable:"Tenable · FAQ", refSansec:"Sansec · Research", refJfrog:"JFrog · Security research", refPlesk:"Plesk · Security advisory", refGoogle:"Google Cloud · Response", refImunify:"Imunify360 · WAF rule", refWiz:"Wiz · Vulnerability DB",
  lPrivacy:"Privacy statement", lCookies:"Cookie policy", lA11y:"Accessibility", lPrefs:"Cookie preferences",
- footDisc:"An independent awareness hub for PHP2Shell (CVE-2026-109618, CVE-2026-109619). Content is provided “as is” for awareness only and is not security or legal advice. Data is accurate as of the disclosure date and may change — the official PHP.net and vendor advisories are authoritative. Trademarks belong to their owners.",
+ footDisc:"An independent awareness hub for PHP2Shell (CVE-2026-109618, CVE-2026-109619). Content is provided “as is” for awareness only and is not security or legal advice. Data is accurate as of the disclosure date and may change — the official PHP.net and vendor advisories are authoritative. Trademarks and logos belong to their owners.",
  ckText:"We use essential cookies only by default. Analytics and advertising cookies load only with your consent.", ckMore:"Details", ckEssential:"Essential only", ckAccept:"Accept all",
  scVulnT:"Vulnerable — update required", scVulnM:"Version <b>{v}</b> is in the vulnerable range. Upgrade to <b>{fix}</b> or later.",
  scOkT:"Up to date & protected", scOkM:"Version <b>{v}</b> includes the fix (<b>{fix}</b> or later). Make sure staging, cron, and CLI are updated too.",
@@ -577,21 +715,32 @@ en:{
  "use strict";var T=window.P2S_T,$=function(id){return document.getElementById(id);};
  var LS={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
  var root=document.documentElement;
+
+ /* build the affected-ecosystem logo wall + vendor-card logos from verified brand paths */
+ var B=window.BRAND||{};
+ function svg(slug){var b=B[slug];if(!b)return '';return '<svg viewBox="0 0 24 24" role="img" aria-label="'+b.t+'"><title>'+b.t+'</title><path d="'+b.d+'"/></svg>';}
+ var ECO=['wordpress','laravel','drupal','joomla','magento','php','plesk','cpanel','googlecloud','paloaltonetworks','nginx','apache'];
+ (function(){var w=$('logowall');if(!w)return;w.innerHTML=ECO.map(function(s){var b=B[s]||{t:s};return '<div class="logocell">'+svg(s)+'<span class="nm">'+b.t+'</span></div>';}).join('');})();
+ document.querySelectorAll('.ttl[data-logo]').forEach(function(el){var s=el.getAttribute('data-logo');if(B[s])el.insertAdjacentHTML('afterbegin',svg(s));});
+
  /* theme */
  var th=LS.get('p2s-theme');if(th==='dark'||th==='light')root.setAttribute('data-theme',th);
  $('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');var dark=c==='dark'||(!c&&matchMedia('(prefers-color-scheme:dark)').matches);var n=dark?'light':'dark';root.setAttribute('data-theme',n);LS.set('p2s-theme',n);});
  /* lang */
  $('langBtn').addEventListener('click',function(){window.P2S_setLang(window.P2S_lang()==='he'?'en':'he');});
 
- /* self-check */
+ /* self-check + drive the hero patch ladder */
  var PATCHED={'8.5':12,'8.4':27,'8.3':36,'8.2':35};
  var form=$('checkForm'),input=$('phpv'),box=$('result'),vEl=$('verdict'),dEl=$('detail');
  function parse(v){var m=String(v).trim().match(/(\d+)\.(\d+)(?:\.(\d+))?/);if(!m)return null;return{maj:+m[1],min:+m[2],pat:m[3]!=null?+m[3]:0,branch:m[1]+'.'+m[2]};}
  var last=null;
- function evaluate(p){var fix=PATCHED[p.branch];if(fix!=null){if(p.pat<fix)return{cls:'r-crit',t:T('scVulnT'),m:T('scVulnM').replace('{v}',p.branch+'.'+p.pat).replace('{fix}',p.branch+'.'+fix)};return{cls:'r-ok',t:T('scOkT'),m:T('scOkM').replace('{v}',p.branch+'.'+p.pat).replace('{fix}',p.branch+'.'+fix)};}if(p.maj<8||(p.maj===8&&p.min<2))return{cls:'r-crit',t:T('scEolT'),m:T('scEolM').replace('{branch}',p.branch)};return{cls:'r-warn',t:T('scUnkT'),m:T('scUnkM').replace('{branch}',p.branch)};}
- function show(r){box.className='result show '+r.cls;vEl.textContent=r.t;dEl.innerHTML=r.m;}
- form.addEventListener('submit',function(e){e.preventDefault();var p=parse(input.value);if(!p){last=null;box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');return;}last=p;show(evaluate(p));});
- $('clearBtn').addEventListener('click',function(){input.value='';box.className='result';last=null;input.focus();});
+ function evaluate(p){var fix=PATCHED[p.branch];if(fix!=null){if(p.pat<fix)return{cls:'r-crit',t:T('scVulnT'),m:T('scVulnM').replace('{v}',p.branch+'.'+p.pat).replace('{fix}',p.branch+'.'+fix),branch:p.branch,below:true};return{cls:'r-ok',t:T('scOkT'),m:T('scOkM').replace('{v}',p.branch+'.'+p.pat).replace('{fix}',p.branch+'.'+fix),branch:p.branch,below:false};}if(p.maj<8||(p.maj===8&&p.min<2))return{cls:'r-crit',t:T('scEolT'),m:T('scEolM').replace('{branch}',p.branch),branch:null};return{cls:'r-warn',t:T('scUnkT'),m:T('scUnkM').replace('{branch}',p.branch),branch:null};}
+ function markLadder(r){document.querySelectorAll('.lrow').forEach(function(row){row.classList.remove('active');var hm=row.querySelector('.heremark');if(hm){hm.style.left='';hm.style.setProperty('--hm','var(--fg)');}});
+  if(!r||!r.branch)return;var row=document.querySelector('.lrow[data-branch="'+r.branch+'"]');if(!row)return;row.classList.add('active');var hm=row.querySelector('.heremark');if(!hm)return;
+  hm.style.left=r.below?'34%':'86%';hm.style.setProperty('--hm',r.below?'var(--crit)':'var(--ok)');}
+ function show(r){box.className='result show '+r.cls;vEl.textContent=r.t;dEl.innerHTML=r.m;markLadder(r);}
+ form.addEventListener('submit',function(e){e.preventDefault();var p=parse(input.value);if(!p){last=null;box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');markLadder(null);return;}last=p;show(evaluate(p));});
+ $('clearBtn').addEventListener('click',function(){input.value='';box.className='result';last=null;markLadder(null);input.focus();});
  window.P2S_onlang=function(){ if(last&&box.classList.contains('show'))show(evaluate(last)); else if(box.classList.contains('show')){box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');} };
 
  /* modals */
