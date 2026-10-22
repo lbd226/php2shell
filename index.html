@@ -458,6 +458,14 @@ dialog::backdrop{background:rgba(5,8,13,.6);backdrop-filter:blur(2px)}
       </div>
       <div class="or"><p data-t="orScan">רוצים לבדוק דומיין חי במקום גרסה? אפשר לסרוק דומיין שבבעלותכם, אחרי הוכחת בעלות.</p>
         <a class="cta" href="/scan.html"><span data-t="orScanBtn">אימות בעלות וסריקה</span> <span data-t="arrowFwd" aria-hidden="true">←</span></a></div>
+      <div class="or"><p data-t="orLocal">מעדיפים לבדוק ישירות על השרת? הורידו סקריפט קצר שמזהה את כל גרסאות ה‑PHP המותקנות (כולל סביבות cPanel/Plesk) — רץ מקומית, בלי לשלוח כלום.</p>
+        <a class="cta" href="/php2shell-check.sh" download><span data-t="orLocalBtn">הורדת סקריפט בדיקה</span> <span aria-hidden="true">↓</span></a></div>
+      <div class="howto"><p data-t="localHow">להרצה על השרת (מומלץ לעבור על הקוד לפני הרצה):</p>
+        <code class="cmd">curl -O https://php2shell.ai/php2shell-check.sh
+less php2shell-check.sh
+bash php2shell-check.sh</code>
+        <p style="margin-top:9px;font-size:12.5px"><span data-t="localShaLabel">אימות שלמות (SHA‑256)</span>: <code class="mono" style="font-size:11px;word-break:break-all">9cd4487db34b7b1c9e7113cced13ab712aa9a061802aeb41b7011e3f37165847</code></p>
+      </div>
     </div>
   </div></section>
 
@@ -627,6 +635,8 @@ he:{
  howto1:"לא בטוחים איזו גרסה רצה אצלכם? הריצו בשרת שלכם:",
  howto2:'או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code>phpinfo()</code> באתר שבבעלותכם.',
  orScan:"רוצים לבדוק דומיין חי במקום גרסה? אפשר לסרוק דומיין שבבעלותכם, אחרי הוכחת בעלות.", orScanBtn:"אימות בעלות וסריקה",
+ orLocal:"מעדיפים לבדוק ישירות על השרת? הורידו סקריפט קצר שמזהה את כל גרסאות ה‑PHP המותקנות (כולל סביבות cPanel/Plesk) — רץ מקומית, בלי לשלוח כלום.", orLocalBtn:"הורדת סקריפט בדיקה",
+ localHow:"להרצה על השרת (מומלץ לעבור על הקוד לפני הרצה):", localShaLabel:"אימות שלמות (SHA‑256)",
  e_ver:"גרסאות", verH:"גרסאות פגיעות ומתוקנות",
  verSub:"שדרגו לגרסה המתוקנת של הענף שלכם — או גבוהה ממנה. ענפים שהגיעו לסוף חיים (7.4 עד 8.1) לא קיבלו גרסה רשמית, רק תיקוני מקור חלקיים; עדיף לעבור לענף נתמך.",
  verCap:"מקור: ההודעות הרשמיות של PHP.net ו‑Imunify360. ודאו מול המקור בזמן אמת.",
@@ -701,6 +711,8 @@ en:{
  howto1:"Not sure which version you run? On your own server:",
  howto2:'Or check your hosting panel (cPanel / Plesk → PHP version), or <code>phpinfo()</code> on a site you own.',
  orScan:"Want to check a live domain instead of a version? You can scan a domain you own, after proving ownership.", orScanBtn:"Verify ownership & scan",
+ orLocal:"Prefer to check directly on your servers? Download a short script that detects every installed PHP version (including cPanel/Plesk setups) — it runs locally and sends nothing.", orLocalBtn:"Download check script",
+ localHow:"Run it on your server (review the code first):", localShaLabel:"Integrity (SHA‑256)",
  e_ver:"Versions", verH:"Vulnerable & fixed versions",
  verSub:"Upgrade to your branch's fixed version — or higher. End-of-life branches (7.4 to 8.1) got no official release, only partial source backports; moving to a supported branch is best.",
  verCap:"Source: the official PHP.net and Imunify360 advisories. Verify against the source in real time.",
