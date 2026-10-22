@@ -213,6 +213,30 @@ html[lang="he"] .sec-eyebrow{text-transform:none;letter-spacing:.02em}
 .tag{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:7px;white-space:nowrap}
 .tag.affected{background:var(--crit-weak);color:var(--crit)}.tag.patch{background:var(--ok-weak);color:var(--ok)}.tag.action{background:var(--accent-weak);color:var(--accent)}.tag.nofix{background:var(--warn-weak);color:var(--warn)}
 .tag.tech{background:var(--surface-3);color:var(--muted);font-family:var(--mono);direction:ltr;font-weight:500}
+.card-foot{margin-top:auto;padding-top:11px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-foot .upd{font-size:12px;color:var(--faint);display:inline-flex;align-items:center;gap:6px}
+.card-foot .upd .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);flex:none}
+.card-foot .upd time{font-variant-numeric:tabular-nums}
+.card-foot a{font-size:12.5px;font-weight:700;white-space:nowrap}
+.reviewed{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-size:12.5px;color:var(--faint)}
+.reviewed .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-weak);flex:none}
+.reviewed time{color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* coverage / press */
+.cov{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cov-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px 4px 8px}
+.cov-col h3{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:14px 16px 10px;border-bottom:1px solid var(--border)}
+html[lang="he"] .cov-col h3{letter-spacing:.02em;text-transform:none}
+.cov-col ul{list-style:none;margin:0;padding:4px}
+.cov-item{display:block;padding:10px 12px;border-radius:9px;transition:background .15s}
+.cov-item:hover{background:var(--surface-2);text-decoration:none}
+.cov-item .out{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cov-item .o{font-weight:700;font-size:13.5px;color:var(--fg)}
+.cov-item .d{font-family:var(--mono);font-size:11px;color:var(--faint);direction:ltr;flex:none}
+.cov-item .ti{display:block;font-size:12.8px;color:var(--muted);margin-top:2px;line-height:1.45}
+.cov-item .o::after{content:" ↗";color:var(--accent);font-weight:400}
+.cov-note{margin-top:14px;font-size:12.5px;color:var(--faint)}
+@media(max-width:860px){.cov{grid-template-columns:1fr}}
 
 /* self-check */
 .checker{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px}
@@ -441,14 +465,8 @@ dialog::backdrop{background:rgba(5,8,13,.6);backdrop-filter:blur(2px)}
     <div class="sec-head"><span class="sec-eyebrow" data-t="e_vendors">ספקים</span><h2 data-t="venH">ספקים וכלים רלוונטיים</h2>
       <p class="sub" data-t="venSub">ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.</p>
     </div>
-    <div class="grid">
-      <div class="card"><div class="top"><div class="ttl" data-logo="wordpress"><h3>WordPress</h3></div><span class="tag action" data-t="tUpdatePhp">עדכנו PHP</span></div><p data-t="vWordpress">וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.</p></div>
-      <div class="card"><div class="top"><div class="ttl" data-logo="plesk"><h3>Plesk</h3></div><span class="tag affected" data-t="tAffected">מושפע</span></div><p data-t="vPlesk">Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.</p></div>
-      <div class="card"><div class="top"><div class="ttl" data-logo="cpanel"><h3>cPanel · Imunify360</h3></div><span class="tag patch" data-t="tWaf">חוק WAF</span></div><p data-t="vImunify">חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.</p></div>
-      <div class="card"><div class="top"><div class="ttl" data-logo="paloaltonetworks"><h3>Palo Alto PAN-OS</h3></div><span class="tag nofix" data-t="tNoFix">אין תיקון עדיין</span></div><p data-t="vPalo">Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.</p></div>
-      <div class="card"><div class="top"><div class="ttl" data-logo="googlecloud"><h3>Google Cloud</h3></div><span class="tag action" data-t="tGuidance">הנחיה</span></div><p data-t="vGoogle">Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.</p></div>
-      <div class="card"><div class="top"><div class="ttl"><h3>Laravel · Drupal · Joomla</h3></div><span class="tag action" data-t="tUpdatePhp2">עדכנו PHP</span></div><p data-t="vFrameworks">כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers, וודאו שהפרודקשן על גרסה מתוקנת.</p></div>
-    </div>
+    <div class="reviewed"><span class="dot" aria-hidden="true"></span><span data-t="lastReviewed">נבדק לאחרונה</span> <time id="revDate"></time></div>
+    <div class="grid" id="vendorGrid" style="margin-top:14px"></div>
   </div></section>
 
   <section class="band" id="disclosed"><div class="wrap">
@@ -491,6 +509,14 @@ dialog::backdrop{background:rgba(5,8,13,.6);backdrop-filter:blur(2px)}
     <details class="faq"><summary data-t="q3">אני על ענף סוף‑חיים (7.4–8.1). מה עכשיו?</summary><div class="body" data-t="a3">אין גרסה רשמית מתוקנת לענפים האלה, רק תיקוני מקור חלקיים. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.</div></details>
     <details class="faq"><summary data-t="q4">יש כלי שסורק דומיין חי?</summary><div class="body" data-th="a4">כן — אבל רק אחרי שמוכיחים בעלות על הדומיין (או הרשאה מפורשת), דרך <a href="/scan.html">הסורק שלנו</a>. הבדיקה פסיבית: היא קוראת את כותרות השרת ומסיקה גרסה, בלי לנצל שום דבר. סריקה של מערכת שאינה שלכם וללא הרשאה היא עבירה.</div></details>
     <details class="faq"><summary data-t="q5">יש כבר ניצול בשטח?</summary><div class="body" data-t="a5">כן — יש קוד ניצול ציבורי בשטח, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.</div></details>
+  </div></section>
+
+  <section class="band" id="coverage"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_coverage">סיקור</span><h2 data-t="covH">הפרסומים המרכזיים בנושא</h2>
+      <p class="sub" data-t="covSub">ריכוז הסיקור המשמעותי על PHP2Shell — ניתוחים של חברות אבטחה, דיווחי חדשות וטכנולוגיה, והתראות רשמיות. כל קישור מוביל למקור.</p>
+    </div>
+    <div class="cov" id="coverageWrap"></div>
+    <p class="cov-note" data-t="covNote">הרשימה מתעדכנת ונבדקת מול המקורות; הקישורים חיצוניים ואינם בשליטתנו. אל תורידו "כלי בדיקה" לא רשמיים.</p>
   </div></section>
 
   <section class="band tint" id="refs"><div class="wrap">
@@ -591,6 +617,11 @@ he:{
  e_vendors:"ספקים", venH:"ספקים וכלים רלוונטיים",
  venSub:"ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.",
  tUpdatePhp:"עדכנו PHP", tUpdatePhp2:"עדכנו PHP", tAffected:"מושפע", tWaf:"חוק WAF", tNoFix:"אין תיקון עדיין", tGuidance:"הנחיה",
+ lastReviewed:"נבדק לאחרונה:", venUpdated:"עודכן", venAdvisory:"להודעת הספק",
+ e_coverage:"סיקור", covH:"הפרסומים המרכזיים בנושא",
+ covSub:"ריכוז הסיקור המשמעותי על PHP2Shell — ניתוחים של חברות אבטחה, דיווחי חדשות וטכנולוגיה, והתראות רשמיות. כל קישור מוביל למקור.",
+ covNote:"הרשימה מתעדכנת ונבדקת מול המקורות; הקישורים חיצוניים ואינם בשליטתנו. אל תורידו “כלי בדיקה” לא רשמיים.",
+ covResearch:"חברות אבטחה ומחקר", covNews:"חדשות וטכנולוגיה", covOfficial:"התראות רשמיות וגופי CERT",
  vWordpress:"וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.",
  vPlesk:"Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.",
  vImunify:"חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.",
@@ -660,6 +691,11 @@ en:{
  e_vendors:"Vendors", venH:"Relevant vendors & tools",
  venSub:"In most cases the fix is updating the host's PHP version — not the app. Summaries below; see each vendor's official advisory.",
  tUpdatePhp:"Update PHP", tUpdatePhp2:"Update PHP", tAffected:"Affected", tWaf:"WAF rule", tNoFix:"No fix yet", tGuidance:"Guidance",
+ lastReviewed:"Last reviewed:", venUpdated:"Updated", venAdvisory:"Advisory",
+ e_coverage:"Coverage", covH:"The main publications on this",
+ covSub:"A roundup of the significant coverage of PHP2Shell — security-firm analyses, news and tech reporting, and official advisories. Every link goes to the source.",
+ covNote:"The list is maintained and checked against the sources; links are external and outside our control. Don’t download unofficial “checkers”.",
+ covResearch:"Security firms & research", covNews:"News & tech press", covOfficial:"Official & national advisories",
  vWordpress:"WordPress itself isn't the flaw — but it runs on PHP. Update the PHP version in your hosting panel to your branch's fixed release.",
  vPlesk:"Plesk ships its own PHP and published dedicated guidance to update the bundled PHP. Update through Plesk, not by hand.",
  vImunify:"Imunify360's WAF ruleset 8.83 blocks the public exploit pattern on ModSecurity and Coraza; on LiteSpeed it only logs. No substitute for updating PHP.",
@@ -723,7 +759,47 @@ en:{
  function svg(slug){var b=B[slug];if(!b)return '';return '<svg viewBox="0 0 24 24" role="img" aria-label="'+b.t+'"><title>'+b.t+'</title><path d="'+b.d+'"/></svg>';}
  var ECO=['wordpress','laravel','drupal','joomla','magento','php','plesk','cpanel','googlecloud','paloaltonetworks','nginx','apache'];
  (function(){var w=$('logowall');if(!w)return;w.innerHTML=ECO.map(function(s){var b=B[s]||{t:s};return '<div class="logocell">'+svg(s)+'<span class="nm">'+b.t+'</span></div>';}).join('');})();
- document.querySelectorAll('.ttl[data-logo]').forEach(function(el){var s=el.getAttribute('data-logo');if(B[s])el.insertAdjacentHTML('afterbegin',svg(s));});
+ /* ---- data-driven vendor status + coverage (dates localize client-side; re-render on language switch) ---- */
+ var LAST_REVIEWED='2026-10-22';
+ var VENDORS=[
+  {logo:'wordpress',name:'WordPress',st:'tUpdatePhp',cls:'action',desc:'vWordpress',u:'https://cybernews.com/security/wordpress-php-severe-rce-flaws-emergency-patches/',upd:'2026-10-21'},
+  {logo:'plesk',name:'Plesk',st:'tAffected',cls:'affected',desc:'vPlesk',u:'https://support.plesk.com/hc/en-us/articles/44397729587351-Vulnerability-CVE-2026-109618-and-CVE-2026-109619-Remote-code-execution-in-PHP-shipped-with-Plesk',upd:'2026-10-21'},
+  {logo:'cpanel',name:'cPanel · Imunify360',st:'tWaf',cls:'patch',desc:'vImunify',u:'https://blog.imunify360.com/php-cve-2026-109618-cve-2026-109619/',upd:'2026-10-21'},
+  {logo:'paloaltonetworks',name:'Palo Alto PAN-OS',st:'tNoFix',cls:'nofix',desc:'vPalo',u:'https://security.paloaltonetworks.com/CVE-2026-109618',upd:'2026-10-22'},
+  {logo:'googlecloud',name:'Google Cloud',st:'tGuidance',cls:'action',desc:'vGoogle',u:'https://cloud.google.com/blog/products/identity-security/responding-to-core-php-vulnerabilities-cve-2026-109618-cve-2026-109619',upd:'2026-10-21'},
+  {logo:'',name:'Laravel · Drupal · Joomla',st:'tUpdatePhp2',cls:'action',desc:'vFrameworks',u:'https://www.php.net/',upd:'2026-10-21'}
+ ];
+ var COVERAGE={
+  research:[
+   {o:'watchTowr',t:'PHP RCE FAQ: CVE-2026-109618 & -109619',u:'https://watchtowr.com/intelligence/php-cve-2026-109618-faq/',d:'2026-10-21'},
+   {o:'Huntress',t:'Rapid Response: php2shell leaked critical PHP vulns',u:'https://www.huntress.com/blog/php2shell-leaked-critical-php-vulnerabilities',d:'2026-10-21'},
+   {o:'JFrog',t:'All you need to know about CVE-2026-109618/9',u:'https://research.jfrog.com/post/php2shell-all-you-need-to-know-about-cve-2026-109618-and-cve-2026-109619/',d:'2026-10-21'},
+   {o:'CrowdStrike',t:'Protecting customers from the PHP RCE zero-days',u:'https://www.crowdstrike.com/en-us/blog/crowdstrike-protects-customers-from-php-rce-zero-days/',d:'2026-10-21'},
+   {o:'Tenable',t:'Critical PHP RCE — frequently asked questions',u:'https://www.tenable.com/blog/php2shell-cve-2026-109618-cve-2026-109619-frequently-asked-questions-about-critical-php-remote',d:'2026-10-21'},
+   {o:'Cloudflare',t:'Deploying WAF protections against php2shell',u:'https://blog.cloudflare.com/php-vulnerabilities-waf-protection',d:'2026-10-21'},
+   {o:'Wiz',t:'Vulnerability database · CVE-2026-109618',u:'https://www.wiz.io/vulnerability-database/cve/cve-2026-109618',d:'2026-10-21'}
+  ],
+  news:[
+   {o:'SecurityWeek',t:'Mass exploitation looms for leaked critical PHP flaws',u:'https://www.securityweek.com/php2shell-mass-exploitation-looms-for-leaked-critical-php-flaws/',d:'2026-10-21'},
+   {o:'BleepingComputer',t:'PHP ships emergency patches for PHP2Shell flaws',u:'https://www.bleepingcomputer.com/news/security/php-ships-emergency-patches-for-critical-php2shell-flaws/',d:'2026-10-21'},
+   {o:'The Hacker News',t:'PHP issues emergency patches for two critical RCEs',u:'https://thehackernews.com/2026/10/php-issues-emergency-patches-for-two.html',d:'2026-10-21'},
+   {o:'Help Net Security',t:'Critical PHP vulnerabilities patched, update now',u:'https://www.helpnetsecurity.com/2026/10/21/php2shell-php-vulnerabilities-patched-cve-2026-109618-cve-2026-109619/',d:'2026-10-21'},
+   {o:'heise',t:'Critical flaws allow code injection in PHP',u:'https://www.heise.de/en/news/php2shell-Critical-flaws-allow-code-injection-in-PHP-11494897.html',d:'2026-10-21'},
+   {o:'Cybernews',t:'A severe PHP scare has WordPress sites bracing',u:'https://cybernews.com/security/wordpress-php-severe-rce-flaws-emergency-patches/',d:'2026-10-21'},
+   {o:'Cyber Kendra',t:'Critical PHP flaws allow remote code execution',u:'https://www.cyberkendra.com/2026/10/php2shell-cve-2026-109618-cve-2026-109619.html',d:'2026-10-21'}
+  ],
+  official:[
+   {o:'PHP.net',t:'Official PHP security advisory',u:'https://www.php.net/',d:'2026-10-21'},
+   {o:'NVD / NIST',t:'CVE-2026-109618 detail',u:'https://nvd.nist.gov/vuln/detail/CVE-2026-109618',d:'2026-10-21'},
+   {o:'NCSC-NL',t:'Operational information (GitHub)',u:'https://github.com/NCSC-NL/php2shell',d:'2026-10-21'},
+   {o:'CSA Singapore',t:'National advisory AL-2026-151',u:'https://www.csa.gov.sg/alerts-and-advisories/alerts/al-2026-151/',d:'2026-10-21'}
+  ]
+ };
+ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+ function fmtDate(iso){try{return new Intl.DateTimeFormat(window.P2S_lang()==='he'?'he-IL':'en-US',{day:'numeric',month:'short',year:'numeric'}).format(new Date(iso+'T00:00:00'));}catch(e){return iso;}}
+ function renderVendors(){var g=$('vendorGrid');if(!g)return;g.innerHTML=VENDORS.map(function(v){var logo=(v.logo&&B[v.logo])?svg(v.logo):'';return '<div class="card"><div class="top"><div class="ttl">'+logo+'<h3>'+esc(v.name)+'</h3></div><span class="tag '+v.cls+'">'+esc(T(v.st))+'</span></div><p>'+esc(T(v.desc))+'</p><div class="card-foot"><span class="upd"><span class="dot" aria-hidden="true"></span>'+esc(T('venUpdated'))+' <time datetime="'+v.upd+'">'+fmtDate(v.upd)+'</time></span><a href="'+v.u+'" target="_blank" rel="noopener">'+esc(T('venAdvisory'))+' ↗</a></div></div>';}).join('');var rd=$('revDate');if(rd){rd.setAttribute('datetime',LAST_REVIEWED);rd.textContent=fmtDate(LAST_REVIEWED);}}
+ function renderCoverage(){var w=$('coverageWrap');if(!w)return;var cats=[['research','covResearch'],['news','covNews'],['official','covOfficial']];w.innerHTML=cats.map(function(c){var items=COVERAGE[c[0]]||[];return '<div class="cov-col"><h3>'+esc(T(c[1]))+'</h3><ul>'+items.map(function(it){return '<li><a class="cov-item" href="'+it.u+'" target="_blank" rel="noopener"><span class="out"><span class="o">'+esc(it.o)+'</span><span class="d">'+fmtDate(it.d)+'</span></span><span class="ti">'+esc(it.t)+'</span></a></li>';}).join('')+'</ul></div>';}).join('');}
+ renderVendors();renderCoverage();
 
  /* theme */
  var th=LS.get('p2s-theme');if(th==='dark'||th==='light')root.setAttribute('data-theme',th);
@@ -743,7 +819,7 @@ en:{
  function show(r){box.className='result show '+r.cls;vEl.textContent=r.t;dEl.innerHTML=r.m;markLadder(r);}
  form.addEventListener('submit',function(e){e.preventDefault();var p=parse(input.value);if(!p){last=null;box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');markLadder(null);return;}last=p;show(evaluate(p));});
  $('clearBtn').addEventListener('click',function(){input.value='';box.className='result';last=null;markLadder(null);input.focus();});
- window.P2S_onlang=function(){ if(last&&box.classList.contains('show'))show(evaluate(last)); else if(box.classList.contains('show')){box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');} };
+ window.P2S_onlang=function(){ renderVendors();renderCoverage(); if(last&&box.classList.contains('show'))show(evaluate(last)); else if(box.classList.contains('show')){box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');} };
 
  /* modals */
  var lastFocus=null;
