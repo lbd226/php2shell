@@ -1,0 +1,14 @@
+{
+  "name": "PHP2Shell",
+  "short_name": "PHP2Shell",
+  "description": "Awareness and ownership-verified passive scanner for the PHP2Shell vulnerabilities (CVE-2026-109618 / CVE-2026-109619).",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e13",
+  "theme_color": "#0c6b86",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

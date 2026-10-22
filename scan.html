@@ -4,10 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PHP2Shell — אימות וסריקה</title>
-<meta name="description" content="אימות בעלות על דומיין וסריקת תנוחת גרסת PHP פסיבית לחולשות PHP2Shell.">
+<meta name="description" content="אימות בעלות על דומיין וסריקת גרסת PHP פסיבית לחולשות PHP2Shell (CVE-2026-109618 / CVE-2026-109619).">
+<meta name="theme-color" content="#0c6b86" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0e13" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PHP2Shell">
+<meta property="og:title" content="PHP2Shell — Verify ownership & scan">
+<meta property="og:description" content="Prove you own a domain, then run a strictly passive PHP-version posture check.">
+<meta property="og:url" content="https://php2shell.ai/scan.html">
+<meta property="og:image" content="https://php2shell.ai/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
   --bg:#eef1f5; --surface:#ffffff; --surface-2:#f7f9fb; --surface-3:#e9edf2;
@@ -17,10 +30,11 @@
   --high:#b4530a; --high-weak:#fbe8d6; --warn:#8f5602; --warn-weak:#faeecf;
   --ok:#0f7536; --ok-weak:#e0f2e7;
   --shadow:0 1px 2px rgba(14,20,28,.05),0 10px 30px rgba(14,20,28,.08);
-  --radius:14px; --radius-lg:18px; --maxw:720px;
-  --ff-body:"Heebo",-apple-system,"Segoe UI",Arial,sans-serif;
-  --ff-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --radius:14px; --radius-lg:18px; --maxw:760px;
+  --sans:"Heebo","Inter",-apple-system,"Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
+html[lang="en"]{--sans:"Inter","Heebo",-apple-system,"Segoe UI",Arial,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#070a0e; --surface:#111822; --surface-2:#0d131b; --surface-3:#1d2733;
   --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
@@ -43,367 +57,383 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--fg);font-family:var(--ff-body);line-height:1.6;font-size:16px;direction:rtl;text-align:right;-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top,0) 0 40px}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;padding-bottom:40px}
 h1,h2,h3{margin:0;text-wrap:balance;font-weight:800}
 p{margin:0}
 a{color:var(--accent)}
-code,.mono{font-family:var(--ff-mono);font-variant-numeric:tabular-nums}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:5px}
-.skip{position:absolute;right:-9999px;top:8px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:8px;z-index:60;font-weight:700}
-.skip:focus{right:16px}
+code,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
+.skip{position:absolute;inset-inline-start:-9999px;top:8px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:8px;z-index:60;font-weight:700}
+.skip:focus{inset-inline-start:16px}
 .wrap{max-width:var(--maxw);margin-inline:auto;padding-left:max(18px,env(safe-area-inset-left,0));padding-right:max(18px,env(safe-area-inset-right,0))}
-.statusbar{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
-.statusbar .wrap{display:flex;align-items:center;gap:12px;padding-block:11px}
-.brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:17px}
-.brand .n2{color:var(--accent)}
+
+/* header */
+.topbar{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.topbar .wrap{display:flex;align-items:center;gap:10px;padding-block:11px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:17px;letter-spacing:.3px;text-decoration:none;color:var(--fg)}
+.brand .a{color:var(--accent)}
 .sp{flex:1}
-.iconbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:16px;display:inline-grid;place-items:center}
-.hero{padding-block:30px 8px}
-.eyebrow{font-family:var(--ff-mono);font-size:12px;font-weight:600;color:var(--accent);letter-spacing:1px}
-.hero h1{font-size:clamp(25px,5vw,36px);margin:12px 0 10px}
-.hero p{color:var(--muted);max-width:60ch}
+.tbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);height:38px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;padding:0 11px;font-family:var(--sans)}
+.tbtn.sq{width:38px;justify-content:center;padding:0}
+.tbtn:hover{background:var(--surface-3)}
+.tbtn svg{width:16px;height:16px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:
+  radial-gradient(760px 320px at 85% -20%,var(--accent-weak),transparent 60%),var(--surface-2)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:40px 40px;-webkit-mask-image:radial-gradient(520px 320px at 85% 0,#000,transparent 72%);mask-image:radial-gradient(520px 320px at 85% 0,#000,transparent 72%)}
+.hero .wrap{position:relative;z-index:1;padding-block:34px 28px}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);letter-spacing:1px}
+.hero h1{font-size:clamp(26px,5vw,38px);font-weight:900;letter-spacing:-.4px;margin:11px 0 10px}
+.hero .lead{font-size:clamp(15.5px,2.2vw,17.5px);color:var(--muted);max-width:60ch}
+
 /* stepper */
-.stepper{display:flex;gap:8px;margin:22px 0 6px;padding:0;list-style:none;counter-reset:st}
-.stepper li{counter-increment:st;flex:1;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--faint);padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px}
-.stepper li::before{content:counter(st);width:24px;height:24px;flex:none;border-radius:7px;display:grid;place-items:center;font-family:var(--ff-mono);font-weight:600;background:var(--surface-3);color:var(--muted)}
-.stepper li[aria-current="step"]{color:var(--fg);border-color:var(--accent-line)}
-.stepper li[aria-current="step"]::before{background:var(--accent);color:var(--accent-fg)}
-.stepper li.done::before{content:"✓";background:var(--ok);color:#fff}
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px;margin-top:18px}
+.stepper{display:flex;gap:0;margin:22px 0 2px;padding:0;list-style:none;counter-reset:st}
+.stepper li{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:12.5px;color:var(--faint);font-weight:600;text-align:center}
+.stepper li .dot{counter-increment:st;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:13px;background:var(--surface-3);color:var(--muted);border:2px solid var(--border);position:relative;z-index:1}
+.stepper li .dot::before{content:counter(st)}
+.stepper li::before,.stepper li::after{content:"";position:absolute;top:15px;height:2px;background:var(--border);width:50%}
+.stepper li::before{inset-inline-start:0}.stepper li::after{inset-inline-end:0}
+.stepper li:first-child::before,.stepper li:last-child::after{display:none}
+.stepper li[aria-current="step"]{color:var(--fg)}
+.stepper li[aria-current="step"] .dot{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.stepper li.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.stepper li.done .dot::before{content:"✓"}
+.stepper li.done::before,.stepper li.done::after,.stepper li[aria-current="step"]::before{background:var(--accent)}
+
+main{padding-top:4px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px;margin-top:20px}
 .panel h2{font-size:20px;margin-bottom:6px}
 .panel .sub{color:var(--muted);font-size:14.5px;margin-bottom:16px}
-.callout{display:flex;gap:12px;background:var(--accent-weak);border:1px solid var(--accent-line);border-radius:12px;padding:15px 16px;font-size:14px;line-height:1.6}
-.callout.warn{background:var(--warn-weak);border-color:color-mix(in srgb,var(--warn) 34%,transparent)}
-.gate{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:14px}
-.gate input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent)}
-label.fld{display:block;font-size:13.5px;font-weight:700;margin:14px 0 7px}
-input[type=text],input[type=email]{width:100%;font-family:var(--ff-mono);font-size:16px;direction:ltr;text-align:left;padding:12px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg)}
-.btn{font-family:var(--ff-body);font-weight:700;font-size:15px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:10px;padding:13px 22px;cursor:pointer;transition:filter .15s}
+
+.callout{display:flex;gap:12px;align-items:flex-start;background:var(--warn-weak);border:1px solid color-mix(in srgb,var(--warn) 32%,transparent);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.6}
+.callout.info{background:var(--accent-weak);border-color:var(--accent-line)}
+.callout .i{flex:none;font-size:17px}
+.gate{display:flex;gap:11px;align-items:flex-start;margin-top:16px;font-size:14px;cursor:pointer}
+.gate input{margin-top:2px;width:18px;height:18px;accent-color:var(--accent);flex:none}
+label.fld{display:block;font-size:13.5px;font-weight:700;margin:16px 0 7px}
+input[type=text],input[type=email]{width:100%;font-family:var(--mono);font-size:16px;direction:ltr;text-align:left;padding:12px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg)}
+input::placeholder{color:var(--faint)}
+
+.btn{font-family:var(--sans);font-weight:700;font-size:15px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:10px;padding:13px 22px;cursor:pointer;transition:filter .15s}
 .btn:hover{filter:brightness(1.08)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn:disabled{background:var(--surface-3);color:var(--faint);cursor:not-allowed;filter:none}
 .btn.ghost{background:var(--surface-2);color:var(--fg);border:1px solid var(--border)}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
-.tab{flex:1;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-weight:700;font-size:14px;cursor:pointer}
-.tab[aria-selected=true]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.radio{display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;font-family:var(--ff-mono);direction:ltr;font-size:14px}
-.radio input{accent-color:var(--accent)}
-.dl{display:grid;gap:10px;margin:4px 0}
-.dl .k{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px}
+
+.tabs{display:flex;gap:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:16px}
+.tab{flex:1;padding:10px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;font-family:var(--sans)}
+.tab[aria-selected=true]{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
+
+.dl{display:grid;gap:11px;margin:6px 0}
+.dl .k{font-size:11.5px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
 .cmd{display:flex;gap:8px;align-items:center}
-.cmd code{flex:1;min-width:0;direction:ltr;text-align:left;font-size:13px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;overflow-x:auto;white-space:nowrap}
-.result{border-radius:12px;padding:18px;border:1px solid var(--border);margin-top:4px;display:flex;gap:14px;align-items:flex-start}
-.result .led{flex:none;width:14px;height:14px;border-radius:50%;margin-top:5px}
-.result.r-crit{background:var(--crit-weak);border-color:var(--crit-line)} .result.r-crit .led{background:var(--crit)} .result.r-crit h2{color:var(--crit)}
-.result.r-ok{background:var(--ok-weak);border-color:color-mix(in srgb,var(--ok) 42%,transparent)} .result.r-ok .led{background:var(--ok)} .result.r-ok h2{color:var(--ok)}
-.result.r-warn{background:var(--warn-weak);border-color:color-mix(in srgb,var(--warn) 42%,transparent)} .result.r-warn .led{background:var(--warn)} .result.r-warn h2{color:var(--warn)}
-.result h2{font-size:18px;margin-bottom:6px}
-.result .meta{margin-top:12px;font-size:12.5px;color:var(--muted);direction:ltr;text-align:left;font-family:var(--ff-mono);background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 11px;overflow-x:auto}
-.result .disc{margin-top:12px;font-size:12.5px;color:var(--faint);line-height:1.6}
-.spin{width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp 1s linear infinite;flex:none}
-@keyframes sp{to{transform:rotate(360deg)}}
+.cmd code{flex:1;min-width:0;direction:ltr;text-align:left;font-size:13px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:11px 12px;overflow-x:auto;white-space:nowrap}
+.copy{flex:none;width:40px;height:42px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);cursor:pointer;font-size:15px}
+.copy:hover{background:var(--surface-3)}
+.radio{display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;font-family:var(--mono);direction:ltr;font-size:14px}
+.radio:has(input:checked){border-color:var(--accent-line);background:var(--accent-weak)}
+.radio input{accent-color:var(--accent)}
 .muted{color:var(--muted);font-size:13.5px}
 .err{color:var(--crit);font-size:13.5px;margin-top:10px;font-weight:600}
+
+/* result */
+.result{border-radius:14px;padding:18px;border:1px solid var(--border);display:flex;gap:14px;align-items:flex-start}
+.result .led{flex:none;width:14px;height:14px;border-radius:50%;margin-top:6px;box-shadow:0 0 0 4px color-mix(in srgb,var(--faint) 18%,transparent);background:var(--faint)}
+.result.r-crit{background:var(--crit-weak);border-color:var(--crit-line)} .result.r-crit .led{background:var(--crit);box-shadow:0 0 0 4px color-mix(in srgb,var(--crit) 22%,transparent)} .result.r-crit h3{color:var(--crit)}
+.result.r-ok{background:var(--ok-weak);border-color:color-mix(in srgb,var(--ok) 42%,transparent)} .result.r-ok .led{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 22%,transparent)} .result.r-ok h3{color:var(--ok)}
+.result.r-warn{background:var(--warn-weak);border-color:color-mix(in srgb,var(--warn) 42%,transparent)} .result.r-warn .led{background:var(--warn);box-shadow:0 0 0 4px color-mix(in srgb,var(--warn) 22%,transparent)} .result.r-warn h3{color:var(--warn)}
+.result h3{font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vchip{font-family:var(--mono);font-size:12.5px;font-weight:600;direction:ltr;background:color-mix(in srgb,var(--fg) 7%,transparent);border:1px solid var(--border);padding:2px 9px;border-radius:999px}
+.result .msg{margin-top:7px;font-size:14.5px;color:var(--fg)}
+.result .meta{margin-top:12px;font-size:12.5px;color:var(--muted);direction:ltr;text-align:left;font-family:var(--mono);background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.result .disc{margin-top:12px;font-size:12px;color:var(--faint);line-height:1.6}
+.spin{width:19px;height:19px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp 1s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+
 footer{margin-top:28px;border-top:1px solid var(--border);padding-top:18px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--muted)}
-[hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media(max-width:560px){.panel{padding:18px}.btn{width:100%}.stepper li span{display:none}}
+@media(max-width:560px){.panel{padding:18px}.btn{width:100%}.stepper li span{font-size:11px}}
 </style>
 </head>
 <body>
-<a class="skip" href="#main">דלג לתוכן</a>
-<header class="statusbar"><div class="wrap">
-  <span class="brand"><span>PHP2</span><span class="n2">Shell</span></span>
+<a class="skip" href="#main" data-t="skip">דלג לתוכן</a>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="/" dir="ltr" aria-label="PHP2Shell">
+    <svg width="24" height="24" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg>
+    <span>PHP2<span class="a">Shell</span></span>
+  </a>
   <span class="sp"></span>
-  <a class="iconbtn" href="index.html" title="חזרה לדף המידע" aria-label="חזרה לדף המידע" style="text-decoration:none">←</a>
-  <button class="iconbtn" id="themeBtn" type="button" aria-label="החלפת ערכת צבעים">◑</button>
+  <button class="tbtn" id="langBtn" type="button" data-tal="langAria" aria-label="Switch language">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+    <span data-lang-code>EN</span>
+  </button>
+  <button class="tbtn sq" id="themeBtn" type="button" data-tal="themeAria" aria-label="Toggle theme">◑</button>
 </div></header>
 
-<main id="main"><div class="wrap">
-  <section class="hero">
-    <p class="eyebrow">כלי לבעלי־דומיין</p>
-    <h1>אימות בעלות וסריקת תנוחה פסיבית</h1>
-    <p>כדי לסרוק דומיין צריך קודם להוכיח שהוא שלכם. איננו מנצלים חולשות ואיננו שולחים מטענים — אנחנו רק קוראים כותרות שהשרת עצמו חושף, ומסיקים מהן את תנוחת גרסת ה‑PHP.</p>
-  </section>
+<div class="hero"><div class="wrap">
+  <p class="eyebrow" data-t="eyebrow">כלי לבעלי דומיין</p>
+  <h1 data-t="h1">אימות בעלות וסריקת גרסה פסיבית</h1>
+  <p class="lead" data-t="lead">כדי לבדוק דומיין צריך קודם להוכיח שהוא שלכם. אנחנו לא מנצלים חולשות ולא שולחים מטענים — רק קוראים את הכותרות שהשרת עצמו חושף ומסיקים מהן את גרסת ה‑PHP.</p>
+</div></div>
 
-  <ol class="stepper" aria-label="שלבים">
-    <li id="st1" aria-current="step"><span>דומיין</span></li>
-    <li id="st2"><span>אימות בעלות</span></li>
-    <li id="st3"><span>תוצאה</span></li>
+<main id="main"><div class="wrap">
+  <ol class="stepper" aria-label="Progress">
+    <li id="st1" aria-current="step"><span class="dot"></span><span data-t="step1">דומיין</span></li>
+    <li id="st2"><span class="dot"></span><span data-t="step2">אימות בעלות</span></li>
+    <li id="st3"><span class="dot"></span><span data-t="step3">תוצאה</span></li>
   </ol>
 
-  <!-- STEP 1: domain + gate -->
+  <!-- STEP 1 -->
   <section class="panel" id="panel1">
-    <h2>הזנת דומיין</h2>
-    <p class="sub">הזינו שם דומיין בלבד — בלי http:// ובלי נתיב (למשל example.com).</p>
-    <div class="callout warn">
-      <span aria-hidden="true">⚠︎</span>
-      <span><strong>בדקו רק דומיינים שבבעלותכם או שיש לכם הרשאה מפורשת לבדוק.</strong> הכלי בודק אך ורק דומיינים שהוכחה בעלותכם עליהם. קריאת הכותרות היא הסקה, לא הוכחה לפגיעוּת.</span>
-    </div>
-    <label class="gate"><input type="checkbox" id="gate"> <span>אני מאשר/ת שאני הבעלים של הדומיין או מורשה/ית במפורש לבדוק אותו.</span></label>
-    <label class="fld" for="domain">הדומיין לבדיקה</label>
+    <h2 data-t="p1h">הזנת דומיין</h2>
+    <p class="sub" data-t="p1sub">שם דומיין בלבד — בלי http:// ובלי נתיב. למשל example.com</p>
+    <div class="callout"><span class="i" aria-hidden="true">⚠︎</span><span data-th="gate">בדקו רק דומיינים שבבעלותכם, או שקיבלתם הרשאה מפורשת לבדוק. קריאת הכותרות היא הערכה — לא הוכחה ודאית לפגיעוּת.</span></div>
+    <label class="gate"><input type="checkbox" id="gate"><span data-t="gateCheck">אני הבעלים של הדומיין, או מורשה במפורש לבדוק אותו.</span></label>
+    <label class="fld" for="domain" data-t="domainLabel">הדומיין לבדיקה</label>
     <input type="text" id="domain" inputmode="url" placeholder="example.com" autocomplete="off" disabled>
     <div class="err" id="err1" hidden></div>
-    <div class="btnrow"><button class="btn" id="toVerify" disabled>המשך לאימות בעלות</button></div>
+    <div class="btnrow"><button class="btn" id="toVerify" disabled data-t="continue">המשך</button></div>
   </section>
 
-  <!-- STEP 2: verify -->
+  <!-- STEP 2 -->
   <section class="panel" id="panel2" hidden>
-    <h2>אימות בעלות על <span class="mono" id="domainEcho" style="direction:ltr"></span></h2>
-    <p class="sub">בחרו שיטה להוכחת בעלות.</p>
+    <h2><span data-t="p2h">אימות בעלות על</span> <span class="mono" id="domainEcho" dir="ltr" style="color:var(--accent)"></span></h2>
+    <p class="sub" data-t="p2sub">בחרו שיטה להוכחת בעלות.</p>
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tabDns" aria-selected="true">רשומת DNS TXT</button>
-      <button class="tab" role="tab" id="tabEmail" aria-selected="false">מייל בדומיין</button>
+      <button class="tab" role="tab" id="tabDns" aria-selected="true" data-t="tabDns">רשומת DNS</button>
+      <button class="tab" role="tab" id="tabEmail" aria-selected="false" data-t="tabEmail">מייל בדומיין</button>
     </div>
 
-    <!-- DNS method -->
     <div id="methDns" role="tabpanel">
-      <p class="muted">הוסיפו את רשומת ה‑TXT הבאה אצל ספק ה‑DNS של הדומיין, ואז לחצו "אימות כעת". הטוקן אקראי וחד־פעמי לכל דומיין.</p>
+      <p class="muted" data-t="dnsIntro">הוסיפו את רשומת ה‑TXT הבאה אצל ספק ה‑DNS שלכם, ואז לחצו "אמת עכשיו". הטוקן ייחודי לדומיין וחד‑פעמי.</p>
       <div class="dl">
-        <div><div class="k">Name / Host</div><div class="cmd"><code id="dnsName">_php2shell-verify</code><button class="iconbtn copy" data-copy="dnsName" aria-label="העתקה">⧉</button></div></div>
-        <div><div class="k">Type</div><div class="cmd"><code>TXT</code></div></div>
-        <div><div class="k">Value</div><div class="cmd"><code id="dnsVal">—</code><button class="iconbtn copy" data-copy="dnsVal" aria-label="העתקה">⧉</button></div></div>
+        <div><div class="k" data-t="dnsName">Name</div><div class="cmd"><code id="dnsName">_php2shell-verify</code><button class="copy" data-copy="dnsName" data-tal="copyAria" aria-label="Copy">⧉</button></div></div>
+        <div><div class="k" data-t="dnsType">Type</div><div class="cmd"><code>TXT</code></div></div>
+        <div><div class="k" data-t="dnsValue">Value</div><div class="cmd"><code id="dnsVal">—</code><button class="copy" data-copy="dnsVal" data-tal="copyAria" aria-label="Copy">⧉</button></div></div>
       </div>
-      <p class="muted" style="margin-top:8px">הפצת DNS יכולה לקחת כמה דקות. אפשר לנסות שוב.</p>
-      <div class="btnrow"><button class="btn" id="dnsCheck">אימות כעת</button></div>
+      <p class="muted" style="margin-top:10px" data-t="dnsProp">שינויי DNS יכולים לקחת כמה דקות עד שיופצו. אפשר לנסות שוב.</p>
+      <div class="btnrow"><button class="btn" id="dnsCheck" data-t="verifyNow">אמת עכשיו</button></div>
       <div class="err" id="errDns" hidden></div>
     </div>
 
-    <!-- Email method -->
     <div id="methEmail" role="tabpanel" hidden>
-      <p class="muted" id="emailAvail">נשלח קוד חד‑פעמי לכתובת בדומיין עצמו. בחרו כתובת:</p>
+      <p class="muted" data-t="emailIntro">נשלח קוד חד‑פעמי לכתובת בתוך הדומיין. בחרו כתובת:</p>
       <div id="mailboxes" style="margin-top:12px">
         <label class="radio"><input type="radio" name="mbox" value="admin" checked> admin@<span class="emDom"></span></label>
         <label class="radio"><input type="radio" name="mbox" value="security"> security@<span class="emDom"></span></label>
         <label class="radio"><input type="radio" name="mbox" value="webmaster"> webmaster@<span class="emDom"></span></label>
-        <label class="radio"><input type="radio" name="mbox" value="__custom"> כתובת אחרת בדומיין זה…</label>
+        <label class="radio"><input type="radio" name="mbox" value="__custom"> <span data-t="emailOther">כתובת אחרת בדומיין הזה…</span></label>
       </div>
       <input type="email" id="customEmail" placeholder="you@example.com" hidden style="margin-top:8px">
-      <div class="btnrow"><button class="btn" id="emailSend">שליחת מייל אימות</button></div>
-      <div id="emailSent" hidden style="margin-top:14px">
-        <div class="callout"><div class="spin" aria-hidden="true"></div><span>נשלח מייל אל <strong id="maskedTo"></strong>. פִתחו את הקישור שבמייל — העמוד יתעדכן אוטומטית כאן.</span></div>
-      </div>
+      <div class="btnrow"><button class="btn" id="emailSend" data-t="emailSend">שליחת מייל אימות</button></div>
+      <div id="emailSent" hidden style="margin-top:14px"></div>
       <div class="err" id="errEmail" hidden></div>
     </div>
   </section>
 
-  <!-- STEP 3: result -->
+  <!-- STEP 3 -->
   <section class="panel" id="panel3" hidden>
-    <h2>תוצאת הבדיקה</h2>
-    <p class="sub">בדיקת תנוחה פסיבית מבוססת כותרות — הסקה, לא הוכחה.</p>
-    <div id="scanBusy" class="callout"><div class="spin" aria-hidden="true"></div><span>מריץ בדיקה פסיבית…</span></div>
+    <h2 data-t="p3h">תוצאת הבדיקה</h2>
+    <p class="sub" data-t="p3sub">בדיקה פסיבית לפי כותרות השרת — הערכה, לא הוכחה ודאית.</p>
+    <div id="scanBusy" class="callout info"><div class="spin" aria-hidden="true"></div><span data-t="scanBusy">מריצים בדיקה פסיבית…</span></div>
     <div class="result" id="resultBox" hidden>
       <span class="led" aria-hidden="true"></span>
       <div style="min-width:0;flex:1">
-        <h2 id="resTitle"></h2>
-        <p id="resMsg" style="font-size:14.5px"></p>
+        <h3><span id="resTitle"></span><span class="vchip" id="resChip" hidden></span></h3>
+        <p class="msg" id="resMsg"></p>
         <div class="meta" id="resMeta" hidden></div>
         <p class="disc" id="resDisc"></p>
       </div>
     </div>
-    <div class="btnrow"><button class="btn ghost" id="restart">בדיקת דומיין נוסף</button></div>
+    <div class="btnrow"><button class="btn ghost" id="restart" data-t="restart">בדיקת דומיין נוסף</button></div>
   </section>
 </div></main>
 
 <footer><div class="wrap">
-  <span>PHP2Shell · אימות בעלות</span>
-  <a href="index.html">חזרה לדף המידע ←</a>
+  <span data-t="footLeft">PHP2Shell · אימות בעלות</span>
+  <a href="/" data-t="footBack">חזרה למידע</a>
 </div></footer>
+
+<script>
+window.I18N = {
+  he: {
+    title:"PHP2Shell — אימות וסריקה", skip:"דלג לתוכן",
+    langAria:"החלפת שפה", themeAria:"החלפת ערכת צבעים", copyAria:"העתקה",
+    eyebrow:"כלי לבעלי דומיין",
+    h1:"אימות בעלות וסריקת גרסה פסיבית",
+    lead:"כדי לבדוק דומיין צריך קודם להוכיח שהוא שלכם. אנחנו לא מנצלים חולשות ולא שולחים מטענים — רק קוראים את הכותרות שהשרת עצמו חושף ומסיקים מהן את גרסת ה‑PHP.",
+    step1:"דומיין", step2:"אימות בעלות", step3:"תוצאה",
+    p1h:"הזנת דומיין", p1sub:"שם דומיין בלבד — בלי http:// ובלי נתיב. למשל example.com",
+    gate:"בדקו רק דומיינים שבבעלותכם, או שקיבלתם הרשאה מפורשת לבדוק. קריאת הכותרות היא הערכה — לא הוכחה ודאית לפגיעוּת.",
+    gateCheck:"אני הבעלים של הדומיין, או מורשה במפורש לבדוק אותו.",
+    domainLabel:"הדומיין לבדיקה", continue:"המשך",
+    errDomain:"הזינו שם דומיין תקין, למשל example.com",
+    p2h:"אימות בעלות על", p2sub:"בחרו שיטה להוכחת בעלות.",
+    tabDns:"רשומת DNS", tabEmail:"מייל בדומיין",
+    dnsIntro:"הוסיפו את רשומת ה‑TXT הבאה אצל ספק ה‑DNS שלכם, ואז לחצו “אמת עכשיו”. הטוקן ייחודי לדומיין וחד‑פעמי.",
+    dnsName:"Name", dnsType:"Type", dnsValue:"Value",
+    dnsProp:"שינויי DNS יכולים לקחת כמה דקות עד שיופצו. אפשר לנסות שוב.",
+    verifyNow:"אמת עכשיו", checking:"בודק…",
+    dnsNotFound:"הרשומה עדיין לא נמצאה. ודאו שהוספתם אותה, ותנו ל‑DNS כמה דקות להתפשט.",
+    tooSoon:"רגע — נסו שוב בעוד כמה שניות.",
+    emailIntro:"נשלח קוד חד‑פעמי לכתובת בתוך הדומיין. בחרו כתובת:",
+    emailOther:"כתובת אחרת בדומיין הזה…", emailSend:"שליחת מייל אימות", sending:"שולח…",
+    emailBad:"הזינו כתובת מייל תקינה בתוך הדומיין.",
+    emailDisabled:"שליחת המייל לא זמינה בשרת הזה כרגע. השתמשו באימות ה‑DNS.",
+    emailSent:"שלחנו מייל אל <b>{to}</b>. פתחו את הקישור שבמייל — הבדיקה תימשך בחלון שייפתח משם.",
+    emailDone:"האימות הושלם. הבדיקה ממשיכה בחלון שנפתח מהמייל (אם פתחתם אותו במכשיר אחר — היא רצה שם).",
+    p3h:"תוצאת הבדיקה", p3sub:"בדיקה פסיבית לפי כותרות השרת — הערכה, לא הוכחה ודאית.",
+    scanBusy:"מריצים בדיקה פסיבית…",
+    restart:"בדיקת דומיין נוסף",
+    footLeft:"PHP2Shell · אימות בעלות", footBack:"חזרה למידע",
+    claimFail:"לא ניתן היה להנפיק הרשאת סריקה ({e}).",
+    scanFail:"הבדיקה נכשלה ({e}).", netErr:"שגיאת רשת במהלך הבדיקה.",
+    v_vulnerable_t:"⚠ ככל הנראה חשוף", v_vulnerable_m:"גרסה {v} בטווח הפגיע. שדרגו ל‑{fix} ומעלה והפעילו מחדש את תהליכי ה‑PHP.",
+    v_eol_t:"⚠ ענף בסוף חיים", v_eol_m:"ענף {branch} אינו נתמך עוד ולא קיבל גרסה מתוקנת רשמית. עברו לענף נתמך — 8.2.35 ומעלה.",
+    v_patched_t:"✓ ככל הנראה מעודכן", v_patched_m:"גרסה {v} כבר כוללת את התיקון. ודאו שגם ה‑CLI וה‑cron על אותה גרסה.",
+    v_unknown_hidden_t:"הגרסה מוסתרת", v_unknown_hidden_m:"השרת לא חושף את גרסת ה‑PHP — וזו דווקא היגיינה טובה. אי אפשר להסיק מכאן; בדקו פנימית עם php -v בשרת שלכם.",
+    v_unknown_branch_t:"ענף לא מוכר", v_unknown_branch_m:"ענף {branch} לא מופיע ברשימה של הכלי. בדקו ישירות בהודעה הרשמית של PHP.net.",
+    v_error_ssrf:"הדומיין מצביע לכתובת פנימית — הבדיקה נחסמה מטעמי אבטחה.",
+    v_error_dns:"לא הצלחנו לפענח את כתובת הדומיין.",
+    v_error_fetch:"לא הצלחנו להגיע לשרת (ייתכן שאין HTTPS, או שהחיבור נכשל).",
+    v_error_t:"הבדיקה לא הושלמה", disc:"הערכה לפי כותרת שהשרת חושף — לא הוכחה. כותרות עלולות להיות ישנות, מזויפות או מוסתרות. אמתו תמיד מול PHP.net."
+  },
+  en: {
+    title:"PHP2Shell — Verify & Scan", skip:"Skip to content",
+    langAria:"Switch language", themeAria:"Toggle theme", copyAria:"Copy",
+    eyebrow:"Domain-owner tool",
+    h1:"Verify ownership & passive version scan",
+    lead:"To scan a domain you first prove it's yours. We don't exploit anything and send no payloads — we only read the headers the server itself advertises and infer its PHP version.",
+    step1:"Domain", step2:"Ownership", step3:"Result",
+    p1h:"Enter a domain", p1sub:"Domain name only — no http:// and no path. e.g. example.com",
+    gate:"Only check domains you own, or are explicitly authorized to test. Reading the headers is an assessment — not definitive proof of a vulnerability.",
+    gateCheck:"I own this domain, or I'm explicitly authorized to test it.",
+    domainLabel:"Domain to check", continue:"Continue",
+    errDomain:"Enter a valid domain, e.g. example.com",
+    p2h:"Verify ownership of", p2sub:"Choose how to prove ownership.",
+    tabDns:"DNS record", tabEmail:"Email at the domain",
+    dnsIntro:"Add the TXT record below at your DNS provider, then click “Verify now”. The token is unique per domain and single-use.",
+    dnsName:"Name", dnsType:"Type", dnsValue:"Value",
+    dnsProp:"DNS changes can take a few minutes to propagate. You can retry.",
+    verifyNow:"Verify now", checking:"Checking…",
+    dnsNotFound:"The record wasn't found yet. Make sure you added it, and give DNS a few minutes to propagate.",
+    tooSoon:"Hold on — try again in a few seconds.",
+    emailIntro:"We'll send a one-time code to an address on the domain. Choose one:",
+    emailOther:"Another address on this domain…", emailSend:"Send verification email", sending:"Sending…",
+    emailBad:"Enter a valid email address on this domain.",
+    emailDisabled:"Email sending isn't available on this server right now. Use DNS verification.",
+    emailSent:"We emailed <b>{to}</b>. Open the link in that email — the scan continues in the window it opens.",
+    emailDone:"Verified. The scan continues in the window opened from the email (if you opened it on another device, it runs there).",
+    p3h:"Scan result", p3sub:"A passive check from the server's headers — an assessment, not definitive proof.",
+    scanBusy:"Running a passive check…",
+    restart:"Check another domain",
+    footLeft:"PHP2Shell · Ownership verification", footBack:"Back to overview",
+    claimFail:"Couldn't issue a scan grant ({e}).",
+    scanFail:"The scan failed ({e}).", netErr:"Network error during the scan.",
+    v_vulnerable_t:"⚠ Likely exposed", v_vulnerable_m:"Version {v} is in the vulnerable range. Upgrade to {fix} or later and restart your PHP workers.",
+    v_eol_t:"⚠ End-of-life branch", v_eol_m:"Branch {branch} is no longer supported and got no official fix. Move to a supported branch — 8.2.35 or later.",
+    v_patched_t:"✓ Likely up to date", v_patched_m:"Version {v} already includes the fix. Make sure CLI and cron run the same version.",
+    v_unknown_hidden_t:"Version hidden", v_unknown_hidden_m:"The server doesn't reveal its PHP version — which is good hygiene. Nothing to infer here; check internally with php -v on your server.",
+    v_unknown_branch_t:"Unknown branch", v_unknown_branch_m:"Branch {branch} isn't in the tool's list. Check the official PHP.net advisory directly.",
+    v_error_ssrf:"The domain resolves to an internal address — the scan was blocked for safety.",
+    v_error_dns:"We couldn't resolve the domain.",
+    v_error_fetch:"We couldn't reach the server (it may have no HTTPS, or the connection failed).",
+    v_error_t:"Scan not completed", disc:"An assessment from a header the server advertises — not proof. Headers can be stale, spoofed, or hidden. Always verify against PHP.net."
+  }
+};
+(function(){
+  var lang=(function(){ try{var s=localStorage.getItem('p2s-lang');if(s==='he'||s==='en')return s;}catch(e){} var l=((navigator.languages&&navigator.languages.join(','))||navigator.language||''); return /(^|[,\-])he|iw/i.test(l)?'he':'en'; })();
+  function t(k,vars){ var d=window.I18N[lang]||window.I18N.en; var s=(k in d)?d[k]:(window.I18N.en[k]||k); if(vars) s=s.replace(/\{(\w+)\}/g,function(_,m){return vars[m]!=null?vars[m]:'';}); return s; }
+  window.P2S_T=t; window.P2S_lang=function(){return lang;};
+  function render(){
+    var rtl=lang==='he', root=document.documentElement;
+    root.lang=lang; root.dir=rtl?'rtl':'ltr';
+    document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'));});
+    document.querySelectorAll('[data-th]').forEach(function(el){el.innerHTML=t(el.getAttribute('data-th'));});
+    document.querySelectorAll('[data-tph]').forEach(function(el){el.setAttribute('placeholder',t(el.getAttribute('data-tph')));});
+    document.querySelectorAll('[data-tal]').forEach(function(el){el.setAttribute('aria-label',t(el.getAttribute('data-tal')));});
+    document.querySelectorAll('[data-lang-code]').forEach(function(el){el.textContent=rtl?'EN':'עברית';});
+    document.title=t('title');
+    if(window.P2S_onlang)window.P2S_onlang(lang);
+  }
+  window.P2S_setLang=function(l){lang=l;try{localStorage.setItem('p2s-lang',l);}catch(e){}render();};
+  window.P2S_render=render;
+  if(document.readyState!=='loading')render(); else document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
 
 <script>
 (function(){
   "use strict";
-  var API = (window.P2S_API_BASE || '').replace(/\/+$/,'');
-  var SS = {
-    get:function(k){try{return JSON.parse(sessionStorage.getItem(k))}catch(e){return null}},
-    set:function(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}},
-    del:function(k){try{sessionStorage.removeItem(k)}catch(e){}}
-  };
-  var $=function(id){return document.getElementById(id)};
+  var API=(window.P2S_API_BASE||'').replace(/\/+$/,''), T=window.P2S_T;
+  var $=function(id){return document.getElementById(id);};
+  var SS={get:function(k){try{return JSON.parse(sessionStorage.getItem(k));}catch(e){return null;}},set:function(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));}catch(e){}},del:function(k){try{sessionStorage.removeItem(k);}catch(e){}}};
 
-  /* theme */
-  var root=document.documentElement,tb=$('themeBtn');
-  try{var t=localStorage.getItem('p2s-theme');if(t)root.setAttribute('data-theme',t)}catch(e){}
-  tb.addEventListener('click',function(){
-    var cur=root.getAttribute('data-theme');
-    var dark=cur==='dark'||(!cur&&matchMedia('(prefers-color-scheme:dark)').matches);
-    root.setAttribute('data-theme',dark?'light':'dark');
-    try{localStorage.setItem('p2s-theme',dark?'light':'dark')}catch(e){}
-  });
+  /* lang + theme toggles */
+  $('langBtn').addEventListener('click',function(){window.P2S_setLang(window.P2S_lang()==='he'?'en':'he');});
+  var root=document.documentElement;
+  try{var th=localStorage.getItem('p2s-theme');if(th)root.setAttribute('data-theme',th);}catch(e){}
+  $('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');var dark=c==='dark'||(!c&&matchMedia('(prefers-color-scheme:dark)').matches);root.setAttribute('data-theme',dark?'light':'dark');try{localStorage.setItem('p2s-theme',dark?'light':'dark');}catch(e){}});
 
   var state=SS.get('p2s-verify')||{};
-  function save(){SS.set('p2s-verify',state)}
-
-  function api(path,opts){
-    opts=opts||{};
-    return fetch(API+path,{
-      method:opts.method||'GET',
-      headers:Object.assign({'content-type':'application/json'},opts.headers||{}),
-      body:opts.body?JSON.stringify(opts.body):undefined
-    }).then(function(r){return r.json().then(function(j){return{ok:r.ok,status:r.status,body:j}})});
-  }
-  function showErr(id,msg){var e=$(id);e.textContent=msg;e.hidden=false}
-  function hideErr(id){$(id).hidden=true}
-  function step(n){
-    [['st1',1],['st2',2],['st3',3]].forEach(function(p){
-      var li=$(p[0]);li.classList.toggle('done',p[1]<n);
-      if(p[1]===n)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');
-    });
-    $('panel1').hidden=n!==1;$('panel2').hidden=n!==2;$('panel3').hidden=n!==3;
-  }
+  function save(){SS.set('p2s-verify',state);}
+  function api(path,opts){opts=opts||{};return fetch(API+path,{method:opts.method||'GET',headers:Object.assign({'content-type':'application/json'},opts.headers||{}),body:opts.body?JSON.stringify(opts.body):undefined}).then(function(r){return r.json().then(function(j){return{ok:r.ok,status:r.status,body:j};},function(){return{ok:r.ok,status:r.status,body:{}};});});}
+  function showErr(id,m){var e=$(id);e.textContent=m;e.hidden=false;}
+  function hideErr(id){$(id).hidden=true;}
+  function step(n){[['st1',1],['st2',2],['st3',3]].forEach(function(p){var li=$(p[0]);li.classList.toggle('done',p[1]<n);if(p[1]===n)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});$('panel1').hidden=n!==1;$('panel2').hidden=n!==2;$('panel3').hidden=n!==3;}
 
   /* step 1 */
-  $('gate').addEventListener('change',function(){
-    var on=this.checked;$('domain').disabled=!on;$('toVerify').disabled=!on;
-  });
-  function cleanDomain(v){
-    return String(v||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'').replace(/:\d+$/,'').replace(/^\.+|\.+$/g,'');
-  }
-  $('toVerify').addEventListener('click',function(){
-    hideErr('err1');
-    var d=cleanDomain($('domain').value);
-    if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(d)){showErr('err1','הזינו שם דומיין תקין, למשל example.com');return}
-    state={domain:d};save();
-    $('domainEcho').textContent=d;
-    Array.prototype.forEach.call(document.querySelectorAll('.emDom'),function(s){s.textContent=d});
-    step(2);selectMethod('dns');
-  });
+  $('gate').addEventListener('change',function(){var on=this.checked;$('domain').disabled=!on;$('toVerify').disabled=!on;});
+  function cleanDomain(v){return String(v||'').trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'').replace(/:\d+$/,'').replace(/^\.+|\.+$/g,'');}
+  $('toVerify').addEventListener('click',function(){hideErr('err1');var d=cleanDomain($('domain').value);if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(d)){showErr('err1',T('errDomain'));return;}state={domain:d};save();$('domainEcho').textContent=d;Array.prototype.forEach.call(document.querySelectorAll('.emDom'),function(s){s.textContent=d;});step(2);selectMethod('dns');});
 
-  /* step 2 — method tabs */
-  function selectMethod(m){
-    $('tabDns').setAttribute('aria-selected',String(m==='dns'));
-    $('tabEmail').setAttribute('aria-selected',String(m==='email'));
-    $('methDns').hidden=m!=='dns';$('methEmail').hidden=m!=='email';
-    if(m==='dns'&&!state.dnsStarted)startDns();
-  }
-  $('tabDns').addEventListener('click',function(){selectMethod('dns')});
-  $('tabEmail').addEventListener('click',function(){selectMethod('email')});
-
-  function startDns(){
-    hideErr('errDns');
-    api('/api/verify/dns/start',{method:'POST',body:{domain:state.domain}}).then(function(r){
-      if(!r.ok){showErr('errDns',(r.body&&r.body.message)||'לא ניתן להתחיל אימות DNS');return}
-      state.dnsStarted=true;state.verificationId=r.body.verificationId;state.claimSecret=r.body.claimSecret;save();
-      $('dnsName').textContent=r.body.record.name;
-      $('dnsVal').textContent=r.body.record.value;
-    });
-  }
-  $('dnsCheck').addEventListener('click',function(){
-    hideErr('errDns');var b=$('dnsCheck');b.disabled=true;b.textContent='בודק…';
-    api('/api/verify/dns/check',{method:'POST',body:{verificationId:state.verificationId}}).then(function(r){
-      b.disabled=false;b.textContent='אימות כעת';
-      if(r.status===429){showErr('errDns','נסו שוב בעוד מספר שניות.');return}
-      if(r.ok&&r.body.status==='verified'){proceedToScan(state.claimSecret);return}
-      showErr('errDns','הרשומה עדיין לא נמצאה. ודאו שהוספתם אותה, והמתינו להפצת ה‑DNS.');
-    });
-  });
+  /* step 2 */
+  function selectMethod(m){$('tabDns').setAttribute('aria-selected',String(m==='dns'));$('tabEmail').setAttribute('aria-selected',String(m==='email'));$('methDns').hidden=m!=='dns';$('methEmail').hidden=m!=='email';if(m==='dns'&&!state.dnsStarted)startDns();}
+  $('tabDns').addEventListener('click',function(){selectMethod('dns');});
+  $('tabEmail').addEventListener('click',function(){selectMethod('email');});
+  function startDns(){hideErr('errDns');api('/api/verify/dns/start',{method:'POST',body:{domain:state.domain}}).then(function(r){if(!r.ok){showErr('errDns',(r.body&&r.body.message)||T('dnsNotFound'));return;}state.dnsStarted=true;state.verificationId=r.body.verificationId;state.claimSecret=r.body.claimSecret;save();$('dnsName').textContent=r.body.record.name;$('dnsVal').textContent=r.body.record.value;});}
+  $('dnsCheck').addEventListener('click',function(){hideErr('errDns');var b=$('dnsCheck');b.disabled=true;b.textContent=T('checking');api('/api/verify/dns/check',{method:'POST',body:{verificationId:state.verificationId}}).then(function(r){b.disabled=false;b.textContent=T('verifyNow');if(r.status===429){showErr('errDns',T('tooSoon'));return;}if(r.ok&&r.body.status==='verified'){proceed(state.claimSecret);return;}showErr('errDns',T('dnsNotFound'));});});
 
   /* email */
-  document.addEventListener('change',function(e){
-    if(e.target&&e.target.name==='mbox'){
-      $('customEmail').hidden=e.target.value!=='__custom';
-    }
-  });
-  $('emailSend').addEventListener('click',function(){
-    hideErr('errEmail');
-    var sel=document.querySelector('input[name=mbox]:checked').value;
-    var body={domain:state.domain};
-    if(sel==='__custom'){body.email=$('customEmail').value.trim();if(!/@/.test(body.email)){showErr('errEmail','הזינו כתובת מייל תקינה בדומיין.');return}}
-    else{body.localpart=sel}
-    var b=$('emailSend');b.disabled=true;b.textContent='שולח…';
-    api('/api/verify/email/start',{method:'POST',body:body}).then(function(r){
-      b.disabled=false;b.textContent='שליחת מייל אימות';
-      if(r.status===503){showErr('errEmail','שער המייל אינו מופעל בשרת זה. השתמשו באימות DNS.');return}
-      if(!r.ok){showErr('errEmail',(r.body&&r.body.message)||'שליחת המייל נכשלה');return}
-      state.verificationId=r.body.verificationId;state.claimSecret=r.body.claimSecret;save();
-      $('maskedTo').textContent=r.body.maskedRecipient;$('emailSent').hidden=false;
-      pollStatus();
-    });
-  });
+  document.addEventListener('change',function(e){if(e.target&&e.target.name==='mbox')$('customEmail').hidden=e.target.value!=='__custom';});
+  $('emailSend').addEventListener('click',function(){hideErr('errEmail');var sel=document.querySelector('input[name=mbox]:checked').value,body={domain:state.domain};if(sel==='__custom'){body.email=$('customEmail').value.trim();if(!/@/.test(body.email)){showErr('errEmail',T('emailBad'));return;}}else body.localpart=sel;var b=$('emailSend');b.disabled=true;b.textContent=T('sending');api('/api/verify/email/start',{method:'POST',body:body}).then(function(r){b.disabled=false;b.textContent=T('emailSend');if(r.status===503){showErr('errEmail',T('emailDisabled'));return;}if(!r.ok){showErr('errEmail',(r.body&&r.body.message)||T('scanFail',{e:r.status}));return;}state.verificationId=r.body.verificationId;state.claimSecret=r.body.claimSecret;save();$('emailSent').innerHTML='<div class="callout info"><div class="spin" aria-hidden="true"></div><span>'+T('emailSent',{to:r.body.maskedRecipient})+'</span></div>';$('emailSent').hidden=false;poll();});});
   var pollTimer=null,pollDelay=4000;
-  function pollStatus(){
-    if(!state.verificationId||!state.claimSecret)return;
-    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/status',{method:'POST',body:{claimSecret:state.claimSecret}}).then(function(r){
-      if(r.ok&&r.body.status==='verified'){showVerifiedWaiting();return}
-      pollDelay=Math.min(pollDelay*1.3,30000);
-      pollTimer=setTimeout(pollStatus,pollDelay);
-    }).catch(function(){pollTimer=setTimeout(pollStatus,pollDelay)});
-  }
-  function showVerifiedWaiting(){
-    if(pollTimer)clearTimeout(pollTimer);
-    $('emailSent').innerHTML='<div class="callout"><span aria-hidden="true">✓</span><span>האימות הושלם. הבדיקה ממשיכה בלשונית שנפתחה מקישור המייל — אם פתחתם אותו במכשיר אחר, הבדיקה רצה שם.</span></div>';
-  }
+  function poll(){if(!state.verificationId||!state.claimSecret)return;api('/api/verify/'+encodeURIComponent(state.verificationId)+'/status',{method:'POST',body:{claimSecret:state.claimSecret}}).then(function(r){if(r.ok&&r.body.status==='verified'){if(pollTimer)clearTimeout(pollTimer);$('emailSent').innerHTML='<div class="callout info"><span aria-hidden="true">✓</span><span>'+T('emailDone')+'</span></div>';return;}pollDelay=Math.min(pollDelay*1.3,30000);pollTimer=setTimeout(poll,pollDelay);}).catch(function(){pollTimer=setTimeout(poll,pollDelay);});}
 
-  /* claim -> scan. secret = DNS claimSecret, or the confirmSecret delivered to the email clicker. */
-  function proceedToScan(secret){
-    if(pollTimer)clearTimeout(pollTimer);
-    step(3);$('scanBusy').hidden=false;$('resultBox').hidden=true;
-    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/claim',{method:'POST',body:{claimSecret:secret}}).then(function(r){
-      if(!r.ok){renderError('לא ניתן היה להנפיק הרשאת סריקה: '+((r.body&&r.body.error)||r.status));return}
-      var grant=r.body.grant;
-      return api('/api/scan',{method:'POST',headers:{authorization:'Bearer '+grant}}).then(function(s){
-        if(!s.ok){renderError('הסריקה נכשלה: '+((s.body&&(s.body.message||s.body.error))||s.status));return}
-        renderResult(s.body);
-      });
-    }).catch(function(){renderError('שגיאת רשת בעת הסריקה.')});
-  }
-
-  function renderError(msg){
-    $('scanBusy').hidden=true;var box=$('resultBox');box.hidden=false;box.className='result r-warn';
-    $('resTitle').textContent='לא הושלם';$('resMsg').textContent=msg;$('resMeta').hidden=true;$('resDisc').textContent='';
-    SS.del('p2s-verify');
-  }
-  function renderResult(res){
-    $('scanBusy').hidden=true;var box=$('resultBox');box.hidden=false;
-    var cls='r-warn',title='תוצאה';
-    if(res.verdict==='vulnerable'){cls='r-crit';title='⚠ ככל הנראה חשוף'}
-    else if(res.verdict==='eol'){cls='r-crit';title='⚠ ענף בסוף חיים'}
-    else if(res.verdict==='patched'){cls='r-ok';title='✓ ככל הנראה מעודכן'}
-    else if(res.verdict==='unknown_hidden'){cls='r-ok';title='הגרסה מוסתרת (היגיינה טובה)'}
-    else if(res.verdict==='unknown_branch'){cls='r-warn';title='ענף לא מוכר'}
-    else if(res.verdict==='error'){cls='r-warn';title='הבדיקה לא הושלמה'}
-    box.className='result '+cls;
+  /* claim -> scan */
+  var lastResult=null;
+  function proceed(secret){if(pollTimer)clearTimeout(pollTimer);step(3);$('scanBusy').hidden=false;$('resultBox').hidden=true;
+    api('/api/verify/'+encodeURIComponent(state.verificationId)+'/claim',{method:'POST',body:{claimSecret:secret}}).then(function(r){if(!r.ok){renderError(T('claimFail',{e:(r.body&&r.body.error)||r.status}));return;}var g=r.body.grant;return api('/api/scan',{method:'POST',headers:{authorization:'Bearer '+g}}).then(function(s){if(!s.ok){renderError(T('scanFail',{e:(s.body&&(s.body.message||s.body.error))||s.status}));return;}lastResult=s.body;renderResult(s.body);});}).catch(function(){renderError(T('netErr'));});}
+  function renderError(m){$('scanBusy').hidden=true;var b=$('resultBox');b.hidden=false;b.className='result r-warn';$('resTitle').textContent=T('v_error_t');$('resChip').hidden=true;$('resMsg').textContent=m;$('resMeta').hidden=true;$('resDisc').textContent='';SS.del('p2s-verify');}
+  function renderResult(res){lastResult=res;$('scanBusy').hidden=true;var b=$('resultBox');b.hidden=false;
+    var map={vulnerable:'r-crit',eol:'r-crit',patched:'r-ok',unknown_hidden:'r-ok',unknown_branch:'r-warn',error:'r-warn'};
+    b.className='result '+(map[res.verdict]||'r-warn');
+    var title,msg;
+    if(res.verdict==='error'){title=T('v_error_t');msg=T('v_error_'+(res.errorCode==='ssrf_block'?'ssrf':res.errorCode==='dns_error'?'dns':'fetch'));}
+    else{title=T('v_'+res.verdict+'_t');msg=T('v_'+res.verdict+'_m',{v:res.inferredVersion,fix:res.patchedVersion,branch:res.branch});}
     $('resTitle').textContent=title;
-    $('resMsg').textContent=res.message||'';
-    var meta=$('resMeta');
-    if(res.headers&&(res.headers.server||res.headers.xPoweredBy)){
-      meta.hidden=false;
-      meta.textContent=[res.headers.xPoweredBy?('X-Powered-By: '+res.headers.xPoweredBy):null,
-        res.headers.server?('Server: '+res.headers.server):null,
-        res.resolvedIp?('IP: '+res.resolvedIp):null].filter(Boolean).join('\n');
-    }else meta.hidden=true;
-    $('resDisc').textContent=(res.disclaimer||'')+(res.cves?(' ['+res.cves.join(', ')+']'):'');
-    SS.del('p2s-verify');
-  }
+    var chip=$('resChip');if(res.inferredVersion){chip.textContent='PHP '+res.inferredVersion;chip.hidden=false;}else chip.hidden=true;
+    $('resMsg').textContent=msg;
+    var meta=$('resMeta');var lines=[];if(res.headers){if(res.headers.xPoweredBy)lines.push('X-Powered-By: '+res.headers.xPoweredBy);if(res.headers.server)lines.push('Server: '+res.headers.server);}if(res.resolvedIp)lines.push('IP: '+res.resolvedIp);
+    if(lines.length){meta.textContent=lines.join('\n');meta.hidden=false;}else meta.hidden=true;
+    $('resDisc').textContent=T('disc')+(res.cves?'  ['+res.cves.join(', ')+']':'');
+    SS.del('p2s-verify');}
 
-  $('restart').addEventListener('click',function(){SS.del('p2s-verify');state={};location.hash='';location.reload()});
+  /* re-render dynamic result on language switch */
+  window.P2S_onlang=function(){if(!$('panel3').hidden&&lastResult)renderResult(lastResult);};
 
-  /* copy buttons */
-  document.addEventListener('click',function(e){
-    var b=e.target.closest&&e.target.closest('.copy');if(!b)return;
-    var txt=$(b.getAttribute('data-copy')).textContent;
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(txt).then(function(){b.textContent='✓';setTimeout(function(){b.textContent='⧉'},1200)}).catch(function(){fallbackCopy(txt)});
-    }else fallbackCopy(txt);
-  });
-  function fallbackCopy(t){var r=document.createRange(),s=document.createElement('span');s.textContent=t;document.body.appendChild(s);r.selectNodeContents(s);var sel=getSelection();sel.removeAllRanges();sel.addRange(r);try{document.execCommand('copy')}catch(e){}sel.removeAllRanges();document.body.removeChild(s)}
+  $('restart').addEventListener('click',function(){SS.del('p2s-verify');state={};lastResult=null;location.hash='';location.reload();});
 
-  /* resume after email-confirm redirect: #verified=1&id=... */
-  function resumeFromHash(){
-    var h=location.hash||'';
-    if(h.indexOf('verified=1')===-1)return false;
-    var mid=h.match(/id=([A-Za-z0-9_%-]+)/);
-    var mcs=h.match(/cs=([A-Za-z0-9_%-]+)/);
-    if(!mid||!mcs)return false;
-    var saved=SS.get('p2s-verify')||{};
-    state={verificationId:decodeURIComponent(mid[1]),domain:saved.domain||'',claimSecret:saved.claimSecret};
-    step(2);$('domainEcho').textContent=state.domain||'';
-    proceedToScan(decodeURIComponent(mcs[1]));
-    return true;
-  }
+  /* copy */
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.copy');if(!b)return;var txt=$(b.getAttribute('data-copy')).textContent;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){b.textContent='✓';setTimeout(function(){b.textContent='⧉';},1200);}).catch(fb);else fb();function fb(){var r=document.createRange(),s=document.createElement('span');s.textContent=txt;document.body.appendChild(s);r.selectNodeContents(s);var sel=getSelection();sel.removeAllRanges();sel.addRange(r);try{document.execCommand('copy');}catch(e){}sel.removeAllRanges();document.body.removeChild(s);}});
 
-  if(!resumeFromHash())step(1);
+  /* resume after email-confirm redirect: #verified=1&id=..&cs=.. */
+  (function(){var h=location.hash||'';if(h.indexOf('verified=1')===-1)return;var mid=h.match(/id=([A-Za-z0-9_%-]+)/),mcs=h.match(/cs=([A-Za-z0-9_%-]+)/);if(!mid||!mcs)return;var saved=SS.get('p2s-verify')||{};state={verificationId:decodeURIComponent(mid[1]),domain:saved.domain||'',claimSecret:saved.claimSecret};$('domainEcho').textContent=state.domain||'';step(2);proceed(decodeURIComponent(mcs[1]));})();
 })();
 </script>
 </body>

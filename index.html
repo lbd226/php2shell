@@ -1,34 +1,48 @@
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PHP2Shell</title>
+<meta name="description" content="מרכז מידע וכלי בדיקה לחולשות PHP2Shell (CVE-2026-109618 / CVE-2026-109619) — הרצת קוד מרחוק בליבת PHP. בדקו את החשיפה שלכם ותקנו.">
+<meta name="theme-color" content="#0c6b86" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0e13" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PHP2Shell">
+<meta property="og:title" content="PHP2Shell — Critical PHP RCE">
+<meta property="og:description" content="Two critical PHP core vulnerabilities allow unauthenticated remote code execution. Check your exposure and fix it.">
+<meta property="og:url" content="https://php2shell.ai/">
+<meta property="og:image" content="https://php2shell.ai/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Inter:wght@400;500;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout concept: full-width severity-coded bands stacked vertically, alternating
-   surface tints for rhythm; monospace for every CVE id / version / command;
-   a CVSS gauge + advisory fact-card anchor the hero. RTL (Hebrew). */
 :root{
   --bg:#eef1f5; --surface:#ffffff; --surface-2:#f7f9fb; --surface-3:#e9edf2;
   --fg:#0e141c; --muted:#515c6a; --faint:#5f6875; --border:#d6dce4;
   --accent:#0c6b86; --accent-fg:#ffffff; --accent-weak:#e0eef2; --accent-line:#8cc3d2;
   --crit:#bd1b28; --crit-weak:#fbe4e6; --crit-line:#edaab0;
-  --high:#b4530a; --high-weak:#fbe8d6;
-  --warn:#8f5602; --warn-weak:#faeecf;
+  --high:#b4530a; --high-weak:#fbe8d6; --warn:#8f5602; --warn-weak:#faeecf;
   --ok:#0f7536; --ok-weak:#e0f2e7;
   --shadow-sm:0 1px 2px rgba(14,20,28,.06);
   --shadow:0 1px 2px rgba(14,20,28,.05),0 10px 30px rgba(14,20,28,.08);
   --radius:14px; --radius-lg:18px; --maxw:1120px;
-  --s1:6px; --s2:10px; --s3:16px; --s4:24px; --s5:36px; --s6:56px;
-  --ff-body:"Heebo",-apple-system,"Segoe UI",Arial,sans-serif;
-  --ff-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --s3:16px; --s4:24px; --s5:36px;
+  --sans:"Heebo","Inter",-apple-system,"Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
 }
+html[lang="en"]{--sans:"Inter","Heebo",-apple-system,"Segoe UI",Arial,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#070a0e; --surface:#111822; --surface-2:#0d131b; --surface-3:#1d2733;
   --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
   --accent:#3bbdd9; --accent-fg:#04141a; --accent-weak:#0f2b34; --accent-line:#1f4f5d;
   --crit:#ff7a82; --crit-weak:#331418; --crit-line:#5c252a;
-  --high:#f3993f; --high-weak:#33220f;
-  --warn:#e4ab4c; --warn-weak:#2d2210;
+  --high:#f3993f; --high-weak:#33220f; --warn:#e4ab4c; --warn-weak:#2d2210;
   --ok:#53c680; --ok-weak:#0e2a1a;
   --shadow-sm:0 1px 2px rgba(0,0,0,.5);
   --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.55);
@@ -39,141 +53,132 @@
   --fg:#e9eef4; --muted:#9da9b7; --faint:#8b97a6; --border:#232e3b;
   --accent:#3bbdd9; --accent-fg:#04141a; --accent-weak:#0f2b34; --accent-line:#1f4f5d;
   --crit:#ff7a82; --crit-weak:#331418; --crit-line:#5c252a;
-  --high:#f3993f; --high-weak:#33220f;
-  --warn:#e4ab4c; --warn-weak:#2d2210;
+  --high:#f3993f; --high-weak:#33220f; --warn:#e4ab4c; --warn-weak:#2d2210;
   --ok:#53c680; --ok-weak:#0e2a1a;
   --shadow-sm:0 1px 2px rgba(0,0,0,.5);
   --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.55);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--ff-body);line-height:1.62;font-size:16px;-webkit-font-smoothing:antialiased}
-.rtl{direction:rtl;text-align:right}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.62;font-size:16px;-webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{line-height:1.18;text-wrap:balance;margin:0;font-weight:800}
 p{margin:0}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
-code,kbd,samp,.mono{font-family:var(--ff-mono);font-variant-numeric:tabular-nums}
+code,kbd,samp,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:5px}
-.wrap{max-width:var(--maxw);margin-inline:auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
-.skip{position:absolute;right:-9999px;top:8px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:8px;z-index:60;font-weight:700}
-.skip:focus{right:16px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+[hidden]{display:none!important}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-left:max(18px,env(safe-area-inset-left,0));padding-right:max(18px,env(safe-area-inset-right,0))}
+.skip{position:absolute;inset-inline-start:-9999px;top:8px;background:var(--accent);color:var(--accent-fg);padding:10px 16px;border-radius:8px;z-index:60;font-weight:700}
+.skip:focus{inset-inline-start:16px}
 
-/* bands & rhythm */
 .band{border-top:1px solid var(--border)}
 .band>.wrap{padding-block:clamp(34px,5.5vw,60px)}
 .band.tint{background:var(--surface)}
 .band.hero{border-top:none}
 
-/* status bar */
-.statusbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-.statusbar .wrap{display:flex;align-items:center;gap:14px;padding-block:11px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px;font-size:17px}
-.brand svg{flex:none}
-.brand .n1{color:var(--fg)}.brand .n2{color:var(--accent)}
-.statusbar .spacer{flex:1 1 auto}
+.statusbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.statusbar .wrap{display:flex;align-items:center;gap:12px;padding-block:11px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px;font-size:17px;text-decoration:none;color:var(--fg)}
+.brand .n2{color:var(--accent)}
+.sp{flex:1 1 auto}
 .livedot{width:9px;height:9px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 0 var(--crit);animation:pulse 2.4s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--crit) 55%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.sev-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff-mono);font-size:12.5px;font-weight:600;background:var(--crit-weak);color:var(--crit);border:1px solid var(--crit-line);padding:5px 11px;border-radius:999px;direction:ltr}
-.iconbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:17px;display:inline-grid;place-items:center}
-.iconbtn:hover{background:var(--surface-3)}
+.sev-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12.5px;font-weight:600;background:var(--crit-weak);color:var(--crit);border:1px solid var(--crit-line);padding:5px 11px;border-radius:999px;direction:ltr}
+.tbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);height:40px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;padding:0 12px;font-family:var(--sans)}
+.tbtn.sq{width:40px;justify-content:center;padding:0;font-size:17px}
+.tbtn:hover{background:var(--surface-3)}
+.tbtn svg{width:16px;height:16px}
+.navcta{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14px;padding:10px 17px;border-radius:10px;text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px color-mix(in srgb,var(--accent) 40%,transparent)}
+.navcta:hover{filter:brightness(1.08);text-decoration:none}
+.navcta svg{width:16px;height:16px;flex:none}
+@media(max-width:560px){.navcta{order:5;flex:1 1 100%;justify-content:center;padding:11px 17px}.sev-chip{display:none}}
 
-/* hero */
 .hero{position:relative;overflow:hidden;background:
   radial-gradient(900px 440px at 88% -12%,var(--accent-weak),transparent 62%),
   radial-gradient(700px 320px at 8% 120%,color-mix(in srgb,var(--crit) 10%,transparent),transparent 60%),
   var(--surface-2)}
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
   background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
-  background-size:46px 46px;mask-image:radial-gradient(640px 400px at 85% 0%,#000,transparent 72%);-webkit-mask-image:radial-gradient(640px 400px at 85% 0%,#000,transparent 72%)}
+  background-size:46px 46px;-webkit-mask-image:radial-gradient(640px 400px at 85% 0,#000,transparent 72%);mask-image:radial-gradient(640px 400px at 85% 0,#000,transparent 72%)}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.25fr .85fr;gap:clamp(24px,4vw,46px);align-items:center;padding-block:clamp(40px,6vw,64px)}
-.eyebrow{font-family:var(--ff-mono);font-size:12.5px;font-weight:600;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:9px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:9px}
 .hero h1{font-size:clamp(30px,5.6vw,52px);font-weight:900;margin:14px 0 10px;letter-spacing:-.5px}
 .hero .lead{font-size:clamp(16.5px,2.2vw,19.5px);color:var(--muted);max-width:56ch}
 .cve-row{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 0}
-.cve-tag{font-family:var(--ff-mono);font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--border);padding:8px 13px;border-radius:10px;direction:ltr}
+.cve-tag{font-family:var(--mono);font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--border);padding:8px 13px;border-radius:10px;direction:ltr}
 
-/* CVSS gauge */
-.gauge{direction:ltr;margin-top:26px;max-width:460px}
+.gauge{direction:ltr;margin-top:24px;max-width:460px}
 .gauge-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
-.gauge-top .score{font-family:var(--ff-mono);font-weight:600;font-size:15px}
+.gauge-top .score{font-family:var(--mono);font-weight:600;font-size:15px}
 .gauge-top .score b{font-size:22px;color:var(--crit)}
-.gauge-top .band-label{font-family:var(--ff-mono);font-size:12px;font-weight:600;color:var(--crit);letter-spacing:.5px}
+.gauge-top .band-label{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--crit);letter-spacing:.5px}
 .gauge-track{position:relative;height:12px;border-radius:999px;overflow:hidden;display:flex;border:1px solid var(--border)}
-.gz{height:100%}
-.gz.low{width:40%;background:var(--ok)}
-.gz.med{width:30%;background:var(--warn)}
-.gz.high{width:20%;background:var(--high)}
-.gz.crit{width:10%;background:var(--crit)}
+.gz{height:100%}.gz.low{width:40%;background:var(--ok)}.gz.med{width:30%;background:var(--warn)}.gz.high{width:20%;background:var(--high)}.gz.crit{width:10%;background:var(--crit)}
 .gz:not(.crit){opacity:.42}
 .gauge-marker{position:absolute;top:-4px;bottom:-4px;left:92%;width:3px;background:var(--fg);border-radius:2px;box-shadow:0 0 0 2px var(--surface-2)}
-.gauge-scale{display:flex;justify-content:space-between;font-family:var(--ff-mono);font-size:10.5px;color:var(--faint);margin-top:5px}
+.gauge-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:5px}
+.hero-cta{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:15px;padding:12px 20px;border-radius:11px;text-decoration:none}
+.hero-cta:hover{filter:brightness(1.08);text-decoration:none}
 
-/* advisory fact card */
-.factcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);margin:0;overflow:hidden}
-.factcard .fc-head{font-family:var(--ff-mono);font-size:11.5px;letter-spacing:1px;color:var(--faint);padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.factcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+.factcard .fc-head{font-family:var(--mono);font-size:11.5px;letter-spacing:1px;color:var(--faint);padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .factcard dl{margin:0;padding:6px 18px 12px}
 .factcard .row{display:flex;justify-content:space-between;gap:14px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--border)}
 .factcard .row:last-child{border-bottom:none}
 .factcard dt{color:var(--muted);font-size:13.5px;flex:none}
-.factcard dd{margin:0;font-weight:700;font-size:13.5px;text-align:left}
-.factcard dd.mono{font-family:var(--ff-mono);font-weight:500;direction:ltr;font-size:12.5px}
+.factcard dd{margin:0;font-weight:700;font-size:13.5px;text-align:end}
+.factcard dd.mono{font-family:var(--mono);font-weight:500;direction:ltr;font-size:12.5px}
 .factcard dd.danger{color:var(--crit)}
 
-/* section head */
 .sec-head{margin-bottom:var(--s4)}
-.sec-eyebrow{font-family:var(--ff-mono);font-size:12px;font-weight:600;letter-spacing:1.5px;color:var(--accent);display:block;margin-bottom:9px}
+.sec-eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:1.5px;color:var(--accent);display:block;margin-bottom:9px}
 .sec-head h2{font-size:clamp(23px,3.4vw,31px)}
 .sub{color:var(--muted);max-width:68ch;margin-top:8px;font-size:15.5px}
 
-/* callout */
 .callout{display:flex;gap:13px;align-items:flex-start;background:var(--warn-weak);border:1px solid color-mix(in srgb,var(--warn) 34%,transparent);border-radius:var(--radius);padding:16px 18px}
 .callout.info{background:var(--accent-weak);border-color:var(--accent-line)}
 .callout .ic{flex:none;font-size:19px;line-height:1.5}
 .callout p{font-size:14.5px;color:var(--fg)}
-.callout strong{font-weight:700}
+.callout a{font-weight:700}
 
-/* self check */
 .checker{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px}
 .checker form{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:4px}
 .field{flex:1 1 230px;min-width:0}
 .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:7px}
-.field input{width:100%;font-family:var(--ff-mono);font-size:16px;direction:ltr;text-align:left;padding:12px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg)}
+.field input{width:100%;font-family:var(--mono);font-size:16px;direction:ltr;text-align:left;padding:12px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg)}
 .field input::placeholder{color:var(--faint)}
-.btn{font-family:var(--ff-body);font-size:15px;font-weight:700;background:var(--accent);color:var(--accent-fg);border:none;border-radius:10px;padding:13px 22px;cursor:pointer;white-space:nowrap;transition:filter .15s}
+.btn{font-family:var(--sans);font-size:15px;font-weight:700;background:var(--accent);color:var(--accent-fg);border:none;border-radius:10px;padding:13px 22px;cursor:pointer;white-space:nowrap;transition:filter .15s}
 .btn:hover{filter:brightness(1.08)}
 .btn.ghost{background:var(--surface-2);color:var(--fg);border:1px solid var(--border)}
 .result{margin-top:18px;border-radius:12px;padding:16px 18px;border:1px solid var(--border);display:none;gap:14px;align-items:flex-start}
 .result.show{display:flex}
 .result .led{flex:none;width:13px;height:13px;border-radius:50%;margin-top:5px;background:var(--faint);box-shadow:0 0 0 4px color-mix(in srgb,var(--faint) 20%,transparent)}
-.result.r-crit{background:var(--crit-weak);border-color:var(--crit-line)}
-.result.r-crit .led{background:var(--crit);box-shadow:0 0 0 4px color-mix(in srgb,var(--crit) 24%,transparent)}
-.result.r-ok{background:var(--ok-weak);border-color:color-mix(in srgb,var(--ok) 42%,transparent)}
-.result.r-ok .led{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 24%,transparent)}
-.result.r-warn{background:var(--warn-weak);border-color:color-mix(in srgb,var(--warn) 42%,transparent)}
-.result.r-warn .led{background:var(--warn);box-shadow:0 0 0 4px color-mix(in srgb,var(--warn) 24%,transparent)}
+.result.r-crit{background:var(--crit-weak);border-color:var(--crit-line)}.result.r-crit .led{background:var(--crit);box-shadow:0 0 0 4px color-mix(in srgb,var(--crit) 24%,transparent)}
+.result.r-ok{background:var(--ok-weak);border-color:color-mix(in srgb,var(--ok) 42%,transparent)}.result.r-ok .led{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 24%,transparent)}
+.result.r-warn{background:var(--warn-weak);border-color:color-mix(in srgb,var(--warn) 42%,transparent)}.result.r-warn .led{background:var(--warn);box-shadow:0 0 0 4px color-mix(in srgb,var(--warn) 24%,transparent)}
 .result .verdict{font-weight:800;font-size:17.5px}
 .result.r-crit .verdict{color:var(--crit)}.result.r-ok .verdict{color:var(--ok)}.result.r-warn .verdict{color:var(--warn)}
 .result .detail{margin-top:7px;font-size:14.5px;color:var(--fg)}
-.result .detail b{font-family:var(--ff-mono);direction:ltr;unicode-bidi:plaintext;font-weight:600}
+.result .detail b{font-family:var(--mono);direction:ltr;unicode-bidi:plaintext;font-weight:600}
 .howto{margin-top:16px;font-size:13.5px;color:var(--muted)}
-.cmd{display:block;direction:ltr;text-align:left;font-family:var(--ff-mono);font-size:13.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-top:8px;overflow-x:auto;white-space:pre}
+.cmd{display:block;direction:ltr;text-align:left;font-family:var(--mono);font-size:13.5px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-top:8px;overflow-x:auto;white-space:pre}
+.checker .or{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.checker .or p{font-size:14px;color:var(--muted)}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:10px;text-decoration:none;white-space:nowrap}
+.cta:hover{filter:brightness(1.08);text-decoration:none}
 
-/* version table */
 .tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
 table{border-collapse:collapse;width:100%;min-width:470px;background:var(--surface)}
-caption{text-align:right;color:var(--muted);font-size:13px;padding:10px 14px}
-th,td{padding:12px 15px;text-align:right;border-bottom:1px solid var(--border);font-size:14.5px}
+caption{text-align:start;color:var(--muted);font-size:13px;padding:10px 14px}
+th,td{padding:12px 15px;text-align:start;border-bottom:1px solid var(--border);font-size:14.5px}
 th{background:var(--surface-2);font-weight:700;font-size:12.5px;color:var(--muted);letter-spacing:.3px}
 tr:last-child td{border-bottom:none}
-td .v{font-family:var(--ff-mono);direction:ltr;unicode-bidi:plaintext;font-weight:500}
-.pill{display:inline-block;font-family:var(--ff-mono);font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px}
-.pill.bad{background:var(--crit-weak);color:var(--crit)}
-.pill.good{background:var(--ok-weak);color:var(--ok)}
-.pill.eol{background:var(--warn-weak);color:var(--warn)}
+td .v{font-family:var(--mono);direction:ltr;unicode-bidi:plaintext;font-weight:500}
+.pill{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px}
+.pill.bad{background:var(--crit-weak);color:var(--crit)}.pill.good{background:var(--ok-weak);color:var(--ok)}.pill.eol{background:var(--warn-weak);color:var(--warn)}
 
-/* grids & cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:19px 20px;display:flex;flex-direction:column;gap:9px;transition:border-color .18s,transform .18s,box-shadow .18s}
 .card:hover{border-color:var(--accent-line);transform:translateY(-3px);box-shadow:var(--shadow)}
@@ -181,467 +186,433 @@ td .v{font-family:var(--ff-mono);direction:ltr;unicode-bidi:plaintext;font-weigh
 .card h3{font-size:17px}
 .card p{font-size:13.8px;color:var(--muted)}
 .card.cve{border-top:3px solid var(--crit)}
-.tag{font-family:var(--ff-mono);font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px;white-space:nowrap}
-.tag.affected{background:var(--crit-weak);color:var(--crit)}
-.tag.patch{background:var(--ok-weak);color:var(--ok)}
-.tag.action{background:var(--accent-weak);color:var(--accent)}
-.tag.nofix{background:var(--warn-weak);color:var(--warn)}
+.tag{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px;white-space:nowrap}
+.tag.affected{background:var(--crit-weak);color:var(--crit)}.tag.patch{background:var(--ok-weak);color:var(--ok)}.tag.action{background:var(--accent-weak);color:var(--accent)}.tag.nofix{background:var(--warn-weak);color:var(--warn)}
 
-/* steps */
 .steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;counter-reset:s}
 .steps li{counter-increment:s;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:flex-start}
-.steps li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--accent-fg);font-family:var(--ff-mono);font-weight:600;display:grid;place-items:center}
+.steps li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--accent-fg);font-family:var(--mono);font-weight:600;display:grid;place-items:center}
 .steps li h4{font-size:15.5px;margin-bottom:4px}
 .steps li p{font-size:13.8px;color:var(--muted)}
 
-/* faq */
 details.faq{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
 details.faq summary{cursor:pointer;padding:15px 17px;font-weight:700;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
 details.faq summary::-webkit-details-marker{display:none}
-details.faq summary::after{content:"+";font-family:var(--ff-mono);color:var(--accent);font-size:20px;flex:none}
+details.faq summary::after{content:"+";font-family:var(--mono);color:var(--accent);font-size:20px;flex:none}
 details.faq[open] summary::after{content:"\2212"}
 details.faq .body{padding:0 17px 16px;color:var(--muted);font-size:14.3px}
 details.faq .body code{background:var(--surface-2);padding:1px 5px;border-radius:5px}
 
-/* refs */
 .refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:11px}
 .ref{display:flex;flex-direction:column;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 15px;transition:border-color .18s,transform .18s}
 .ref:hover{border-color:var(--accent-line);transform:translateY(-2px);text-decoration:none}
-.ref .src{font-family:var(--ff-mono);font-size:11.5px;color:var(--faint)}
+.ref .src{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
 .ref .t{font-weight:700;font-size:14px;color:var(--fg)}
 
-/* ad slot */
-.ad-slot{margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:repeating-linear-gradient(45deg,var(--surface-2),var(--surface-2) 13px,var(--surface) 13px,var(--surface) 26px);border:1px dashed var(--border);border-radius:12px;min-height:104px;color:var(--faint);text-align:center;padding:16px}
-.ad-slot .lab{font-family:var(--ff-mono);font-size:11px;letter-spacing:1px;text-transform:uppercase}
-.ad-slot .d{font-size:12.5px}
+/* ad containers: invisible until an ad is injected (AdSense-ready, no placeholder clutter) */
+.ad{display:flex;justify-content:center;margin:var(--s4) auto 0}
+.ad:empty{display:none;margin:0}
 
-/* footer */
 footer{border-top:1px solid var(--border);background:var(--surface)}
 footer .wrap{padding-block:30px 36px;display:flex;flex-direction:column;gap:16px}
 .foot-top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 .foot-links{display:flex;flex-wrap:wrap;gap:8px 18px}
-.foot-links button{background:none;border:none;color:var(--muted);font-family:var(--ff-body);font-size:14px;cursor:pointer;padding:3px 0}
+.foot-links button{background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:14px;cursor:pointer;padding:3px 0}
 .foot-links button:hover{color:var(--accent);text-decoration:underline}
 .disc{font-size:12.5px;color:var(--faint);max-width:94ch}
 
-/* modal */
 dialog{border:1px solid var(--border);background:var(--surface);color:var(--fg);border-radius:16px;max-width:620px;width:calc(100% - 32px);padding:0;box-shadow:var(--shadow)}
 dialog::backdrop{background:rgba(4,8,13,.6);backdrop-filter:blur(2px)}
 .dlg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
 .dlg-head h3{font-size:19px}
 .dlg-body{padding:18px 20px;max-height:66vh;overflow:auto}
-.dlg-body h4{font-size:15px;margin:16px 0 6px}
-.dlg-body h4:first-child{margin-top:0}
+.dlg-body h4{font-size:15px;margin:16px 0 6px}.dlg-body h4:first-child{margin-top:0}
 .dlg-body p,.dlg-body li{font-size:14px;color:var(--muted);line-height:1.65}
 .dlg-body ul{margin:6px 0;padding-inline-start:20px}
 .dlg-body code{background:var(--surface-2);padding:1px 5px;border-radius:5px;direction:ltr;display:inline-block}
 
-/* cookie banner */
-.cookie{position:fixed;inset:auto 0 0 0;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px);display:none}
+.cookie{position:fixed;inset:auto 0 0 0;z-index:50;padding-bottom:env(safe-area-inset-bottom,0);display:none}
 .cookie.show{display:block}
-.cookie .inner{max-width:var(--maxw);margin:0 auto 14px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-left:max(14px,env(safe-area-inset-left,0px));margin-right:max(14px,env(safe-area-inset-right,0px))}
+.cookie .inner{max-width:var(--maxw);margin:0 auto 14px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-left:max(14px,env(safe-area-inset-left,0));margin-right:max(14px,env(safe-area-inset-right,0))}
 .cookie p{font-size:13.5px;color:var(--muted);flex:1 1 300px;min-width:0}
 .cookie .acts{display:flex;gap:9px;flex-wrap:wrap}
 .cookie .btn{padding:10px 18px;font-size:14px}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media(max-width:820px){.hero .wrap{grid-template-columns:1fr}.factcard{order:2}}
-@media(max-width:560px){.checker{padding:18px}.checker form{flex-direction:column;align-items:stretch}.btn{width:100%}}
+@media(max-width:560px){.checker{padding:18px}.checker form{flex-direction:column;align-items:stretch}.btn{width:100%}.checker .or{flex-direction:column;align-items:stretch}.cta{justify-content:center}}
 </style>
+</head>
+<body>
+<a class="skip" href="#main" data-t="skip">דלג לתוכן הראשי</a>
 
-<a class="skip" href="#main">דלג לתוכן הראשי</a>
-
-<div class="rtl">
-<header class="statusbar">
-  <div class="wrap">
-    <span class="brand" aria-label="PHP2Shell מרכז מידע">
-      <svg width="27" height="27" viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent)" d="M12 1.5 3 5v6.3c0 5 3.6 8.9 9 11.2 5.4-2.3 9-6.2 9-11.2V5l-9-3.5Z"/><path fill="var(--surface)" d="m10.8 15.2-2.9-2.9 1.4-1.4 1.5 1.5 3.9-3.9 1.4 1.4-5.3 5.3Z"/></svg>
-      <span><span class="n1">PHP2</span><span class="n2">Shell</span></span>
-    </span>
-    <span class="spacer"></span>
-    <span class="sev-chip" title="חומרה קריטית"><span class="livedot" aria-hidden="true"></span> CVSS 9.2 · CRITICAL</span>
-    <button class="iconbtn" id="themeBtn" type="button" aria-label="החלפת ערכת צבעים">◑</button>
-  </div>
-</header>
+<header class="statusbar"><div class="wrap">
+  <a class="brand" href="/" dir="ltr" aria-label="PHP2Shell">
+    <svg width="27" height="27" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg>
+    <span><span class="n1">PHP2</span><span class="n2">Shell</span></span>
+  </a>
+  <span class="sp"></span>
+  <a class="navcta" href="/scan.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+    <span data-t="navCta">בדיקת דומיין מאומתת</span>
+  </a>
+  <span class="sev-chip"><span class="livedot" aria-hidden="true"></span> CVSS 9.2 · CRITICAL</span>
+  <button class="tbtn" id="langBtn" type="button" aria-label="Switch language">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+    <span data-lang-code>EN</span>
+  </button>
+  <button class="tbtn sq" id="themeBtn" type="button" data-tal="themeAria" aria-label="Toggle theme">◑</button>
+</div></header>
 
 <main id="main">
-  <!-- HERO -->
-  <section class="band hero">
-    <div class="wrap">
-      <div class="hero-text">
-        <p class="eyebrow"><span class="livedot" aria-hidden="true"></span> עדכון אבטחה · פורסם 21 באוקטובר 2026</p>
-        <h1>PHP2Shell — הרצת קוד מרחוק בליבת PHP</h1>
-        <p class="lead">שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת ללא כל אימות. כאן תבינו אם אתם חשופים, ומה בדיוק צריך לעשות — לעצמכם ולספקים שלכם.</p>
-        <div class="cve-row">
-          <span class="cve-tag">CVE-2026-109618</span>
-          <span class="cve-tag">CVE-2026-109619</span>
-        </div>
-        <div class="gauge" role="img" aria-label="ציון חומרת CVSS: 9.2 מתוך 10 — קריטי">
-          <div class="gauge-top"><span class="score"><b>9.2</b> / 10</span><span class="band-label">CRITICAL · CVSS v4.0</span></div>
-          <div class="gauge-track" aria-hidden="true"><span class="gz low"></span><span class="gz med"></span><span class="gz high"></span><span class="gz crit"></span><span class="gauge-marker"></span></div>
-          <div class="gauge-scale" aria-hidden="true"><span>0</span><span>Low</span><span>Med</span><span>High</span><span>10</span></div>
-        </div>
+  <section class="band hero"><div class="wrap">
+    <div>
+      <p class="eyebrow"><span class="livedot" aria-hidden="true"></span> <span data-t="eyebrow">עדכון אבטחה · פורסם 21 באוקטובר 2026</span></p>
+      <h1 data-t="h1">PHP2Shell — הרצת קוד מרחוק בליבת PHP</h1>
+      <p class="lead" data-t="lead">שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת ללא כל אימות. כאן תבינו אם אתם חשופים, ומה בדיוק צריך לעשות — לעצמכם ולספקים שלכם.</p>
+      <div class="cve-row"><span class="cve-tag">CVE-2026-109618</span><span class="cve-tag">CVE-2026-109619</span></div>
+      <div class="gauge" role="img" data-tal="gaugeAria" aria-label="CVSS 9.2 / 10 — Critical">
+        <div class="gauge-top"><span class="score"><b>9.2</b> / 10</span><span class="band-label">CRITICAL · CVSS v4.0</span></div>
+        <div class="gauge-track" aria-hidden="true"><span class="gz low"></span><span class="gz med"></span><span class="gz high"></span><span class="gz crit"></span><span class="gauge-marker"></span></div>
+        <div class="gauge-scale" aria-hidden="true"><span>0</span><span>Low</span><span>Med</span><span>High</span><span>10</span></div>
       </div>
-      <aside class="factcard" aria-label="עובדות מפתח">
-        <div class="fc-head"><span>ADVISORY</span><span>PHP CORE</span></div>
-        <dl>
-          <div class="row"><dt>פורסם</dt><dd>21 אוקטובר 2026</dd></div>
-          <div class="row"><dt>סוג</dt><dd>הרצת קוד מרחוק</dd></div>
-          <div class="row"><dt>דרוש אימות</dt><dd class="danger">לא נדרש</dd></div>
-          <div class="row"><dt>ניצול ציבורי</dt><dd class="danger">קיים במחזור</dd></div>
-          <div class="row"><dt>ענפים מתוקנים</dt><dd class="mono">8.2.35 · 8.3.36 · 8.4.27 · 8.5.12</dd></div>
-        </dl>
-      </aside>
+      <a class="hero-cta" href="/scan.html"><span data-t="heroCta">בדיקת דומיין שבבעלותכם</span> <span data-t="arrowFwd" aria-hidden="true">←</span></a>
     </div>
-  </section>
+    <aside class="factcard" aria-label="Key facts">
+      <div class="fc-head"><span>ADVISORY</span><span>PHP CORE</span></div>
+      <dl>
+        <div class="row"><dt data-t="fPublished">פורסם</dt><dd data-t="fPublishedV">21 אוקטובר 2026</dd></div>
+        <div class="row"><dt data-t="fType">סוג</dt><dd data-t="fTypeV">הרצת קוד מרחוק</dd></div>
+        <div class="row"><dt data-t="fAuth">דרוש אימות</dt><dd class="danger" data-t="fAuthV">לא נדרש</dd></div>
+        <div class="row"><dt data-t="fExploit">ניצול ציבורי</dt><dd class="danger" data-t="fExploitV">קיים במחזור</dd></div>
+        <div class="row"><dt data-t="fFixed">ענפים מתוקנים</dt><dd class="mono">8.2.35 · 8.3.36 · 8.4.27 · 8.5.12</dd></div>
+      </dl>
+    </aside>
+  </div></section>
 
-  <!-- disclaimer -->
-  <section class="band" aria-label="הבהרה">
-    <div class="wrap">
-      <div class="callout info">
-        <span class="ic" aria-hidden="true">ℹ︎</span>
-        <p><strong>העמוד הזה הוא מידע והסברה בלבד.</strong> הוא אינו סורק אתרים, אינו שולח בקשות לאף שרת ואינו שומר נתונים. בדיקת החשיפה למטה רצה כולה בדפדפן שלכם, על גרסת PHP שאתם מקלידים. אל תריצו בדיקות או ניצול נגד מערכות שאינן בבעלותכם או שאין לכם הרשאה מפורשת לבדוק — זו עבירה. ודאו כל פרט מול ההודעות הרשמיות המקושרות בהמשך.</p>
-      </div>
+  <section class="band"><div class="wrap">
+    <div class="callout info"><span class="ic" aria-hidden="true">ℹ︎</span>
+      <p data-th="disclaimer">זהו מרכז מידע. הבדיקה העצמית למטה רצה כולה בדפדפן שלכם, על גרסה שאתם מקלידים. לבדיקה חיה של דומיין שבבעלותכם יש <a href="/scan.html">סורק ייעודי</a> שמחייב קודם הוכחת בעלות. אל תריצו בדיקות נגד מערכות שאינן שלכם ושאין לכם הרשאה לבדוק — זו עבירה.</p></div>
+  </div></section>
+
+  <section class="band tint" id="what"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_bg">רקע</span><h2 data-t="whatH">מה זו החולשה</h2>
+      <p class="sub" data-t="whatSub">PHP2Shell הוא השם שניתן לצמד חולשות בליבת PHP עצמה — לא בתוסף או בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני באינטרנט. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק ללא התחברות.</p>
     </div>
-  </section>
-
-  <!-- WHAT -->
-  <section class="band tint" id="what">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">רקע</span><h2>מה זו החולשה</h2>
-        <p class="sub">PHP2Shell הוא השם שניתן לצמד חולשות בליבת PHP עצמה — לא בתוסף או בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני באינטרנט. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק ללא התחברות.</p>
-      </div>
-      <div class="grid">
-        <div class="card cve">
-          <div class="top"><h3 class="mono" style="direction:ltr">CVE-2026-109618</h3><span class="tag affected">Memory</span></div>
-          <p>כשל בטיפול בזיכרון. כאשר התהליך נגמר לו הזיכרון בזמן שנתוני הבקשה עדיין בהרכבה, שלב הניקוי מתייחס לנתונים החלקיים כאילו היו תקינים — מצב שניתן לנצל להשתלטות.</p>
-        </div>
-        <div class="card cve">
-          <div class="top"><h3 class="mono" style="direction:ltr">CVE-2026-109619</h3><span class="tag affected">Use-after-free</span></div>
-          <p>שימוש בזיכרון משוחרר. מצב שנותר מבקשה אחת מצביע לזיכרון שכבר שוחרר, ובקשה מאוחרת יותר על אותו worker יכולה להשתמש בו. אושרה גם דליפת מידע מהזיכרון.</p>
-        </div>
-      </div>
-      <div class="callout" style="margin-top:16px">
-        <span class="ic" aria-hidden="true">⚠︎</span>
-        <p>קוד ניצול ציבורי כבר במחזור ברשת. חברות אבטחה מדווחות שהמחקר משוחזר באופן עצמאי — כלומר ההגנה דחופה, לא תיאורטית. <strong>אל תורידו ואל תריצו "כלי בדיקה" לא רשמיים</strong>: חלקם דווחו כנגועים בתוכנה זדונית.</p>
-      </div>
+    <div class="grid">
+      <div class="card cve"><div class="top"><h3 class="mono" dir="ltr">CVE-2026-109618</h3><span class="tag affected">Memory</span></div><p data-t="cve18">כשל בטיפול בזיכרון: כשנגמר הזיכרון בזמן שנתוני הבקשה עדיין בהרכבה, שלב הניקוי מתייחס לנתונים החלקיים כאילו היו תקינים — פתח להשתלטות.</p></div>
+      <div class="card cve"><div class="top"><h3 class="mono" dir="ltr">CVE-2026-109619</h3><span class="tag affected">Use-after-free</span></div><p data-t="cve19">שימוש בזיכרון משוחרר: מצב שנשאר מבקשה אחת מצביע לזיכרון שכבר שוחרר, ובקשה מאוחרת על אותו worker יכולה להשתמש בו. אושרה גם דליפת מידע מהזיכרון.</p></div>
     </div>
-  </section>
+    <div class="callout" style="margin-top:16px"><span class="ic" aria-hidden="true">⚠︎</span>
+      <p data-t="exploitNote">כבר יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות ששחזרו את המחקר באופן עצמאי — ההגנה דחופה, לא תיאורטית. אל תורידו "כלי בדיקה" לא רשמיים: חלקם דווחו כנגועים בתוכנה זדונית.</p></div>
+  </div></section>
 
-  <!-- ad -->
-  <section class="band"><div class="wrap"><div class="ad-slot" role="complementary" aria-label="שטח פרסום"><span class="lab">Advertisement</span><span class="d">שטח מיועד לפרסום · 728×90 / רספונסיבי</span></div></div></section>
+  <section class="band"><div class="wrap"><div class="ad" id="ad-1" data-ad-slot=""></div></div></section>
 
-  <!-- SELF CHECK -->
-  <section class="band tint" id="check">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">כלי</span><h2>בדיקה עצמית — האם אתם חשופים?</h2>
-        <p class="sub">הקלידו את גרסת ה‑PHP שרצה אצלכם והבדיקה תגיד אם היא בטווח הפגיע. הכול מתבצע מקומית בדפדפן שלכם — שום דבר לא נשלח לרשת.</p>
-      </div>
-      <div class="checker">
-        <form id="checkForm" novalidate>
-          <div class="field">
-            <label for="phpv">גרסת PHP שלכם</label>
-            <input id="phpv" name="phpv" type="text" inputmode="decimal" placeholder="למשל 8.3.20" autocomplete="off" aria-describedby="howto">
-          </div>
-          <button class="btn" type="submit">בדיקת חשיפה</button>
-          <button class="btn ghost" type="button" id="clearBtn">ניקוי</button>
-        </form>
-        <div class="result" id="result" role="status" aria-live="polite">
-          <span class="led" aria-hidden="true"></span>
-          <div class="result-main"><div class="verdict" id="verdict"></div><div class="detail" id="detail"></div></div>
-        </div>
-        <div class="howto" id="howto">
-          <p>לא יודעים איזו גרסה רצה אצלכם? הריצו בשרת <em>שלכם</em>:</p>
-          <code class="cmd">php -v</code>
-          <p style="margin-top:10px">או בדקו בלוח הניהול של האחסון (cPanel / Plesk ← PHP version), או בקובץ <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> באתר שבבעלותכם.</p>
-        </div>
-      </div>
+  <section class="band tint" id="check"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_tool">כלי</span><h2 data-t="checkH">בדיקה עצמית — האם אתם חשופים?</h2>
+      <p class="sub" data-t="checkSub">הקלידו את גרסת ה‑PHP שרצה אצלכם, והבדיקה תגיד אם היא בטווח הפגיע. הכול מתבצע בדפדפן שלכם — שום דבר לא נשלח לרשת.</p>
     </div>
-  </section>
-
-  <!-- VERSIONS -->
-  <section class="band" id="versions">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">גרסאות</span><h2>גרסאות פגיעות ומתוקנות</h2>
-        <p class="sub">שדרגו לגרסה המתוקנת של הענף שלכם — או גבוהה ממנה. ענפים שהגיעו לסוף חיים (7.4 עד 8.1) לא קיבלו גרסה רשמית, רק תיקוני מקור חלקיים; ההמלצה היא לעבור לענף נתמך.</p>
+    <div class="checker">
+      <form id="checkForm" novalidate>
+        <div class="field"><label for="phpv" data-t="yourVer">גרסת ה‑PHP שלכם</label>
+          <input id="phpv" name="phpv" type="text" inputmode="decimal" placeholder="8.3.20" autocomplete="off" aria-describedby="howto"></div>
+        <button class="btn" type="submit" data-t="checkBtn">בדיקת חשיפה</button>
+        <button class="btn ghost" type="button" id="clearBtn" data-t="clearBtn">ניקוי</button>
+      </form>
+      <div class="result" id="result" role="status" aria-live="polite"><span class="led" aria-hidden="true"></span>
+        <div><div class="verdict" id="verdict"></div><div class="detail" id="detail"></div></div>
       </div>
-      <div class="tablewrap">
-        <table>
-          <caption>מקור: ההודעות הרשמיות של PHP.net ו‑Imunify360. ודאו מול המקור בזמן אמת.</caption>
-          <thead><tr><th scope="col">ענף PHP</th><th scope="col">סטטוס</th><th scope="col">גרסה מתוקנת</th></tr></thead>
-          <tbody>
-            <tr><td><span class="v">8.5.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.5.12</span></td><td><span class="v">8.5.12</span></td></tr>
-            <tr><td><span class="v">8.4.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.4.27</span></td><td><span class="v">8.4.27</span></td></tr>
-            <tr><td><span class="v">8.3.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.3.36</span></td><td><span class="v">8.3.36</span></td></tr>
-            <tr><td><span class="v">8.2.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.2.35</span></td><td><span class="v">8.2.35</span></td></tr>
-            <tr><td><span class="v">7.4 – 8.1</span></td><td><span class="pill eol">סוף חיים — ללא גרסה רשמית</span></td><td>שדרוג לענף נתמך</td></tr>
-          </tbody>
-        </table>
+      <div class="howto" id="howto"><p data-t="howto1">לא בטוחים איזו גרסה רצה אצלכם? הריצו בשרת שלכם:</p>
+        <code class="cmd">php -v</code>
+        <p style="margin-top:10px" data-th="howto2">או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> באתר שבבעלותכם.</p>
       </div>
+      <div class="or"><p data-t="orScan">רוצים לבדוק דומיין חי במקום גרסה? אפשר לסרוק דומיין שבבעלותכם, אחרי הוכחת בעלות.</p>
+        <a class="cta" href="/scan.html"><span data-t="orScanBtn">אימות בעלות וסריקה</span> <span data-t="arrowFwd" aria-hidden="true">←</span></a></div>
     </div>
-  </section>
+  </div></section>
 
-  <!-- VENDORS -->
-  <section class="band tint" id="vendors">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">ספקים</span><h2>ספקים וכלים רלוונטיים</h2>
-        <p class="sub">כל דבר שרץ על PHP מושפע ברגע שה‑PHP שתחתיו פגיע. ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה עצמה. הניסוחים כאן מתומצתים; ראו ההודעות הרשמיות של כל ספק.</p>
-      </div>
-      <div class="grid">
-        <div class="card"><div class="top"><h3>WordPress</h3><span class="tag action">עדכנו PHP</span></div><p>וורדפרס עצמו אינו החולשה — אך הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.</p></div>
-        <div class="card"><div class="top"><h3>Plesk</h3><span class="tag affected">מושפע</span></div><p>Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך ה‑Plesk ולא ידנית.</p></div>
-        <div class="card"><div class="top"><h3>cPanel / Imunify360</h3><span class="tag patch">חוק WAF</span></div><p>חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.</p></div>
-        <div class="card"><div class="top"><h3>Palo Alto PAN-OS</h3><span class="tag nofix">אין תיקון עדיין</span></div><p>Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.</p></div>
-        <div class="card"><div class="top"><h3>Google Cloud</h3><span class="tag action">הנחיה</span></div><p>Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.</p></div>
-        <div class="card"><div class="top"><h3>Laravel · Drupal · Joomla · Magento</h3><span class="tag action">עדכנו PHP</span></div><p>כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers וּודאו שהפרודקשן עלה על גרסה מתוקנת.</p></div>
-      </div>
+  <section class="band" id="versions"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_ver">גרסאות</span><h2 data-t="verH">גרסאות פגיעות ומתוקנות</h2>
+      <p class="sub" data-t="verSub">שדרגו לגרסה המתוקנת של הענף שלכם — או גבוהה ממנה. ענפים שהגיעו לסוף חיים (7.4 עד 8.1) לא קיבלו גרסה רשמית, רק תיקוני מקור חלקיים; עדיף לעבור לענף נתמך.</p>
     </div>
-  </section>
+    <div class="tablewrap"><table>
+      <caption data-t="verCap">מקור: ההודעות הרשמיות של PHP.net ו‑Imunify360. ודאו מול המקור בזמן אמת.</caption>
+      <thead><tr><th scope="col" data-t="thBranch">ענף PHP</th><th scope="col" data-t="thStatus">סטטוס</th><th scope="col" data-t="thFixed">גרסה מתוקנת</th></tr></thead>
+      <tbody>
+        <tr><td><span class="v">8.5.x</span></td><td><span class="pill bad" data-t="below">פגיע מתחת ל‑8.5.12</span></td><td><span class="v">8.5.12</span></td></tr>
+        <tr><td><span class="v">8.4.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.4.27</span></td><td><span class="v">8.4.27</span></td></tr>
+        <tr><td><span class="v">8.3.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.3.36</span></td><td><span class="v">8.3.36</span></td></tr>
+        <tr><td><span class="v">8.2.x</span></td><td><span class="pill bad">פגיע מתחת ל‑8.2.35</span></td><td><span class="v">8.2.35</span></td></tr>
+        <tr><td><span class="v">7.4 – 8.1</span></td><td><span class="pill eol" data-t="eol">סוף חיים — ללא גרסה רשמית</span></td><td data-t="moveSupported">מעבר לענף נתמך</td></tr>
+      </tbody>
+    </table></div>
+  </div></section>
 
-  <!-- ad -->
-  <section class="band"><div class="wrap"><div class="ad-slot" role="complementary" aria-label="שטח פרסום"><span class="lab">Advertisement</span><span class="d">שטח מיועד לפרסום · מלבן רספונסיבי</span></div></div></section>
-
-  <!-- REMEDIATION -->
-  <section class="band tint" id="fix">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">פעולה</span><h2>מה לעשות עכשיו</h2>
-        <p class="sub">צעדי הגנה בלבד — ללא פרטי ניצול. בצעו לפי הסדר, והתחילו מהפרודקשן החשוף לאינטרנט.</p>
-      </div>
-      <ol class="steps">
-        <li><div><h4>מפו את גרסאות ה‑PHP שלכם</h4><p>בכל שרת, קונטיינר ואחסון מנוהל. אל תשכחו סביבות staging, cron ו‑CLI.</p></div></li>
-        <li><div><h4>שדרגו לגרסה המתוקנת</h4><p>8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 ומעלה. ענף סוף‑חיים? עברו לענף נתמך.</p></div></li>
-        <li><div><h4>הקלת ביניים ל‑CVE-2026-109619</h4><p>כהמלצת PHP: כבו את <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.</p></div></li>
-        <li><div><h4>הפעילו חסימה ב‑WAF</h4><p>עדכנו את חוקות ה‑WAF (למשל Imunify360 8.83). זו שכבת הגנה משלימה — לא תחליף לעדכון.</p></div></li>
-        <li><div><h4>בקשו מהספקים אישור</h4><p>פנו לספקי האחסון, ה‑SaaS וה‑CDN שלכם ובקשו בכתב אילו גרסאות PHP הם מריצים ומתי יעדכנו.</p></div></li>
-        <li><div><h4>נטרו ותעדו</h4><p>חפשו קריסות worker חריגות ובקשות חשודות בלוגים, ושמרו תיעוד שדרוג מסודר.</p></div></li>
-      </ol>
+  <section class="band tint" id="vendors"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_vendors">ספקים</span><h2 data-t="venH">ספקים וכלים רלוונטיים</h2>
+      <p class="sub" data-t="venSub">כל דבר שרץ על PHP מושפע ברגע שה‑PHP שתחתיו פגיע. ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.</p>
     </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="band" id="faq">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">שאלות ותשובות</span><h2>שאלות נפוצות</h2></div>
-      <details class="faq"><summary>האם האתר שלי בוורדפרס פגיע?</summary><div class="body">תלוי בגרסת ה‑PHP של האחסון, לא בוורדפרס עצמו. בדקו את הגרסה (ראו "בדיקה עצמית") ועדכנו בלוח האחסון לגרסה מתוקנת.</div></details>
-      <details class="faq"><summary>עדכנתי את התוספים — זה מספיק?</summary><div class="body">לא. החולשה היא בליבת PHP. עדכון תוספים או תבניות לא מתקן אותה; צריך לעדכן את גרסת ה‑PHP של הסביבה.</div></details>
-      <details class="faq"><summary>אני על ענף סוף‑חיים (7.4–8.1). מה עכשיו?</summary><div class="body">אין גרסה רשמית מתוקנת לענפים האלה, רק תיקוני מקור חלקיים. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.</div></details>
-      <details class="faq"><summary>יש כלי שסורק אתר לפי כתובת?</summary><div class="body">סריקה אקטיבית של מערכת שאינה בבעלותכם או ללא הרשאה מפורשת היא עבירה. בדקו את הסביבה שלכם מבפנים (<code>php -v</code>, לוח האחסון), ובקשו מהספקים אישור בכתב.</div></details>
-      <details class="faq"><summary>יש כבר ניצול בשטח?</summary><div class="body">כן — דווח על קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.</div></details>
+    <div class="grid">
+      <div class="card"><div class="top"><h3>WordPress</h3><span class="tag action" data-t="tUpdatePhp">עדכנו PHP</span></div><p data-t="vWordpress">וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.</p></div>
+      <div class="card"><div class="top"><h3>Plesk</h3><span class="tag affected" data-t="tAffected">מושפע</span></div><p data-t="vPlesk">Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.</p></div>
+      <div class="card"><div class="top"><h3>cPanel / Imunify360</h3><span class="tag patch" data-t="tWaf">חוק WAF</span></div><p data-t="vImunify">חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.</p></div>
+      <div class="card"><div class="top"><h3>Palo Alto PAN-OS</h3><span class="tag nofix" data-t="tNoFix">אין תיקון עדיין</span></div><p data-t="vPalo">Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.</p></div>
+      <div class="card"><div class="top"><h3>Google Cloud</h3><span class="tag action" data-t="tGuidance">הנחיה</span></div><p data-t="vGoogle">Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.</p></div>
+      <div class="card"><div class="top"><h3>Laravel · Drupal · Joomla · Magento</h3><span class="tag action" data-t="tUpdatePhp2">עדכנו PHP</span></div><p data-t="vFrameworks">כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers, וודאו שהפרודקשן על גרסה מתוקנת.</p></div>
     </div>
-  </section>
+  </div></section>
 
-  <!-- REFERENCES -->
-  <section class="band tint" id="refs">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-eyebrow">מקורות</span><h2>מקורות והודעות רשמיות</h2>
-        <p class="sub">כל קביעה בעמוד נשענת על המקורות האלה. בכל ספק — המקור הרשמי קובע.</p>
-      </div>
-      <div class="refs">
-        <a class="ref" href="https://php2shell.com" target="_blank" rel="noopener"><span class="src">php2shell.com</span><span class="t">האתר הרשמי · Wiz × OpenAI × Calif</span></a>
-        <a class="ref" href="https://nvd.nist.gov/vuln/detail/CVE-2026-109618" target="_blank" rel="noopener"><span class="src">nvd.nist.gov</span><span class="t">NVD · CVE-2026-109618</span></a>
-        <a class="ref" href="https://nvd.nist.gov/vuln/detail/CVE-2026-109619" target="_blank" rel="noopener"><span class="src">nvd.nist.gov</span><span class="t">NVD · CVE-2026-109619</span></a>
-        <a class="ref" href="https://www.php.net/" target="_blank" rel="noopener"><span class="src">php.net</span><span class="t">הודעת PHP הרשמית</span></a>
-        <a class="ref" href="https://www.rapid7.com/blog/post/etr-cve-2026-109618-and-cve-2026-109619-critical-unauthenticated-remote-code-execution-in-php/" target="_blank" rel="noopener"><span class="src">rapid7.com</span><span class="t">Rapid7 · ETR ניתוח</span></a>
-        <a class="ref" href="https://www.tenable.com/blog/php2shell-cve-2026-109618-cve-2026-109619-frequently-asked-questions-about-critical-php-remote" target="_blank" rel="noopener"><span class="src">tenable.com</span><span class="t">Tenable · שאלות נפוצות</span></a>
-        <a class="ref" href="https://sansec.io/research/php2shell" target="_blank" rel="noopener"><span class="src">sansec.io</span><span class="t">Sansec · מחקר PHP2Shell</span></a>
-        <a class="ref" href="https://research.jfrog.com/post/php2shell-all-you-need-to-know-about-cve-2026-109618-and-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">jfrog.com</span><span class="t">JFrog Security Research</span></a>
-        <a class="ref" href="https://socradar.io/blog/php2shell-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">socradar.io</span><span class="t">SOCRadar · סקירה</span></a>
-        <a class="ref" href="https://support.plesk.com/hc/en-us/articles/44397729587351-Vulnerability-CVE-2026-109618-and-CVE-2026-109619-Remote-code-execution-in-PHP-shipped-with-Plesk" target="_blank" rel="noopener"><span class="src">plesk.com</span><span class="t">Plesk · הודעת אבטחה</span></a>
-        <a class="ref" href="https://security.paloaltonetworks.com/CVE-2026-109618" target="_blank" rel="noopener"><span class="src">paloaltonetworks.com</span><span class="t">Palo Alto · PAN-OS</span></a>
-        <a class="ref" href="https://cloud.google.com/blog/products/identity-security/responding-to-core-php-vulnerabilities-cve-2026-109618-cve-2026-109619" target="_blank" rel="noopener"><span class="src">cloud.google.com</span><span class="t">Google Cloud · תגובה</span></a>
-        <a class="ref" href="https://blog.imunify360.com/php-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">imunify360.com</span><span class="t">Imunify360 · חוקת WAF</span></a>
-        <a class="ref" href="https://www.wiz.io/vulnerability-database/cve/cve-2026-109618" target="_blank" rel="noopener"><span class="src">wiz.io</span><span class="t">Wiz · מאגר חולשות</span></a>
-      </div>
+  <section class="band"><div class="wrap"><div class="ad" id="ad-2" data-ad-slot=""></div></div></section>
+
+  <section class="band tint" id="fix"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_action">פעולה</span><h2 data-t="fixH">מה לעשות עכשיו</h2>
+      <p class="sub" data-t="fixSub">צעדי הגנה בלבד — בלי פרטי ניצול. בצעו לפי הסדר, והתחילו מהפרודקשן החשוף לאינטרנט.</p>
     </div>
-  </section>
+    <ol class="steps">
+      <li><div><h4 data-t="fix1h">מפו את גרסאות ה‑PHP</h4><p data-t="fix1p">בכל שרת, קונטיינר ואחסון מנוהל. אל תשכחו staging, cron ו‑CLI.</p></div></li>
+      <li><div><h4 data-t="fix2h">שדרגו לגרסה המתוקנת</h4><p data-t="fix2p">8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 ומעלה. ענף סוף‑חיים? עברו לענף נתמך.</p></div></li>
+      <li><div><h4 data-t="fix3h">הקלת ביניים ל‑CVE-2026-109619</h4><p data-th="fix3p">כהמלצת PHP: כבו את <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.</p></div></li>
+      <li><div><h4 data-t="fix4h">הפעילו חסימה ב‑WAF</h4><p data-t="fix4p">עדכנו את חוקות ה‑WAF (למשל Imunify360 8.83). שכבת הגנה משלימה — לא תחליף לעדכון.</p></div></li>
+      <li><div><h4 data-t="fix5h">בקשו אישור מהספקים</h4><p data-t="fix5p">פנו לספקי האחסון, ה‑SaaS וה‑CDN ובקשו בכתב אילו גרסאות PHP הם מריצים ומתי יעדכנו.</p></div></li>
+      <li><div><h4 data-t="fix6h">נטרו ותעדו</h4><p data-t="fix6p">חפשו קריסות worker חריגות ובקשות חשודות בלוגים, ושמרו תיעוד שדרוג מסודר.</p></div></li>
+    </ol>
+  </div></section>
 
+  <section class="band" id="faq"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_faq">שאלות ותשובות</span><h2 data-t="faqH">שאלות נפוצות</h2></div>
+    <details class="faq"><summary data-t="q1">האם האתר שלי בוורדפרס פגיע?</summary><div class="body" data-t="a1">תלוי בגרסת ה‑PHP של האחסון, לא בוורדפרס עצמו. בדקו את הגרסה (ראו "בדיקה עצמית") ועדכנו בלוח האחסון לגרסה מתוקנת.</div></details>
+    <details class="faq"><summary data-t="q2">עדכנתי את התוספים — זה מספיק?</summary><div class="body" data-t="a2">לא. החולשה היא בליבת PHP. עדכון תוספים או תבניות לא מתקן אותה; צריך לעדכן את גרסת ה‑PHP של הסביבה.</div></details>
+    <details class="faq"><summary data-t="q3">אני על ענף סוף‑חיים (7.4–8.1). מה עכשיו?</summary><div class="body" data-t="a3">אין גרסה רשמית מתוקנת לענפים האלה, רק תיקוני מקור חלקיים. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.</div></details>
+    <details class="faq"><summary data-t="q4">יש כלי שסורק דומיין חי?</summary><div class="body" data-th="a4">כן — אבל רק אחרי שמוכיחים בעלות על הדומיין (או הרשאה מפורשת), דרך <a href="/scan.html">הסורק שלנו</a>. הבדיקה פסיבית: היא קוראת את כותרות השרת ומסיקה גרסה, בלי לנצל שום דבר. סריקה של מערכת שאינה שלכם וללא הרשאה היא עבירה.</div></details>
+    <details class="faq"><summary data-t="q5">יש כבר ניצול בשטח?</summary><div class="body" data-t="a5">כן — יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.</div></details>
+  </div></section>
+
+  <section class="band tint" id="refs"><div class="wrap">
+    <div class="sec-head"><span class="sec-eyebrow" data-t="e_sources">מקורות</span><h2 data-t="refH">מקורות והודעות רשמיות</h2>
+      <p class="sub" data-t="refSub">כל קביעה בעמוד נשענת על המקורות האלה. בכל ספק — המקור הרשמי קובע.</p>
+    </div>
+    <div class="refs">
+      <a class="ref" href="https://php2shell.com" target="_blank" rel="noopener"><span class="src">php2shell.com</span><span class="t" data-t="refOfficial">האתר הרשמי · Wiz × OpenAI × Calif</span></a>
+      <a class="ref" href="https://nvd.nist.gov/vuln/detail/CVE-2026-109618" target="_blank" rel="noopener"><span class="src">nvd.nist.gov</span><span class="t">NVD · CVE-2026-109618</span></a>
+      <a class="ref" href="https://nvd.nist.gov/vuln/detail/CVE-2026-109619" target="_blank" rel="noopener"><span class="src">nvd.nist.gov</span><span class="t">NVD · CVE-2026-109619</span></a>
+      <a class="ref" href="https://www.php.net/" target="_blank" rel="noopener"><span class="src">php.net</span><span class="t" data-t="refPhp">הודעת PHP הרשמית</span></a>
+      <a class="ref" href="https://www.rapid7.com/blog/post/etr-cve-2026-109618-and-cve-2026-109619-critical-unauthenticated-remote-code-execution-in-php/" target="_blank" rel="noopener"><span class="src">rapid7.com</span><span class="t">Rapid7 · ETR</span></a>
+      <a class="ref" href="https://www.tenable.com/blog/php2shell-cve-2026-109618-cve-2026-109619-frequently-asked-questions-about-critical-php-remote" target="_blank" rel="noopener"><span class="src">tenable.com</span><span class="t">Tenable · FAQ</span></a>
+      <a class="ref" href="https://sansec.io/research/php2shell" target="_blank" rel="noopener"><span class="src">sansec.io</span><span class="t">Sansec · Research</span></a>
+      <a class="ref" href="https://research.jfrog.com/post/php2shell-all-you-need-to-know-about-cve-2026-109618-and-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">jfrog.com</span><span class="t">JFrog Security</span></a>
+      <a class="ref" href="https://socradar.io/blog/php2shell-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">socradar.io</span><span class="t">SOCRadar</span></a>
+      <a class="ref" href="https://support.plesk.com/hc/en-us/articles/44397729587351-Vulnerability-CVE-2026-109618-and-CVE-2026-109619-Remote-code-execution-in-PHP-shipped-with-Plesk" target="_blank" rel="noopener"><span class="src">plesk.com</span><span class="t" data-t="refPlesk">Plesk · הודעת אבטחה</span></a>
+      <a class="ref" href="https://security.paloaltonetworks.com/CVE-2026-109618" target="_blank" rel="noopener"><span class="src">paloaltonetworks.com</span><span class="t">Palo Alto · PAN-OS</span></a>
+      <a class="ref" href="https://cloud.google.com/blog/products/identity-security/responding-to-core-php-vulnerabilities-cve-2026-109618-cve-2026-109619" target="_blank" rel="noopener"><span class="src">cloud.google.com</span><span class="t" data-t="refGoogle">Google Cloud · תגובה</span></a>
+      <a class="ref" href="https://blog.imunify360.com/php-cve-2026-109618-cve-2026-109619/" target="_blank" rel="noopener"><span class="src">imunify360.com</span><span class="t" data-t="refImunify">Imunify360 · חוק WAF</span></a>
+      <a class="ref" href="https://www.wiz.io/vulnerability-database/cve/cve-2026-109618" target="_blank" rel="noopener"><span class="src">wiz.io</span><span class="t" data-t="refWiz">Wiz · מאגר חולשות</span></a>
+    </div>
+  </div></section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="foot-top">
-      <span class="brand"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent)" d="M12 1.5 3 5v6.3c0 5 3.6 8.9 9 11.2 5.4-2.3 9-6.2 9-11.2V5l-9-3.5Z"/></svg><span><span class="n1">PHP2</span><span class="n2">Shell</span></span></span>
-      <nav class="foot-links" aria-label="מידע משפטי">
-        <button type="button" data-dlg="privacy">הצהרת פרטיות</button>
-        <button type="button" data-dlg="cookies">מדיניות עוגיות</button>
-        <button type="button" data-dlg="a11y">הצהרת נגישות</button>
-        <button type="button" id="cookiePrefs">העדפות עוגיות</button>
-      </nav>
-    </div>
-    <p class="disc">מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק "כמות שהוא" למטרות הסברה בלבד, אינו מהווה ייעוץ אבטחה או משפטי, ואינו מבצע סריקה של אתרים כלשהם. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות המסחריים שייכים לבעליהם.</p>
+<footer><div class="wrap">
+  <div class="foot-top">
+    <span class="brand" dir="ltr"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg><span><span class="n1">PHP2</span><span class="n2">Shell</span></span></span>
+    <nav class="foot-links" aria-label="Legal">
+      <button type="button" data-dlg="privacy" data-t="lPrivacy">הצהרת פרטיות</button>
+      <button type="button" data-dlg="cookies" data-t="lCookies">מדיניות עוגיות</button>
+      <button type="button" data-dlg="a11y" data-t="lA11y">הצהרת נגישות</button>
+      <button type="button" id="cookiePrefs" data-t="lPrefs">העדפות עוגיות</button>
+    </nav>
   </div>
-</footer>
+  <p class="disc" data-t="footDisc">מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק "כמות שהוא" למטרות הסברה בלבד ואינו מהווה ייעוץ אבטחה או משפטי. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות המסחריים שייכים לבעליהם.</p>
+</div></footer>
 
-<!-- cookie banner -->
-<div class="cookie" id="cookieBar" role="dialog" aria-live="polite" aria-label="הסכמה לשימוש בעוגיות">
+<div class="cookie" id="cookieBar" role="dialog" aria-live="polite" aria-label="Cookies">
   <div class="inner">
-    <p>אנחנו משתמשים בעוגיות חיוניות בלבד כברירת מחדל. עוגיות לניתוח תנועה ולפרסום ייטענו רק באישורכם. <button type="button" id="cookieLearn" style="background:none;border:none;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline">פרטים</button></p>
-    <div class="acts">
-      <button class="btn ghost" type="button" id="cookieReject">רק חיוניות</button>
-      <button class="btn" type="button" id="cookieAccept">אישור הכול</button>
-    </div>
+    <p><span data-t="ckText">אנחנו משתמשים בעוגיות חיוניות בלבד כברירת מחדל. עוגיות לניתוח ולפרסום ייטענו רק באישורכם.</span> <button type="button" id="cookieLearn" style="background:none;border:none;color:var(--accent);cursor:pointer;font:inherit;padding:0;text-decoration:underline" data-t="ckMore">פרטים</button></p>
+    <div class="acts"><button class="btn ghost" type="button" id="cookieReject" data-t="ckEssential">רק חיוניות</button><button class="btn" type="button" id="cookieAccept" data-t="ckAccept">אישור הכול</button></div>
   </div>
 </div>
 
-<!-- legal modals -->
-<dialog id="dlg-privacy" aria-labelledby="dlg-privacy-t">
-  <div class="dlg-head"><h3 id="dlg-privacy-t">הצהרת פרטיות</h3><button class="iconbtn" type="button" data-close aria-label="סגירה">✕</button></div>
-  <div class="dlg-body">
-    <p>עודכן: 21 באוקטובר 2026.</p>
-    <h4>איזה מידע נאסף</h4>
-    <p>העמוד הוא סטטי ואינו כולל טפסים שנשלחים לשרת. בדיקת החשיפה רצה כולה בדפדפן שלכם — גרסת ה‑PHP שאתם מקלידים אינה נשלחת, אינה נשמרת ואינה מגיעה אלינו או לצד שלישי.</p>
-    <h4>אחסון מקומי</h4>
-    <p>העדפת ערכת הצבעים והבחירה שלכם לגבי עוגיות נשמרות ב‑localStorage של הדפדפן בלבד, למען נוחותכם, וניתנות לניקוי בכל רגע דרך הדפדפן.</p>
-    <h4>ניתוח ופרסום</h4>
-    <p>שירותי ניתוח תנועה ופרסום (אם יופעלו) ייטענו רק לאחר אישורכם המפורש בבאנר העוגיות, ועשויים להציב עוגיות משלהם בכפוף למדיניות שלהם. אפשר לחזור בכם בכל עת דרך "העדפות עוגיות".</p>
-    <h4>זכויותיכם</h4>
-    <p>בהתאם ל‑GDPR ולחוק הגנת הפרטיות, עומדות לכם זכויות עיון, תיקון ומחיקה. מאחר שאיננו אוספים מידע מזהה, אין לנו רשומה אישית לגביכם למחוק.</p>
-    <h4>יצירת קשר</h4>
-    <p>לפניות בנושא פרטיות ניתן להחליף את כתובת הקשר כאן: <code>privacy@example.com</code>.</p>
-  </div>
-</dialog>
+<dialog id="dlg-privacy" aria-labelledby="dpt"><div class="dlg-head"><h3 id="dpt" data-t="lPrivacy">הצהרת פרטיות</h3><button class="tbtn sq" type="button" data-close data-tal="closeAria" aria-label="Close">✕</button></div><div class="dlg-body" data-th="privacyBody"></div></dialog>
+<dialog id="dlg-cookies" aria-labelledby="dct"><div class="dlg-head"><h3 id="dct" data-t="lCookies">מדיניות עוגיות</h3><button class="tbtn sq" type="button" data-close data-tal="closeAria" aria-label="Close">✕</button></div><div class="dlg-body" data-th="cookiesBody"></div></dialog>
+<dialog id="dlg-a11y" aria-labelledby="dat"><div class="dlg-head"><h3 id="dat" data-t="lA11y">הצהרת נגישות</h3><button class="tbtn sq" type="button" data-close data-tal="closeAria" aria-label="Close">✕</button></div><div class="dlg-body" data-th="a11yBody"></div></dialog>
 
-<dialog id="dlg-cookies" aria-labelledby="dlg-cookies-t">
-  <div class="dlg-head"><h3 id="dlg-cookies-t">מדיניות עוגיות</h3><button class="iconbtn" type="button" data-close aria-label="סגירה">✕</button></div>
-  <div class="dlg-body">
-    <h4>עוגיות חיוניות</h4>
-    <p>נדרשות לתפקוד הבסיסי ולשמירת העדפותיכם (ערכת צבעים, בחירת עוגיות). אינן דורשות הסכמה.</p>
-    <h4>עוגיות ניתוח</h4>
-    <p>עוזרות להבין כיצד נעשה שימוש בעמוד, באופן מצטבר. נטענות רק לאחר אישור.</p>
-    <h4>עוגיות פרסום</h4>
-    <p>משמשות להצגת מודעות רלוונטיות על ידי ספקי פרסום צד שלישי. נטענות רק לאחר אישור, וכפופות למדיניות הפרטיות של אותם ספקים.</p>
-    <h4>ניהול ההסכמה</h4>
-    <p>אפשר לשנות את הבחירה בכל עת בלחיצה על "העדפות עוגיות" בתחתית העמוד. ברירת המחדל, עד לאישור, היא עוגיות חיוניות בלבד.</p>
-  </div>
-</dialog>
-
-<dialog id="dlg-a11y" aria-labelledby="dlg-a11y-t">
-  <div class="dlg-head"><h3 id="dlg-a11y-t">הצהרת נגישות</h3><button class="iconbtn" type="button" data-close aria-label="סגירה">✕</button></div>
-  <div class="dlg-body">
-    <p>אנו מחויבים לנגישות ולשוויון בשימוש, בהתאם לתקן <strong>WCAG 2.1 ברמה AA</strong> ולתקנות הנגישות בישראל (ת"י 5568).</p>
-    <h4>מה יישמנו</h4>
-    <ul>
-      <li>ניווט מלא במקלדת עם מצב מיקוד (focus) נראה בכל רכיב אינטראקטיבי.</li>
-      <li>מבנה HTML סמנטי, כותרות מדורגות, סימוני ARIA וקישור "דלג לתוכן".</li>
-      <li>ניגודיות צבעים העומדת בדרישות AA בשתי ערכות הצבעים (בהירה וכהה).</li>
-      <li>כיבוד העדפת <code>prefers-reduced-motion</code> לצמצום אנימציות.</li>
-      <li>טקסט מתכוונן, פריסה רספונסיבית ותמיכה בכיווניות RTL.</li>
-    </ul>
-    <h4>מגבלות ידועות ופנייה</h4>
-    <p>אם נתקלתם ברכיב שאינו נגיש, נשמח לתקן. דרכי פנייה (להחלפה): <code>accessibility@example.com</code>. נענה בתוך זמן סביר.</p>
-    <p>עודכן: 21 באוקטובר 2026.</p>
-  </div>
-</dialog>
-
-</div><!-- /rtl -->
+<script>
+window.I18N={
+he:{
+ skip:"דלג לתוכן הראשי", themeAria:"החלפת ערכת צבעים", closeAria:"סגירה", gaugeAria:"ציון חומרת CVSS 9.2 מתוך 10 — קריטי",
+ title:"PHP2Shell", eyebrow:"עדכון אבטחה · פורסם 21 באוקטובר 2026",
+ h1:"PHP2Shell — הרצת קוד מרחוק בליבת PHP",
+ lead:"שתי חולשות קריטיות בליבת PHP מאפשרות לתוקף להריץ קוד על השרת ללא כל אימות. כאן תבינו אם אתם חשופים, ומה בדיוק צריך לעשות — לעצמכם ולספקים שלכם.",
+ navCta:"בדיקת דומיין מאומתת", arrowFwd:"←", heroCta:"בדיקת דומיין שבבעלותכם",
+ fPublished:"פורסם", fPublishedV:"21 אוקטובר 2026", fType:"סוג", fTypeV:"הרצת קוד מרחוק", fAuth:"דרוש אימות", fAuthV:"לא נדרש", fExploit:"ניצול ציבורי", fExploitV:"קיים במחזור", fFixed:"ענפים מתוקנים",
+ disclaimer:'זהו מרכז מידע. הבדיקה העצמית למטה רצה כולה בדפדפן שלכם, על גרסה שאתם מקלידים. לבדיקה חיה של דומיין שבבעלותכם יש <a href="/scan.html">סורק ייעודי</a> שמחייב קודם הוכחת בעלות. אל תריצו בדיקות נגד מערכות שאינן שלכם ושאין לכם הרשאה לבדוק — זו עבירה.',
+ e_bg:"רקע", whatH:"מה זו החולשה",
+ whatSub:"PHP2Shell הוא השם שניתן לצמד חולשות בליבת PHP עצמה — לא בתוסף או בתבנית, אלא במנוע שמריץ כמעט כל אתר דינמי שני באינטרנט. שתיהן דורגו 9.2 (קריטי) ומאפשרות הרצת קוד מרחוק ללא התחברות.",
+ cve18:"כשל בטיפול בזיכרון: כשנגמר הזיכרון בזמן שנתוני הבקשה עדיין בהרכבה, שלב הניקוי מתייחס לנתונים החלקיים כאילו היו תקינים — פתח להשתלטות.",
+ cve19:"שימוש בזיכרון משוחרר: מצב שנשאר מבקשה אחת מצביע לזיכרון שכבר שוחרר, ובקשה מאוחרת על אותו worker יכולה להשתמש בו. אושרה גם דליפת מידע מהזיכרון.",
+ exploitNote:'כבר יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות ששחזרו את המחקר באופן עצמאי — ההגנה דחופה, לא תיאורטית. אל תורידו "כלי בדיקה" לא רשמיים: חלקם דווחו כנגועים בתוכנה זדונית.',
+ e_tool:"כלי", checkH:"בדיקה עצמית — האם אתם חשופים?",
+ checkSub:"הקלידו את גרסת ה‑PHP שרצה אצלכם, והבדיקה תגיד אם היא בטווח הפגיע. הכול מתבצע בדפדפן שלכם — שום דבר לא נשלח לרשת.",
+ yourVer:"גרסת ה‑PHP שלכם", checkBtn:"בדיקת חשיפה", clearBtn:"ניקוי",
+ howto1:"לא בטוחים איזו גרסה רצה אצלכם? הריצו בשרת שלכם:",
+ howto2:'או בדקו בלוח האחסון (cPanel / Plesk ← PHP version), או עם <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> באתר שבבעלותכם.',
+ orScan:"רוצים לבדוק דומיין חי במקום גרסה? אפשר לסרוק דומיין שבבעלותכם, אחרי הוכחת בעלות.", orScanBtn:"אימות בעלות וסריקה",
+ e_ver:"גרסאות", verH:"גרסאות פגיעות ומתוקנות",
+ verSub:"שדרגו לגרסה המתוקנת של הענף שלכם — או גבוהה ממנה. ענפים שהגיעו לסוף חיים (7.4 עד 8.1) לא קיבלו גרסה רשמית, רק תיקוני מקור חלקיים; עדיף לעבור לענף נתמך.",
+ verCap:"מקור: ההודעות הרשמיות של PHP.net ו‑Imunify360. ודאו מול המקור בזמן אמת.",
+ thBranch:"ענף PHP", thStatus:"סטטוס", thFixed:"גרסה מתוקנת", below:"פגיע מתחת ל‑8.5.12", eol:"סוף חיים — ללא גרסה רשמית", moveSupported:"מעבר לענף נתמך",
+ e_vendors:"ספקים", venH:"ספקים וכלים רלוונטיים",
+ venSub:"כל דבר שרץ על PHP מושפע ברגע שה‑PHP שתחתיו פגיע. ברוב המקרים התיקון הוא עדכון גרסת ה‑PHP של האחסון — לא של האפליקציה. הניסוחים מתומצתים; ראו ההודעה הרשמית של כל ספק.",
+ tUpdatePhp:"עדכנו PHP", tUpdatePhp2:"עדכנו PHP", tAffected:"מושפע", tWaf:"חוק WAF", tNoFix:"אין תיקון עדיין", tGuidance:"הנחיה",
+ vWordpress:"וורדפרס עצמו אינו החולשה — אבל הוא רץ על PHP. עדכנו את גרסת ה‑PHP בלוח האחסון לגרסה המתוקנת של הענף.",
+ vPlesk:"Plesk מפיץ PHP משלו ופרסם הנחיה ייעודית לעדכון ה‑PHP המצורף. עדכנו דרך Plesk ולא ידנית.",
+ vImunify:"חוקת ה‑WAF 8.83 של Imunify360 חוסמת את תבנית הניצול הציבורית ב‑ModSecurity ו‑Coraza; ב‑LiteSpeed רק מתעדת. אין תחליף לעדכון PHP.",
+ vPalo:"Palo Alto מסמנת את PAN‑OS כמושפע, ללא תיקון זמין בשלב זה. עקבו אחר עדכון הספק ויישמו הקלות ביניים.",
+ vGoogle:"Google פרסמה הנחיית תגובה לחולשות ליבת ה‑PHP, כולל מיפוי שירותים ושדרוג סביבות ריצה מנוהלות.",
+ vFrameworks:"כל מסגרת PHP חשופה דרך מנוע הריצה. עדכנו את ה‑PHP בסביבה, הפעילו מחדש את ה‑workers, וודאו שהפרודקשן על גרסה מתוקנת.",
+ e_action:"פעולה", fixH:"מה לעשות עכשיו", fixSub:"צעדי הגנה בלבד — בלי פרטי ניצול. בצעו לפי הסדר, והתחילו מהפרודקשן החשוף לאינטרנט.",
+ fix1h:"מפו את גרסאות ה‑PHP", fix1p:"בכל שרת, קונטיינר ואחסון מנוהל. אל תשכחו staging, cron ו‑CLI.",
+ fix2h:"שדרגו לגרסה המתוקנת", fix2p:"8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 ומעלה. ענף סוף‑חיים? עברו לענף נתמך.",
+ fix3h:"הקלת ביניים ל‑CVE-2026-109619", fix3p:'כהמלצת PHP: כבו את <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> והפעילו מחדש את תהליכי ה‑worker כדי לנקות מצב תקוע.',
+ fix4h:"הפעילו חסימה ב‑WAF", fix4p:"עדכנו את חוקות ה‑WAF (למשל Imunify360 8.83). שכבת הגנה משלימה — לא תחליף לעדכון.",
+ fix5h:"בקשו אישור מהספקים", fix5p:"פנו לספקי האחסון, ה‑SaaS וה‑CDN ובקשו בכתב אילו גרסאות PHP הם מריצים ומתי יעדכנו.",
+ fix6h:"נטרו ותעדו", fix6p:"חפשו קריסות worker חריגות ובקשות חשודות בלוגים, ושמרו תיעוד שדרוג מסודר.",
+ e_faq:"שאלות ותשובות", faqH:"שאלות נפוצות",
+ q1:"האם האתר שלי בוורדפרס פגיע?", a1:"תלוי בגרסת ה‑PHP של האחסון, לא בוורדפרס עצמו. בדקו את הגרסה (ראו “בדיקה עצמית”) ועדכנו בלוח האחסון לגרסה מתוקנת.",
+ q2:"עדכנתי את התוספים — זה מספיק?", a2:"לא. החולשה היא בליבת PHP. עדכון תוספים או תבניות לא מתקן אותה; צריך לעדכן את גרסת ה‑PHP של הסביבה.",
+ q3:"אני על ענף סוף‑חיים (7.4–8.1). מה עכשיו?", a3:"אין גרסה רשמית מתוקנת לענפים האלה, רק תיקוני מקור חלקיים. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.",
+ q4:"יש כלי שסורק דומיין חי?", a4:'כן — אבל רק אחרי שמוכיחים בעלות על הדומיין (או הרשאה מפורשת), דרך <a href="/scan.html">הסורק שלנו</a>. הבדיקה פסיבית: היא קוראת את כותרות השרת ומסיקה גרסה, בלי לנצל שום דבר. סריקה של מערכת שאינה שלכם וללא הרשאה היא עבירה.',
+ q5:"יש כבר ניצול בשטח?", a5:"כן — יש קוד ניצול ציבורי במחזור, וחברות אבטחה מדווחות על שחזור עצמאי של המחקר. התייחסו לעדכון כדחוף.",
+ e_sources:"מקורות", refH:"מקורות והודעות רשמיות", refSub:"כל קביעה בעמוד נשענת על המקורות האלה. בכל ספק — המקור הרשמי קובע.",
+ refOfficial:"האתר הרשמי · Wiz × OpenAI × Calif", refPhp:"הודעת PHP הרשמית", refPlesk:"Plesk · הודעת אבטחה", refGoogle:"Google Cloud · תגובה", refImunify:"Imunify360 · חוק WAF", refWiz:"Wiz · מאגר חולשות",
+ lPrivacy:"הצהרת פרטיות", lCookies:"מדיניות עוגיות", lA11y:"הצהרת נגישות", lPrefs:"העדפות עוגיות",
+ footDisc:"מרכז מידע עצמאי בנושא PHP2Shell (CVE-2026-109618, CVE-2026-109619). התוכן מסופק “כמות שהוא” למטרות הסברה בלבד ואינו מהווה ייעוץ אבטחה או משפטי. הנתונים נכונים לתאריך הפרסום ועשויים להשתנות — ההודעות הרשמיות של הספקים ושל PHP.net הן המקור המחייב. השמות המסחריים שייכים לבעליהם.",
+ ckText:"אנחנו משתמשים בעוגיות חיוניות בלבד כברירת מחדל. עוגיות לניתוח ולפרסום ייטענו רק באישורכם.", ckMore:"פרטים", ckEssential:"רק חיוניות", ckAccept:"אישור הכול",
+ scVulnT:"פגיע — דרוש עדכון", scVulnM:"גרסה <b>{v}</b> נמצאת בטווח הפגיע. שדרגו ל‑<b>{fix}</b> או לגרסה גבוהה ממנה.",
+ scOkT:"מעודכן ומוגן", scOkM:"גרסה <b>{v}</b> כוללת את התיקון (<b>{fix}</b> ומעלה). ודאו שגם staging, cron ו‑CLI מעודכנים.",
+ scEolT:"ענף סוף‑חיים", scEolM:"ענף <b>{branch}</b> הגיע לסוף חיים ולא קיבל גרסה רשמית מתוקנת. המסלול הבטוח הוא מעבר לענף נתמך (8.2 ומעלה) בגרסה מתוקנת.",
+ scUnkT:"ענף לא מזוהה", scUnkM:"לא זיהינו את ענף <b>{branch}</b> ברשימת הענפים המושפעים. ודאו מול ההודעה הרשמית של PHP.net.",
+ scBadT:"קלט לא תקין", scBadM:"הקלידו גרסת PHP בפורמט כמו <b>8.3.20</b>.",
+ privacyBody:"<p>עודכן: אוקטובר 2026.</p><h4>איזה מידע נאסף</h4><p>דף זה אינו שולח טפסים לשרת, והבדיקה העצמית רצה כולה בדפדפן — גרסת ה‑PHP שאתם מקלידים לא נשלחת ולא נשמרת. בסורק הבעלות (בעמוד נפרד) נאספים הדומיין וכתובת המייל לצורך האימות בלבד, ללא שמירת תוכן אתרים.</p><h4>אחסון מקומי</h4><p>העדפת השפה, ערכת הצבעים ובחירת העוגיות נשמרות ב‑localStorage של הדפדפן בלבד.</p><h4>ניתוח ופרסום</h4><p>שירותי ניתוח ופרסום (אם יופעלו) ייטענו רק לאחר אישורכם המפורש, ועשויים להציב עוגיות משלהם. אפשר לחזור בכם בכל עת דרך “העדפות עוגיות”.</p><h4>זכויותיכם</h4><p>בהתאם ל‑GDPR ולחוק הגנת הפרטיות עומדות לכם זכויות עיון, תיקון ומחיקה. לפניות: <code>privacy@php2shell.ai</code>.</p>",
+ cookiesBody:"<h4>עוגיות חיוניות</h4><p>נדרשות לתפקוד בסיסי ולשמירת העדפותיכם. אינן דורשות הסכמה.</p><h4>עוגיות ניתוח</h4><p>עוזרות להבין שימוש מצטבר באתר. נטענות רק לאחר אישור.</p><h4>עוגיות פרסום</h4><p>משמשות ספקי פרסום (למשל Google) להצגת מודעות. נטענות רק לאחר אישור, בכפוף למדיניותם.</p><h4>ניהול ההסכמה</h4><p>אפשר לשנות את הבחירה בכל עת דרך “העדפות עוגיות” בתחתית העמוד.</p>",
+ a11yBody:"<p>אנו מחויבים לנגישות בהתאם לתקן <strong>WCAG 2.1 ברמה AA</strong> ולתקנות הנגישות בישראל (ת“י 5568).</p><h4>מה יישמנו</h4><ul><li>ניווט מלא במקלדת עם מצב מיקוד נראה.</li><li>מבנה סמנטי, כותרות מדורגות וסימוני ARIA.</li><li>ניגודיות AA בשתי ערכות הצבעים.</li><li>כיבוד <code>prefers-reduced-motion</code>, תמיכה ב‑RTL ו‑LTR, ומעבר בין עברית לאנגלית.</li></ul><h4>פנייה</h4><p>נתקלתם ברכיב שאינו נגיש? <code>accessibility@php2shell.ai</code>.</p>"
+},
+en:{
+ skip:"Skip to content", themeAria:"Toggle theme", closeAria:"Close", gaugeAria:"CVSS severity 9.2 out of 10 — Critical",
+ title:"PHP2Shell", eyebrow:"Security advisory · Disclosed Oct 21, 2026",
+ h1:"PHP2Shell — Remote code execution in PHP core",
+ lead:"Two critical vulnerabilities in PHP core let an attacker run code on the server with no authentication. Here's how to tell if you're exposed — and exactly what to do, for yourself and your vendors.",
+ navCta:"Verified domain scan", arrowFwd:"→", heroCta:"Scan a domain you own",
+ fPublished:"Disclosed", fPublishedV:"Oct 21, 2026", fType:"Type", fTypeV:"Remote code execution", fAuth:"Auth required", fAuthV:"None", fExploit:"Public exploit", fExploitV:"In the wild", fFixed:"Fixed branches",
+ disclaimer:'This is an awareness hub. The self-check below runs entirely in your browser, on a version you type. For a live check of a domain you own, use our <a href="/scan.html">dedicated scanner</a>, which first requires proof of ownership. Never run checks against systems you don’t own or aren’t authorized to test — that’s a crime.',
+ e_bg:"Background", whatH:"What the vulnerability is",
+ whatSub:"PHP2Shell is the name given to a pair of flaws in PHP core itself — not a plugin or a theme, but the engine behind nearly every second dynamic site on the web. Both are rated 9.2 (critical) and allow unauthenticated remote code execution.",
+ cve18:"A memory-handling flaw: when the process runs out of memory while request data is still being assembled, the cleanup step treats the partial data as valid — an opening for takeover.",
+ cve19:"A use-after-free: state left over from one request points to freed memory, and a later request on the same worker can use it. Memory disclosure is also confirmed.",
+ exploitNote:"Public exploit code is already circulating, and security firms report independently reproducing the research — defending is urgent, not theoretical. Don’t download unofficial “checkers”: some were reported to carry malware.",
+ e_tool:"Tool", checkH:"Self-check — are you exposed?",
+ checkSub:"Type the PHP version you run and the check tells you whether it's in the vulnerable range. It all runs in your browser — nothing is sent over the network.",
+ yourVer:"Your PHP version", checkBtn:"Check exposure", clearBtn:"Clear",
+ howto1:"Not sure which version you run? On your own server:",
+ howto2:'Or check your hosting panel (cPanel / Plesk → PHP version), or <code style="background:var(--surface-2);padding:1px 5px;border-radius:5px">phpinfo()</code> on a site you own.',
+ orScan:"Want to check a live domain instead of a version? You can scan a domain you own, after proving ownership.", orScanBtn:"Verify ownership & scan",
+ e_ver:"Versions", verH:"Vulnerable & fixed versions",
+ verSub:"Upgrade to your branch's fixed version — or higher. End-of-life branches (7.4 to 8.1) got no official release, only partial source backports; moving to a supported branch is best.",
+ verCap:"Source: the official PHP.net and Imunify360 advisories. Verify against the source in real time.",
+ thBranch:"PHP branch", thStatus:"Status", thFixed:"Fixed version", below:"Vulnerable below 8.5.12", eol:"End-of-life — no official release", moveSupported:"Move to a supported branch",
+ e_vendors:"Vendors", venH:"Relevant vendors & tools",
+ venSub:"Anything running on PHP is affected the moment the PHP beneath it is vulnerable. In most cases the fix is updating the host's PHP version — not the app. Summaries below; see each vendor's official advisory.",
+ tUpdatePhp:"Update PHP", tUpdatePhp2:"Update PHP", tAffected:"Affected", tWaf:"WAF rule", tNoFix:"No fix yet", tGuidance:"Guidance",
+ vWordpress:"WordPress itself isn't the flaw — but it runs on PHP. Update the PHP version in your hosting panel to your branch's fixed release.",
+ vPlesk:"Plesk ships its own PHP and published dedicated guidance to update the bundled PHP. Update through Plesk, not by hand.",
+ vImunify:"Imunify360's WAF ruleset 8.83 blocks the public exploit pattern on ModSecurity and Coraza; on LiteSpeed it only logs. No substitute for updating PHP.",
+ vPalo:"Palo Alto lists PAN-OS as affected, with no fix available yet. Track the vendor update and apply interim mitigations.",
+ vGoogle:"Google published response guidance for the PHP core vulnerabilities, including a service mapping and upgrading managed runtimes.",
+ vFrameworks:"Every PHP framework is exposed through the runtime. Update PHP in the environment, restart the workers, and confirm production is on a fixed version.",
+ e_action:"Action", fixH:"What to do now", fixSub:"Defensive steps only — no exploit details. Work in order, starting with internet-facing production.",
+ fix1h:"Map your PHP versions", fix1p:"Across every server, container, and managed host. Don't forget staging, cron, and CLI.",
+ fix2h:"Upgrade to the fixed version", fix2p:"8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 or later. On an EOL branch? Move to a supported one.",
+ fix3h:"Interim mitigation for CVE-2026-109619", fix3p:'Per PHP: disable <code style="background:var(--surface-3);padding:1px 5px;border-radius:5px;direction:ltr">session.upload_progress</code> and restart worker processes to clear stuck state.',
+ fix4h:"Enable WAF blocking", fix4p:"Update your WAF rules (e.g. Imunify360 8.83). A complementary layer — not a substitute for the update.",
+ fix5h:"Ask your vendors to confirm", fix5p:"Ask your hosting, SaaS, and CDN providers in writing which PHP versions they run and when they'll update.",
+ fix6h:"Monitor and document", fix6p:"Watch for unusual worker crashes and suspicious requests in logs, and keep a clean upgrade record.",
+ e_faq:"Q&A", faqH:"Frequently asked questions",
+ q1:"Is my WordPress site vulnerable?", a1:"It depends on the host's PHP version, not WordPress itself. Check the version (see “Self-check”) and update it in your hosting panel to a fixed release.",
+ q2:"I updated my plugins — is that enough?", a2:"No. The flaw is in PHP core. Updating plugins or themes doesn't fix it; you need to update the environment's PHP version.",
+ q3:"I'm on an EOL branch (7.4–8.1). Now what?", a3:"There's no official fixed release for those branches, only partial source backports. The safe path is moving to a supported branch (8.2+) on a fixed version.",
+ q4:"Is there a tool that scans a live domain?", a4:'Yes — but only after you prove you own the domain (or are authorized), via <a href="/scan.html">our scanner</a>. The check is passive: it reads the server’s headers and infers a version, exploiting nothing. Scanning a system you don’t own, without authorization, is a crime.',
+ q5:"Is there active exploitation?", a5:"Yes — public exploit code is circulating and security firms report independently reproducing the research. Treat the update as urgent.",
+ e_sources:"Sources", refH:"Sources & official advisories", refSub:"Every claim on this page rests on these sources. When in doubt, the official source wins.",
+ refOfficial:"Official site · Wiz × OpenAI × Calif", refPhp:"Official PHP advisory", refPlesk:"Plesk · Security advisory", refGoogle:"Google Cloud · Response", refImunify:"Imunify360 · WAF rule", refWiz:"Wiz · Vulnerability DB",
+ lPrivacy:"Privacy statement", lCookies:"Cookie policy", lA11y:"Accessibility", lPrefs:"Cookie preferences",
+ footDisc:"An independent awareness hub for PHP2Shell (CVE-2026-109618, CVE-2026-109619). Content is provided “as is” for awareness only and is not security or legal advice. Data is accurate as of the disclosure date and may change — the official PHP.net and vendor advisories are authoritative. Trademarks belong to their owners.",
+ ckText:"We use essential cookies only by default. Analytics and advertising cookies load only with your consent.", ckMore:"Details", ckEssential:"Essential only", ckAccept:"Accept all",
+ scVulnT:"Vulnerable — update required", scVulnM:"Version <b>{v}</b> is in the vulnerable range. Upgrade to <b>{fix}</b> or later.",
+ scOkT:"Up to date & protected", scOkM:"Version <b>{v}</b> includes the fix (<b>{fix}</b> or later). Make sure staging, cron, and CLI are updated too.",
+ scEolT:"End-of-life branch", scEolM:"Branch <b>{branch}</b> is end-of-life and got no official fixed release. The safe path is moving to a supported branch (8.2+) on a fixed version.",
+ scUnkT:"Branch not recognized", scUnkM:"We don't recognize branch <b>{branch}</b> in the list of affected branches. Verify against the official PHP.net advisory.",
+ scBadT:"Invalid input", scBadM:"Enter a PHP version in a format like <b>8.3.20</b>.",
+ privacyBody:"<p>Updated: October 2026.</p><h4>What we collect</h4><p>This page submits no forms, and the self-check runs entirely in your browser — the PHP version you type is never sent or stored. The ownership scanner (separate page) collects the domain and an email address solely to run the verification, and never stores site content.</p><h4>Local storage</h4><p>Your language, theme, and cookie choice are stored only in your browser's localStorage.</p><h4>Analytics & advertising</h4><p>Analytics and advertising services (if enabled) load only after your explicit consent and may set their own cookies. You can change your mind anytime via “Cookie preferences”.</p><h4>Your rights</h4><p>Under GDPR and applicable privacy law you have rights of access, correction, and deletion. Contact: <code>privacy@php2shell.ai</code>.</p>",
+ cookiesBody:"<h4>Essential cookies</h4><p>Required for basic function and to remember your preferences. No consent needed.</p><h4>Analytics cookies</h4><p>Help us understand aggregate usage. Loaded only after consent.</p><h4>Advertising cookies</h4><p>Used by ad providers (e.g. Google) to show ads. Loaded only after consent, under their policies.</p><h4>Managing consent</h4><p>Change your choice anytime via “Cookie preferences” at the bottom of the page.</p>",
+ a11yBody:"<p>We're committed to accessibility per <strong>WCAG 2.1 AA</strong>.</p><h4>What we implemented</h4><ul><li>Full keyboard navigation with a visible focus state.</li><li>Semantic structure, ordered headings, and ARIA.</li><li>AA contrast in both color themes.</li><li>Honors <code>prefers-reduced-motion</code>, supports RTL and LTR, and switching between English and Hebrew.</li></ul><h4>Contact</h4><p>Hit an element that isn't accessible? <code>accessibility@php2shell.ai</code>.</p>"
+}};
+(function(){
+ var lang=(function(){try{var s=localStorage.getItem('p2s-lang');if(s==='he'||s==='en')return s;}catch(e){}var l=((navigator.languages&&navigator.languages.join(','))||navigator.language||'');return /(^|[,\-])he|iw/i.test(l)?'he':'en';})();
+ function t(k){var d=window.I18N[lang]||window.I18N.en;return (k in d)?d[k]:(window.I18N.en[k]||k);}
+ window.P2S_T=t;window.P2S_lang=function(){return lang;};
+ function render(){
+  var rtl=lang==='he',root=document.documentElement;root.lang=lang;root.dir=rtl?'rtl':'ltr';
+  document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'));});
+  document.querySelectorAll('[data-th]').forEach(function(el){el.innerHTML=t(el.getAttribute('data-th'));});
+  document.querySelectorAll('[data-tal]').forEach(function(el){el.setAttribute('aria-label',t(el.getAttribute('data-tal')));});
+  document.querySelectorAll('[data-lang-code]').forEach(function(el){el.textContent=rtl?'EN':'עברית';});
+  document.title=t('title');if(window.P2S_onlang)window.P2S_onlang(lang);
+ }
+ window.P2S_setLang=function(l){lang=l;try{localStorage.setItem('p2s-lang',l);}catch(e){}render();};
+ if(document.readyState!=='loading')render();else document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
 
 <script>
 (function(){
-  "use strict";
-  var LS = {
-    get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},
-    set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-  };
+ "use strict";var T=window.P2S_T,$=function(id){return document.getElementById(id);};
+ var LS={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+ var root=document.documentElement;
+ /* theme */
+ var th=LS.get('p2s-theme');if(th==='dark'||th==='light')root.setAttribute('data-theme',th);
+ $('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');var dark=c==='dark'||(!c&&matchMedia('(prefers-color-scheme:dark)').matches);var n=dark?'light':'dark';root.setAttribute('data-theme',n);LS.set('p2s-theme',n);});
+ /* lang */
+ $('langBtn').addEventListener('click',function(){window.P2S_setLang(window.P2S_lang()==='he'?'en':'he');});
 
-  /* ---- theme ---- */
-  var root=document.documentElement, tbtn=document.getElementById('themeBtn');
-  var savedT=LS.get('p2s-theme');
-  if(savedT==='dark'||savedT==='light') root.setAttribute('data-theme',savedT);
-  function syncTheme(){
-    var isDark = root.getAttribute('data-theme')==='dark' ||
-      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme:dark)').matches);
-    tbtn.setAttribute('aria-pressed', String(isDark));
-    tbtn.title = isDark ? 'מעבר לערכה בהירה' : 'מעבר לערכה כהה';
-  }
-  tbtn.addEventListener('click',function(){
-    var cur=root.getAttribute('data-theme');
-    var isDark = cur==='dark' || (!cur && window.matchMedia('(prefers-color-scheme:dark)').matches);
-    var next = isDark ? 'light':'dark';
-    root.setAttribute('data-theme',next); LS.set('p2s-theme',next); syncTheme();
-  });
-  syncTheme();
+ /* self-check */
+ var PATCHED={'8.5':12,'8.4':27,'8.3':36,'8.2':35};
+ var form=$('checkForm'),input=$('phpv'),box=$('result'),vEl=$('verdict'),dEl=$('detail');
+ function parse(v){var m=String(v).trim().match(/(\d+)\.(\d+)(?:\.(\d+))?/);if(!m)return null;return{maj:+m[1],min:+m[2],pat:m[3]!=null?+m[3]:0,branch:m[1]+'.'+m[2]};}
+ var last=null;
+ function evaluate(p){var fix=PATCHED[p.branch];if(fix!=null){if(p.pat<fix)return{cls:'r-crit',t:T('scVulnT'),m:T('scVulnM').replace('{v}',p.branch+'.'+p.pat).replace('{fix}',p.branch+'.'+fix)};return{cls:'r-ok',t:T('scOkT'),m:T('scOkM').replace('{v}',p.branch+'.'+p.pat).replace('{fix}',p.branch+'.'+fix)};}if(p.maj<8||(p.maj===8&&p.min<2))return{cls:'r-crit',t:T('scEolT'),m:T('scEolM').replace('{branch}',p.branch)};return{cls:'r-warn',t:T('scUnkT'),m:T('scUnkM').replace('{branch}',p.branch)};}
+ function show(r){box.className='result show '+r.cls;vEl.textContent=r.t;dEl.innerHTML=r.m;}
+ form.addEventListener('submit',function(e){e.preventDefault();var p=parse(input.value);if(!p){last=null;box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');return;}last=p;show(evaluate(p));});
+ $('clearBtn').addEventListener('click',function(){input.value='';box.className='result';last=null;input.focus();});
+ window.P2S_onlang=function(){ if(last&&box.classList.contains('show'))show(evaluate(last)); else if(box.classList.contains('show')){box.className='result show r-warn';vEl.textContent=T('scBadT');dEl.innerHTML=T('scBadM');} };
 
-  /* ---- self-check (fully client-side, no network) ---- */
-  var PATCHED = {'8.5':12,'8.4':27,'8.3':36,'8.2':35};
-  var form=document.getElementById('checkForm'),
-      input=document.getElementById('phpv'),
-      box=document.getElementById('result'),
-      vEl=document.getElementById('verdict'),
-      dEl=document.getElementById('detail');
+ /* modals */
+ var lastFocus=null;
+ function openDlg(id){var d=$('dlg-'+id);if(!d)return;lastFocus=document.activeElement;if(d.showModal)d.showModal();else d.setAttribute('open','');}
+ function closeDlg(d){if(d.close)d.close();else d.removeAttribute('open');if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+ document.querySelectorAll('[data-dlg]').forEach(function(b){b.addEventListener('click',function(){openDlg(b.getAttribute('data-dlg'));});});
+ document.querySelectorAll('dialog [data-close]').forEach(function(b){b.addEventListener('click',function(){closeDlg(b.closest('dialog'));});});
+ document.querySelectorAll('dialog').forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)closeDlg(d);});});
 
-  function parse(v){
-    var m=String(v).trim().match(/(\d+)\.(\d+)(?:\.(\d+))?/);
-    if(!m) return null;
-    return {maj:+m[1],min:+m[2],pat:m[3]!=null?+m[3]:0,branch:m[1]+'.'+m[2]};
-  }
-  function show(cls,title,html){
-    box.className='result show '+cls;
-    vEl.textContent=title;
-    dEl.innerHTML=html;
-  }
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var p=parse(input.value);
-    if(!p){ show('r-warn','לא זוהתה גרסה','הקלידו גרסה בפורמט כמו <b>8.3.20</b>.'); return; }
-    var fix=PATCHED[p.branch];
-    if(fix!=null){
-      if(p.pat<fix){
-        show('r-crit','הגרסה פגיעה',
-          'גרסה <b>'+p.branch+'.'+p.pat+'</b> חשופה ל‑PHP2Shell. שדרגו ל‑<b>'+p.branch+'.'+fix+'</b> ומעלה בהקדם, והפעילו מחדש את תהליכי ה‑PHP.');
-      } else {
-        show('r-ok','הגרסה מעודכנת',
-          'גרסה <b>'+p.branch+'.'+p.pat+'</b> כוללת את התיקון (<b>'+p.branch+'.'+fix+'</b> ומעלה). ודאו שכל הסביבות — כולל CLI ו‑cron — על אותה גרסה.');
-      }
-      return;
-    }
-    var cmp = (p.maj<8) || (p.maj===8 && p.min<2);
-    if(cmp){
-      show('r-crit','ענף בסוף חיים — פגיע',
-        'ענף <b>'+p.branch+'</b> אינו נתמך ולא קיבל גרסה רשמית מתוקנת (רק תיקוני מקור חלקיים). המסלול הבטוח: מעבר לענף נתמך — <b>8.2.35</b> ומעלה.');
-    } else {
-      show('r-warn','ענף לא ברשימה',
-        'ענף <b>'+p.branch+'</b> אינו ברשימת הענפים המתוקנים הידועה לעמוד זה. בדקו ישירות בהודעה הרשמית של PHP.net.');
-    }
-  });
-  document.getElementById('clearBtn').addEventListener('click',function(){
-    input.value=''; box.className='result'; input.focus();
-  });
-
-  /* ---- legal modals ---- */
-  var lastFocus=null;
-  function openDlg(id){
-    var d=document.getElementById('dlg-'+id); if(!d) return;
-    lastFocus=document.activeElement;
-    if(typeof d.showModal==='function') d.showModal(); else d.setAttribute('open','');
-  }
-  function closeDlg(d){ if(typeof d.close==='function') d.close(); else d.removeAttribute('open'); if(lastFocus&&lastFocus.focus)lastFocus.focus(); }
-  document.querySelectorAll('[data-dlg]').forEach(function(b){
-    b.addEventListener('click',function(){openDlg(b.getAttribute('data-dlg'));});
-  });
-  document.querySelectorAll('dialog [data-close]').forEach(function(b){
-    b.addEventListener('click',function(){closeDlg(b.closest('dialog'));});
-  });
-  document.querySelectorAll('dialog').forEach(function(d){
-    d.addEventListener('click',function(e){ if(e.target===d) closeDlg(d); });
-  });
-
-  /* ---- cookie consent ---- */
-  var bar=document.getElementById('cookieBar');
-  function hideBar(){ bar.classList.remove('show'); }
-  function showBar(){ bar.classList.add('show'); }
-  // Non-essential cookies (analytics / ads) load ONLY from here, after explicit consent.
-  function loadNonEssential(){
-    /* Integration point: inject your analytics + ad-network snippets here.
-       Example (Google AdSense): create the <script> for your publisher id,
-       then push ad units into the .ad-slot containers. Left intentionally
-       empty so no third-party cookie loads without consent. */
-  }
-  var consent=LS.get('p2s-consent');
-  if(consent==='all'){ loadNonEssential(); }
-  else if(consent!=='essential'){ showBar(); }
-  document.getElementById('cookieAccept').addEventListener('click',function(){ LS.set('p2s-consent','all'); hideBar(); loadNonEssential(); });
-  document.getElementById('cookieReject').addEventListener('click',function(){ LS.set('p2s-consent','essential'); hideBar(); });
-  document.getElementById('cookiePrefs').addEventListener('click',function(){ showBar(); });
-  document.getElementById('cookieLearn').addEventListener('click',function(){ openDlg('cookies'); });
+ /* cookies + ads */
+ var ADSENSE_CLIENT=''; /* set to 'ca-pub-XXXXXXXXXXXXXXXX' to enable Google AdSense */
+ var bar=$('cookieBar');
+ function mountAds(){if(!ADSENSE_CLIENT)return;if(!document.getElementById('adsbygoogle-js')){var s=document.createElement('script');s.id='adsbygoogle-js';s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADSENSE_CLIENT;document.head.appendChild(s);}document.querySelectorAll('.ad').forEach(function(slot){var sl=slot.getAttribute('data-ad-slot');if(!sl||slot.firstChild)return;var ins=document.createElement('ins');ins.className='adsbygoogle';ins.style.display='block';ins.setAttribute('data-ad-client',ADSENSE_CLIENT);ins.setAttribute('data-ad-slot',sl);ins.setAttribute('data-ad-format','auto');ins.setAttribute('data-full-width-responsive','true');slot.appendChild(ins);try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});}
+ function hide(){bar.classList.remove('show');}function showBar(){bar.classList.add('show');}
+ var consent=LS.get('p2s-consent');if(consent==='all')mountAds();else if(consent!=='essential')showBar();
+ $('cookieAccept').addEventListener('click',function(){LS.set('p2s-consent','all');hide();mountAds();});
+ $('cookieReject').addEventListener('click',function(){LS.set('p2s-consent','essential');hide();});
+ $('cookiePrefs').addEventListener('click',function(){showBar();});
+ $('cookieLearn').addEventListener('click',function(){openDlg('cookies');});
 })();
 </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PHP2Shell">
+  <rect width="64" height="64" rx="14" fill="#0c6b86"/>
+  <path fill="#ffffff" opacity=".16" d="M32 10 14 16.5v14.9C14 43 21.8 52 32 57c10.2-5 18-14 18-25.6V16.5L32 10Z"/>
+  <path fill="#ffffff" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/>
+</svg>
