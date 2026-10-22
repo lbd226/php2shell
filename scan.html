@@ -265,7 +265,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
 
 <footer><div class="wrap">
   <span data-t="footLeft">PHP2Shell · אימות בעלות</span>
-  <a href="/" data-t="footBack">חזרה למידע</a>
+  <span style="display:flex;gap:16px"><a href="/privacy.html" data-t="footPrivacy">פרטיות</a><a href="/" data-t="footBack">חזרה למידע</a></span>
 </div></footer>
 
 <script>
@@ -299,7 +299,7 @@ window.I18N = {
     p3h:"תוצאת הבדיקה", p3sub:"בדיקה פסיבית לפי כותרות השרת — הערכה, לא הוכחה ודאית.",
     scanBusy:"מריצים בדיקה פסיבית…",
     restart:"בדיקת דומיין נוסף",
-    footLeft:"PHP2Shell · אימות בעלות", footBack:"חזרה למידע",
+    footLeft:"PHP2Shell · אימות בעלות", footBack:"חזרה למידע", footPrivacy:"פרטיות",
     claimFail:"לא ניתן היה להנפיק הרשאת סריקה ({e}).",
     scanFail:"הבדיקה נכשלה ({e}).", netErr:"שגיאת רשת במהלך הבדיקה.",
     v_vulnerable_t:"⚠ ככל הנראה חשוף", v_vulnerable_m:"גרסה {v} בטווח הפגיע. שדרגו ל‑{fix} ומעלה והפעילו מחדש את תהליכי ה‑PHP.",
@@ -341,7 +341,7 @@ window.I18N = {
     p3h:"Scan result", p3sub:"A passive check from the server's headers — an assessment, not definitive proof.",
     scanBusy:"Running a passive check…",
     restart:"Check another domain",
-    footLeft:"PHP2Shell · Ownership verification", footBack:"Back to overview",
+    footLeft:"PHP2Shell · Ownership verification", footBack:"Back to overview", footPrivacy:"Privacy",
     claimFail:"Couldn't issue a scan grant ({e}).",
     scanFail:"The scan failed ({e}).", netErr:"Network error during the scan.",
     v_vulnerable_t:"⚠ Likely exposed", v_vulnerable_m:"Version {v} is in the vulnerable range. Upgrade to {fix} or later and restart your PHP workers.",

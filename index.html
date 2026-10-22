@@ -312,8 +312,8 @@ footer::before{content:"";position:absolute;inset-inline:0;top:-1px;height:2px;w
 footer .wrap{padding-block:30px 36px;display:flex;flex-direction:column;gap:16px}
 .foot-top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 .foot-links{display:flex;flex-wrap:wrap;gap:8px 18px}
-.foot-links button{background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:14px;cursor:pointer;padding:3px 0}
-.foot-links button:hover{color:var(--accent);text-decoration:underline}
+.foot-links button,.foot-links a{background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:14px;cursor:pointer;padding:3px 0;text-decoration:none}
+.foot-links button:hover,.foot-links a:hover{color:var(--accent);text-decoration:underline}
 .disc{font-size:12.5px;color:var(--faint);max-width:94ch}
 
 dialog{border:1px solid var(--border);background:var(--surface);color:var(--fg);border-radius:16px;max-width:620px;width:calc(100% - 32px);padding:0;box-shadow:var(--shadow)}
@@ -548,9 +548,9 @@ dialog::backdrop{background:rgba(5,8,13,.6);backdrop-filter:blur(2px)}
   <div class="foot-top">
     <span class="brand" dir="ltr"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg><span><span class="n1">PHP2</span><span class="n2">Shell</span></span></span>
     <nav class="foot-links" data-tal="legalAria" aria-label="Legal">
-      <button type="button" data-dlg="privacy" data-t="lPrivacy">הצהרת פרטיות</button>
-      <button type="button" data-dlg="cookies" data-t="lCookies">מדיניות עוגיות</button>
-      <button type="button" data-dlg="a11y" data-t="lA11y">הצהרת נגישות</button>
+      <a href="/privacy.html#privacy" data-t="lPrivacy">הצהרת פרטיות</a>
+      <a href="/privacy.html#cookies" data-t="lCookies">מדיניות עוגיות</a>
+      <a href="/privacy.html#accessibility" data-t="lA11y">הצהרת נגישות</a>
       <button type="button" id="cookiePrefs" data-t="lPrefs">העדפות עוגיות</button>
     </nav>
   </div>

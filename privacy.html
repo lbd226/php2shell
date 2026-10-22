@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PHP2Shell — Privacy</title>
+<meta name="description" content="מדיניות פרטיות, מדיניות עוגיות והצהרת נגישות של PHP2Shell — מרכז מידע וכלי בדיקה לחולשות PHP2Shell.">
+<meta name="theme-color" content="#1b4fd4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="google-adsense-account" content="ca-pub-4322570734095183">
+<meta property="og:title" content="PHP2Shell — Privacy policy">
+<meta property="og:description" content="Privacy policy, cookie policy and accessibility statement for PHP2Shell.">
+<meta property="og:url" content="https://php2shell.ai/privacy.html">
+<meta property="og:image" content="https://php2shell.ai/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f5f4f1; --surface:#ffffff; --surface-2:#faf9f6; --surface-3:#ecebe6;
+  --fg:#121722; --muted:#4f5a68; --faint:#6a7280; --border:#e0ded7;
+  --accent:#1b4fd4; --accent-fg:#ffffff; --accent2:#9a6f14;
+  --radius:12px; --maxw:760px;
+  --display:"Frank Ruhl Libre",Georgia,serif;
+  --sans:"Assistant",-apple-system,BlinkMacSystemFont,"Segoe UI","Arial Hebrew","Noto Sans Hebrew",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0a0d14; --surface:#141a24; --surface-2:#0f141d; --surface-3:#1d2635;
+  --fg:#eef1f6; --muted:#97a2b2; --faint:#7f8a99; --border:#232c3a;
+  --accent:#6ea0ff; --accent-fg:#081019; --accent2:#c9a24a; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0a0d14; --surface:#141a24; --surface-2:#0f141d; --surface-3:#1d2635;
+  --fg:#eef1f6; --muted:#97a2b2; --faint:#7f8a99; --border:#232c3a;
+  --accent:#6ea0ff; --accent-fg:#081019; --accent2:#c9a24a; color-scheme:dark;
+}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.68;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+h1,h2{font-family:var(--display);font-weight:700;line-height:1.15;margin:0}
+h1{font-weight:900}
+html[lang="he"] h1,html[lang="he"] h2{letter-spacing:normal}
+code{font-family:var(--mono);background:var(--surface-2);padding:1px 6px;border-radius:5px;direction:ltr;font-size:.92em}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:5px}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-left:max(18px,env(safe-area-inset-left,0));padding-right:max(18px,env(safe-area-inset-right,0))}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.topbar::before{content:"";position:absolute;inset-inline:0;top:0;height:2px;background:var(--accent2);opacity:.7}
+.topbar .wrap{display:flex;align-items:center;gap:10px;padding-block:11px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:17px;text-decoration:none;color:var(--fg)}
+.brand .n2{color:var(--accent)}
+.sp{flex:1}
+.tbtn{background:var(--surface-2);border:1px solid var(--border);color:var(--fg);height:38px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px;padding:0 11px;font-family:var(--sans)}
+.tbtn.sq{width:38px;justify-content:center;padding:0;font-size:16px}
+.tbtn:hover{background:var(--surface-3)}
+.tbtn svg{width:16px;height:16px}
+main{padding-block:38px 56px}
+.lead-meta{font-size:13px;color:var(--faint);font-family:var(--mono);direction:ltr;margin-top:10px}
+h1{font-size:clamp(28px,5vw,40px)}
+.intro{color:var(--muted);font-size:16.5px;margin-top:14px}
+section{margin-top:40px;scroll-margin-top:80px}
+section h2{font-size:clamp(20px,3vw,26px);padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:14px}
+section h2::before{content:"";display:inline-block;width:20px;height:2px;background:var(--accent);vertical-align:middle;margin-inline-end:10px}
+h3{font-size:16px;font-weight:700;margin:20px 0 6px}
+p{margin:0 0 10px}
+ul{margin:8px 0;padding-inline-start:22px}
+li{margin-bottom:6px;color:var(--muted)}
+section p{color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.toc a{font-size:13.5px;font-weight:600;background:var(--surface);border:1px solid var(--border);padding:7px 13px;border-radius:999px;text-decoration:none;color:var(--fg)}
+.toc a:hover{border-color:var(--accent)}
+footer{border-top:1px solid var(--border);background:var(--surface);margin-top:48px}
+footer .wrap{padding-block:26px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="/" dir="ltr" aria-label="PHP2Shell">
+    <svg width="24" height="24" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path fill="var(--accent-fg)" d="M32 13 17 18.4v12.9c0 9.8 6.6 17.6 15 22 8.4-4.4 15-12.2 15-22V18.4L32 13Zm-2.4 28-6.4-6.4 2.9-2.9 3.5 3.6 8.3-8.3 2.9 2.9L29.6 41Z"/></svg>
+    <span><span class="n1">PHP2</span><span class="n2">Shell</span></span>
+  </a>
+  <span class="sp"></span>
+  <a class="tbtn" href="/" data-t="back">חזרה לאתר</a>
+  <button class="tbtn" id="langBtn" type="button" data-tal="langAria" aria-label="Switch language"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><span data-lang-code>EN</span></button>
+  <button class="tbtn sq" id="themeBtn" type="button" data-tal="themeAria" aria-label="Toggle theme">◑</button>
+</div></header>
+
+<main><div class="wrap">
+  <h1 data-t="h1">מדיניות פרטיות ושקיפות</h1>
+  <p class="lead-meta"><span data-t="updated">עודכן</span>: <span data-t="updatedV">22 אוקטובר 2026</span></p>
+  <p class="intro" data-t="intro">מסמך זה מפרט אילו נתונים האתר אוסף, כיצד נעשה שימוש בעוגיות ובפרסום, וכיצד אנו מיישמים נגישות. PHP2Shell הוא מרכז מידע עצמאי בנושא החולשות CVE-2026-109618 ו‑CVE-2026-109619.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#privacy" data-t="s_privacy">פרטיות</a>
+    <a href="#cookies" data-t="s_cookies">עוגיות</a>
+    <a href="#accessibility" data-t="s_a11y">נגישות</a>
+  </nav>
+
+  <section id="privacy"><h2 data-t="s_privacy">פרטיות</h2><div data-th="privacyFull"></div></section>
+  <section id="cookies"><h2 data-t="s_cookies">מדיניות עוגיות</h2><div data-th="cookiesFull"></div></section>
+  <section id="accessibility"><h2 data-t="s_a11y">הצהרת נגישות</h2><div data-th="a11yFull"></div></section>
+</div></main>
+
+<footer><div class="wrap">
+  <span data-t="footLeft">PHP2Shell · מרכז מידע עצמאי</span>
+  <a href="/" data-t="back">חזרה לאתר</a>
+</div></footer>
+
+<script>
+window.I18N={
+he:{
+ title:"PHP2Shell — מדיניות פרטיות", langAria:"החלפת שפה", themeAria:"החלפת ערכת צבעים",
+ back:"חזרה לאתר", h1:"מדיניות פרטיות ושקיפות", updated:"עודכן", updatedV:"22 אוקטובר 2026",
+ intro:"מסמך זה מפרט אילו נתונים האתר אוסף, כיצד נעשה שימוש בעוגיות ובפרסום, וכיצד אנו מיישמים נגישות. PHP2Shell הוא מרכז מידע עצמאי בנושא החולשות CVE-2026-109618 ו‑CVE-2026-109619.",
+ s_privacy:"פרטיות", s_cookies:"מדיניות עוגיות", s_a11y:"הצהרת נגישות",
+ footLeft:"PHP2Shell · מרכז מידע עצמאי",
+ privacyFull:"<h3>איזה מידע נאסף</h3><p>הבדיקה העצמית בדף הבית רצה כולה בדפדפן שלכם — גרסת ה‑PHP שאתם מקלידים אינה נשלחת לשרת ואינה נשמרת. בכלי אימות הבעלות והסריקה (עמוד נפרד) נאספים שם הדומיין וכתובת המייל שבחרתם, לצורך ביצוע האימות בלבד; איננו שומרים את תוכן האתרים הנסרקים.</p><h3>אחסון מקומי בדפדפן</h3><p>העדפת השפה, ערכת הצבעים ואישור הודעת העוגיות נשמרים ב‑<code>localStorage</code> של הדפדפן שלכם בלבד, ואינם מגיעים לשרתים שלנו.</p><h3>פרסום (Google AdSense)</h3><p>האתר מציג מודעות של Google AdSense. Google וספקים צד‑שלישי עשויים להשתמש בעוגיות ובמזהי מכשיר כדי להציג ולמדוד מודעות בהתאם לביקוריכם באתר זה ובאתרים אחרים. לניהול או ביטול פרסום מותאם אישית: <code>google.com/my-ad-center</code> ו‑<code>google.com/settings/ads</code>. מידע נוסף במדיניות הפרטיות של Google: <code>policies.google.com/privacy</code>.</p><h3>ניתוח</h3><p>ייתכן שנשתמש בכלי ניתוח תעבורה מצטברים כדי להבין שימוש באתר. נתונים אלה מצרפיים ואינם מזהים אתכם אישית.</p><h3>זכויותיכם</h3><p>בהתאם ל‑GDPR ולחוק הגנת הפרטיות התשמ“a–1981, עומדות לכם זכויות עיון, תיקון ומחיקה של מידע אישי המוחזק עליכם. לפניות בנושא פרטיות: <code>privacy@php2shell.ai</code>.</p><h3>שינויים</h3><p>מסמך זה עשוי להתעדכן. תאריך העדכון מופיע בראש העמוד.</p>",
+ cookiesFull:"<h3>עוגיות חיוניות</h3><p>נדרשות לתפקוד בסיסי של האתר ולשמירת העדפותיכם (שפה, ערכת צבעים, אישור ההודעה). אינן משמשות למעקב.</p><h3>עוגיות פרסום (Google AdSense)</h3><p>האתר מציג מודעות של Google AdSense (Auto ads). Google וספקיה עשויים להציב עוגיות של צד שלישי לצורך הצגת מודעות ומדידתן. אפשר לנהל או לבטל פרסום מותאם אישית בכתובת <code>google.com/my-ad-center</code> או <code>google.com/settings/ads</code>.</p><h3>עוגיות ניתוח</h3><p>אם יופעלו, עוזרות להבין שימוש מצטבר באתר.</p><h3>ניהול עוגיות</h3><p>אפשר לחסום או למחוק עוגיות דרך הגדרות הדפדפן. חסימה עלולה לפגוע בחלק מהפונקציונליות. גולשים באזור הכלכלי האירופי עשויים לקבל חלון הסכמה ייעודי לפני הצגת מודעות מותאמות.</p>",
+ a11yFull:"<p>אנו מחויבים לנגישות בהתאם לתקן <strong>WCAG 2.1 ברמה AA</strong> ולתקנות שוויון זכויות לאנשים עם מוגבלות (ת“י 5568).</p><h3>מה יושם</h3><ul><li>ניווט מלא במקלדת עם מצב מיקוד נראה לעין.</li><li>מבנה סמנטי, היררכיית כותרות וסימוני ARIA.</li><li>ניגודיות צבעים ברמת AA בשתי ערכות הצבעים (בהיר/כהה).</li><li>כיבוד העדפת <code>prefers-reduced-motion</code>, תמיכה ב‑RTL ו‑LTR, ומעבר בין עברית לאנגלית.</li><li>תמונות ואייקונים פונקציונליים נושאים טקסט חלופי.</li></ul><h3>פנייה בנושא נגישות</h3><p>נתקלתם ברכיב שאינו נגיש? נשמח לדעת ולתקן: <code>accessibility@php2shell.ai</code>.</p>"
+},
+en:{
+ title:"PHP2Shell — Privacy policy", langAria:"Switch language", themeAria:"Toggle theme",
+ back:"Back to site", h1:"Privacy & transparency", updated:"Updated", updatedV:"October 22, 2026",
+ intro:"This document explains what data the site collects, how cookies and advertising are used, and how we approach accessibility. PHP2Shell is an independent awareness hub for CVE-2026-109618 and CVE-2026-109619.",
+ s_privacy:"Privacy", s_cookies:"Cookie policy", s_a11y:"Accessibility",
+ footLeft:"PHP2Shell · Independent awareness hub",
+ privacyFull:"<h3>What we collect</h3><p>The self-check on the home page runs entirely in your browser — the PHP version you type is never sent to a server or stored. The ownership-verification and scanning tool (a separate page) collects the domain name and the email address you choose, solely to perform the verification; we do not store the content of scanned sites.</p><h3>Browser local storage</h3><p>Your language, theme, and cookie-notice acknowledgement are stored only in your browser's <code>localStorage</code> and never reach our servers.</p><h3>Advertising (Google AdSense)</h3><p>This site shows Google AdSense ads. Google and third-party vendors may use cookies and device identifiers to serve and measure ads based on your visits to this and other sites. To manage or opt out of personalized advertising: <code>google.com/my-ad-center</code> and <code>google.com/settings/ads</code>. See Google's privacy policy at <code>policies.google.com/privacy</code>.</p><h3>Analytics</h3><p>We may use aggregate traffic analytics to understand site usage. Such data is aggregated and does not identify you personally.</p><h3>Your rights</h3><p>Under the GDPR and applicable privacy law you have rights of access, correction, and deletion of personal data held about you. Privacy enquiries: <code>privacy@php2shell.ai</code>.</p><h3>Changes</h3><p>This document may be updated; the revision date is shown at the top of the page.</p>",
+ cookiesFull:"<h3>Essential cookies</h3><p>Required for basic site function and to remember your preferences (language, theme, notice acknowledgement). Not used for tracking.</p><h3>Advertising cookies (Google AdSense)</h3><p>This site shows Google AdSense ads (Auto ads). Google and its partners may set third-party cookies to serve and measure ads. You can manage or opt out of personalized advertising at <code>google.com/my-ad-center</code> or <code>google.com/settings/ads</code>.</p><h3>Analytics cookies</h3><p>If enabled, these help us understand aggregate usage.</p><h3>Managing cookies</h3><p>You can block or delete cookies in your browser settings; blocking may break some functionality. Visitors in the European Economic Area may receive a dedicated consent prompt before personalized ads are shown.</p>",
+ a11yFull:"<p>We are committed to accessibility per <strong>WCAG 2.1 AA</strong>.</p><h3>What we implemented</h3><ul><li>Full keyboard navigation with a visible focus state.</li><li>Semantic structure, an ordered heading hierarchy, and ARIA.</li><li>AA color contrast in both light and dark themes.</li><li>Honors <code>prefers-reduced-motion</code>, supports RTL and LTR, and switching between English and Hebrew.</li><li>Functional images and icons carry alternative text.</li></ul><h3>Accessibility contact</h3><p>Hit an element that isn't accessible? We want to know and fix it: <code>accessibility@php2shell.ai</code>.</p>"
+}};
+(function(){
+ var lang=(function(){try{var s=localStorage.getItem('p2s-lang');if(s==='he'||s==='en')return s;}catch(e){}var l=((navigator.languages&&navigator.languages.join(','))||navigator.language||'');return /(^|[,\-])he|iw/i.test(l)?'he':'en';})();
+ function t(k){var d=window.I18N[lang]||window.I18N.en;return (k in d)?d[k]:(window.I18N.en[k]||k);}
+ function render(){var rtl=lang==='he',root=document.documentElement;root.lang=lang;root.dir=rtl?'rtl':'ltr';
+  document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'));});
+  document.querySelectorAll('[data-th]').forEach(function(el){el.innerHTML=t(el.getAttribute('data-th'));});
+  document.querySelectorAll('[data-tal]').forEach(function(el){el.setAttribute('aria-label',t(el.getAttribute('data-tal')));});
+  document.querySelectorAll('[data-lang-code]').forEach(function(el){el.textContent=rtl?'EN':'עברית';});
+  document.title=t('title');}
+ function setLang(l){lang=l;try{localStorage.setItem('p2s-lang',l);}catch(e){}render();}
+ var root=document.documentElement;try{var th=localStorage.getItem('p2s-theme');if(th==='dark'||th==='light')root.setAttribute('data-theme',th);}catch(e){}
+ function ready(){
+  document.getElementById('langBtn').addEventListener('click',function(){setLang(lang==='he'?'en':'he');});
+  document.getElementById('themeBtn').addEventListener('click',function(){var c=root.getAttribute('data-theme');var dark=c==='dark'||(!c&&matchMedia('(prefers-color-scheme:dark)').matches);var n=dark?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('p2s-theme',n);}catch(e){}});
+  render();
+ }
+ if(document.readyState!=='loading')ready();else document.addEventListener('DOMContentLoaded',ready);
+})();
+</script>
+</body>
+</html>
