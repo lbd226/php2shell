@@ -13,6 +13,8 @@ export const limiters = {
   dnsCheck: mk(1, '5 s'),     // dns checks per verification
   domainScan: mk(10, '60 m'), // scans per domain
   ipScan: mk(20, '60 m'),     // scans per client IP
+  ipSubscribe: mk(5, '10 m'), // newsletter sign-ups per client IP
+  rcptSubscribe: mk(3, '60 m'), // confirmation emails per recipient
 };
 
 export async function enforce(limiter, key) {

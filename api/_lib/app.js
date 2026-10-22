@@ -6,6 +6,7 @@ import verifyRoutes from './routes/verify.js';
 import scanRoutes from './routes/scan.js';
 import metaRoutes from './routes/meta.js';
 import previewRoutes from './routes/preview.js';
+import subscribeRoutes from './routes/subscribe.js';
 
 export function createApp() {
   const app = express();
@@ -32,6 +33,7 @@ export function createApp() {
 
   app.use('/api/verify', verifyRoutes);
   app.use('/api/scan', scanRoutes);
+  app.use('/api/subscribe', subscribeRoutes);
   app.use('/api', metaRoutes);
   app.use('/api', previewRoutes);
 
