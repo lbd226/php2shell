@@ -18,6 +18,8 @@
 <meta property="og:url" content="https://php2shell.ai/">
 <meta property="og:image" content="https://php2shell.ai/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<!-- Google AdSense — to enable ads, replace ca-pub-XXXXXXXXXXXXXXXX below, set ADSENSE_CLIENT in the page script, and the publisher id in /ads.txt -->
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -752,7 +754,7 @@ en:{
  document.querySelectorAll('dialog').forEach(function(d){d.addEventListener('click',function(e){if(e.target===d)closeDlg(d);});});
 
  /* cookies + ads */
- var ADSENSE_CLIENT=''; /* set to 'ca-pub-XXXXXXXXXXXXXXXX' to enable Google AdSense */
+ var ADSENSE_CLIENT=''; /* set to 'ca-pub-XXXXXXXXXXXXXXXX' to enable Google AdSense (also update the <meta google-adsense-account> tag and /ads.txt) */
  var bar=$('cookieBar');
  function mountAds(){if(!ADSENSE_CLIENT)return;if(!document.getElementById('adsbygoogle-js')){var s=document.createElement('script');s.id='adsbygoogle-js';s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+ADSENSE_CLIENT;document.head.appendChild(s);}document.querySelectorAll('.ad').forEach(function(slot){var sl=slot.getAttribute('data-ad-slot');if(!sl||slot.firstChild)return;var ins=document.createElement('ins');ins.className='adsbygoogle';ins.style.display='block';ins.setAttribute('data-ad-client',ADSENSE_CLIENT);ins.setAttribute('data-ad-slot',sl);ins.setAttribute('data-ad-format','auto');ins.setAttribute('data-full-width-responsive','true');slot.appendChild(ins);try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}});}
  function hide(){bar.classList.remove('show');}function showBar(){bar.classList.add('show');}
