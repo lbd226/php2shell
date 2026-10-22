@@ -1,9 +1,19 @@
 import { Router } from 'express';
 import { constants } from '../core.js';
+import { redis } from '../redis.js';
 
 const r = Router();
 
-r.get('/healthz', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
+r.get('/healthz', async (_req, res) => {
+  let db = false;
+  try {
+    await redis.set('p2s:healthz', Date.now(), { ex: 30 });
+    db = (await redis.get('p2s:healthz')) != null;
+  } catch {
+    db = false;
+  }
+  res.json({ ok: true, db, time: new Date().toISOString() });
+});
 
 r.get('/version-table', (_req, res) =>
   res.json({
