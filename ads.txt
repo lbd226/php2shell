@@ -1,4 +1,1 @@
-# Google AdSense authorized sellers.
-# To enable ads: replace pub-XXXXXXXXXXXXXXXX below with your AdSense publisher ID
-# (the same ca-pub-... used in the <meta google-adsense-account> tag and ADSENSE_CLIENT).
-google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-4322570734095183, DIRECT, f08c47fec0942fa0
